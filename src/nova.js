@@ -340,7 +340,7 @@ nova = (function() {
         }
     });
     
-    lib.GetterSetterMixin = _.extend({}, lib.EventDispatcherMixin, {
+    lib.PropertiesMixin = _.extend({}, lib.EventDispatcherMixin, {
         init: function() {
             lib.EventDispatcherMixin.init.call(this);
             this.__getterSetterInternalMap = {};
@@ -366,8 +366,12 @@ nova = (function() {
             return this.__getterSetterInternalMap[key];
         }
     });
+
+    lib.Model = _.extend({}, lib.PropertiesMixin, {
+        
+    });
     
-    lib.Widget = lib.Class.extend(_.extend({}, lib.GetterSetterMixin, {
+    lib.Widget = lib.Class.extend(_.extend({}, lib.PropertiesMixin, {
         /**
          * Tag name when creating a default $element.
          * @type string
@@ -388,7 +392,7 @@ nova = (function() {
          * for new components this argument should not be provided any more.
          */
         init: function(parent) {
-            lib.GetterSetterMixin.init.call(this);
+            lib.PropertiesMixin.init.call(this);
             this.$element = $(document.createElement(this.tagName));
     
             this.setParent(parent);
@@ -403,7 +407,7 @@ nova = (function() {
             if(this.$element != null) {
                 this.$element.remove();
             }
-            lib.GetterSetterMixin.destroy.call(this);
+            lib.PropertiesMixin.destroy.call(this);
         },
         /**
          * Renders the current widget and appends it to the given jQuery object or Widget.

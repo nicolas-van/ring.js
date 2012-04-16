@@ -80,10 +80,10 @@ test("base", function() {
     equal(tmp, 0);
 });
 
-module("GetterSetterMixin");
+module("PropertiesMixin");
 
 test("base", function() {
-    var Claz = nova.Class.extend(_.extend({}, nova.GetterSetterMixin, {}));
+    var Claz = nova.Class.extend(_.extend({}, nova.PropertiesMixin, {}));
     var x = new Claz();
     var y = new Claz();
     x.set({test: 1});
@@ -101,7 +101,7 @@ test("base", function() {
 });
 
 test("change event only when changed", function() {
-    var Claz = nova.Class.extend(_.extend({}, nova.GetterSetterMixin, {}));
+    var Claz = nova.Class.extend(_.extend({}, nova.PropertiesMixin, {}));
     var x = new Claz();
     var exec1 = false;
     var exec2 = false;
