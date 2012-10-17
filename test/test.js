@@ -175,7 +175,7 @@ test("extend", function() {
             test = 1;
         },
     });
-    var Switcher2 = Switcher.extend({
+    var Switcher2 = new nova.Mixin(Switcher, {
         switch: function() {
             equal(test, 0);
             Switcher.call(this, 'switch');

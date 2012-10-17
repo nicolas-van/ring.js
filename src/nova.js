@@ -208,14 +208,18 @@ nova = (function() {
         };
 
         var Mixin = Class.$extend({
-            __init__: function(props) {
-                this.props = props;
+            __init__: function() {
+                this.props = {};
+                _.each(_.toArray(arguments), function(el) {
+                    if (el instanceof Mixin) {
+                        _.extend(this.props, el.props);
+                    } else {
+                        _.extend(this.props, el)
+                    }
+                }, this);
             },
             call: function(newthis, fct_name) {
                 this.props[fct_name].apply(this, _.toArray(arguments).slice(2));
-            },
-            extend: function(nprops) {
-                return new Mixin(_.extend({}, this.props, nprops));
             },
         });
 
