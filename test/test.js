@@ -18,6 +18,31 @@ test("base", function() {
     equal(new Claz2().test(), "ok2");
 });
 
+test("class_init", function() {
+    var test = 0;
+    var Claz = nova.Class.$extend({
+        testf: function() {}
+    });
+    var Claz2 = Claz.$extend({
+        __class_init__: function(proto) {
+            var foundTestf = false;
+            _.each(proto, function(el, k) {
+                if (k === "testf")
+                    foundTestf = true;
+            });
+            equal(foundTestf, false);
+            proto.testf2 = function() {
+                test = 2;
+            }
+        },
+        testf2: function() {
+            test = 1;
+        }
+    });
+    new Claz2().testf2();
+    equal(test, 2);
+});
+
 module("Destroyable");
 
 test("base", function() {

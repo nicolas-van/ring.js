@@ -150,7 +150,7 @@ nova = (function() {
             /* copy all properties over to the new prototype */
             for (var name in properties) {
                 var value = getOwnProperty(properties, name);
-                if (name === '__include__' ||
+                if (name === '__include__' || name === "__class_init__" ||
                     value === undefined)
                     continue;
 
@@ -168,6 +168,8 @@ nova = (function() {
                         };
                     })(value, name) : value
             }
+
+            (properties.__class_init__ || function() {})(prototype);
 
             /* dummy constructor */
             var instance = function() {
