@@ -231,9 +231,7 @@ nova = (function() {
                     _.extend(this.props, el)
                 }
             }, this);
-        },
-        call: function(newthis, fct_name) {
-            return this.props[fct_name].apply(newthis, _.toArray(arguments).slice(2));
+            _.extend(this, this.props);
         }
     });
 
@@ -308,7 +306,7 @@ nova = (function() {
     nova.Parented = new nova.Mixin(nova.Destroyable, {
         __parentedMixin : true,
         __init__: function() {
-            nova.Destroyable.call(this, "__init__");
+            nova.Destroyable.__init__.apply(this);
             this.__parentedChildren = [];
             this.__parentedParent = null;
         },
@@ -349,7 +347,7 @@ nova = (function() {
                 el.destroy();
             });
             this.setParent(undefined);
-            nova.Destroyable.call(this, "destroy");
+            nova.Destroyable.destroy.apply(this);
         }
     });
 
@@ -446,7 +444,7 @@ nova = (function() {
     nova.EventDispatcher = new nova.Mixin(nova.Parented, {
         __eventDispatcherMixin: true,
         __init__: function() {
-            nova.Parented.call(this, "__init__");
+            nova.Parented.__init__.apply(this);
             this.__edispatcherEvents = new nova.internal.Events();
             this.__edispatcherRegisteredEvents = [];
         },
@@ -488,7 +486,7 @@ nova = (function() {
                 this.off(cal[0], cal[2], cal[1]);
             }, this);
             this.__edispatcherEvents.off();
-            nova.Parented.call(this, "destroy");
+            nova.Parented.destroy.apply(this);
         }
     });
     
@@ -511,7 +509,7 @@ nova = (function() {
             proto.__properties = props;
         },
         __init__: function() {
-            nova.EventDispatcher.call(this, "__init__");
+            nova.EventDispatcher.__init__.apply(this);
             this.__getterSetterInternalMap = {};
         },
         set: function(map) {
@@ -554,7 +552,7 @@ nova = (function() {
             }
         },
         trigger: function(name) {
-            nova.EventDispatcher.call.apply(nova.EventDispatcher, [this, "trigger"].concat(_.toArray(arguments)));
+            nova.EventDispatcher.trigger.apply(this, arguments);
             if (/(\s|^)change\:.*/.exec(name)) {
                 if (! this.__props_setting)
                     this.trigger("change");
@@ -586,7 +584,7 @@ nova = (function() {
          * for new components this argument should not be provided any more.
          */
         __init__: function(parent) {
-            nova.Properties.call(this, "__init__");
+            nova.Properties.__init__.apply(this);
             this.$element = $(document.createElement(this.tagName));
     
             this.setParent(parent);
@@ -601,7 +599,7 @@ nova = (function() {
             if(this.$element != null) {
                 this.$element.remove();
             }
-            nova.Properties.call(this, "destroy");
+            nova.Properties.destroy.apply(this);
         },
         /**
          * Renders the current widget and appends it to the given jQuery object or Widget.
