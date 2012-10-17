@@ -582,7 +582,7 @@ nova = (function() {
     });
     
     nova.Widget = nova.Class.$extend({
-        __include__ : [nova.Properties],
+        __include__ : [nova.DynamicProperties],
         /**
          * Tag name when creating a default $element.
          * @type string
