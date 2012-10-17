@@ -229,7 +229,7 @@ nova = (function() {
                 _.each(props, function(v, k) {
                     if (typeof v === "function") {
                         nprops[k] = function() {
-                            throw new NotImplementedException();
+                            throw new NotImplementedError();
                         };
                     }
                 });
@@ -237,22 +237,22 @@ nova = (function() {
             }
         });
 
-        var ExceptionBase = function() {
+        var ErrorBase = function() {
         };
-        ExceptionBase.prototype = new Error();
-        ExceptionBase.$extend = Class.$extend;
-        ExceptionBase.$withData = Class.$withData;
+        ErrorBase.prototype = new window.Error();
+        ErrorBase.$extend = Class.$extend;
+        ErrorBase.$withData = Class.$withData;
 
-        var Exception = ExceptionBase.$extend({
-            name: "nova.Exception",
+        var Error = ErrorBase.$extend({
+            name: "nova.Error",
             defaultMessage: "",
             __init__: function(message) {
                 this.message = message || this.defaultMessage;
             }
         });
 
-        var NotImplementedException = Exception.$extend({
-            name: "nova.NotImplementedException",
+        var NotImplementedError = Error.$extend({
+            name: "nova.NotImplementedError",
             defaultMessage: "This method is not implemented"
         });
 
@@ -260,8 +260,8 @@ nova = (function() {
         this.Class = Class;
         this.Mixin = Mixin;
         this.Interface = Interface;
-        this.Exception = Exception;
-        this.NotImplementedException = NotImplementedException;
+        this.Error = Error;
+        this.NotImplementedError = NotImplementedError;
     }).call(nova);
     // end of Armin Ronacher's code
 
