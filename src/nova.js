@@ -512,9 +512,15 @@ nova = (function() {
             nova.EventDispatcher.__init__.apply(this);
             this.__getterSetterInternalMap = {};
         },
-        set: function(map) {
+        set: function(arg1, arg2) {
             var self = this;
-            var changed = false;
+            var map;
+            if (typeof arg1 === "string") {
+                map = {};
+                map[arg1] = arg2;
+            } else {
+                map = arg1;
+            }
             var tmp_set = this.__props_setting;
             this.__props_setting = false;
             _.each(map, function(val, key) {

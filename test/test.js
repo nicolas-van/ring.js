@@ -173,7 +173,7 @@ test("base", function() {
     });
     var Claz2 = Claz.$extend({});
     var x = new Claz();
-    x.set({"stuff": "stuff"});
+    x.set("stuff", "stuff");
     equal(x.get("stuff"), "stuff");
 });
 
