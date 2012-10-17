@@ -3,16 +3,16 @@ module("Class");
 
 test("base", function() {
     ok(!!nova.Class, "Class does exist");
-    ok(!!nova.Class.extend, "extend does exist");
-    var Claz = nova.Class.extend({
+    ok(!!nova.Class.$extend, "$extend does exist");
+    var Claz = nova.Class.$extend({
         test: function() {
             return "ok";
         }
     });
     equal(new Claz().test(), "ok");
-    var Claz2 = Claz.extend({
+    var Claz2 = Claz.$extend({
         test: function() {
-            return this._super() + "2";
+            return this.$super() + "2";
         }
     });
     equal(new Claz2().test(), "ok2");
@@ -21,7 +21,7 @@ test("base", function() {
 module("DestroyableMixin");
 
 test("base", function() {
-    var Claz = nova.Class.extend(_.extend({}, nova.DestroyableMixin, {}));
+    var Claz = nova.Class.$extend(_.extend({}, nova.DestroyableMixin, {}));
     var x = new Claz();
     equal(!!x.isDestroyed(), false);
     x.destroy();
@@ -31,7 +31,7 @@ test("base", function() {
 module("ParentedMixin");
 
 test("base", function() {
-    var Claz = nova.Class.extend(_.extend({}, nova.ParentedMixin, {}));
+    var Claz = nova.Class.$extend(_.extend({}, nova.ParentedMixin, {}));
     var x = new Claz();
     var y = new Claz();
     y.setParent(x);
@@ -60,7 +60,7 @@ test("base", function() {
 module("EventDispatcherMixin");
 
 test("base", function() {
-    var Claz = nova.Class.extend(_.extend({}, nova.EventDispatcherMixin, {}));
+    var Claz = nova.Class.$extend(_.extend({}, nova.EventDispatcherMixin, {}));
     var x = new Claz();
     var y = new Claz();
     var tmp = 0;
@@ -83,7 +83,7 @@ test("base", function() {
 module("PropertiesMixin");
 
 test("base", function() {
-    var Claz = nova.Class.extend(_.extend({}, nova.PropertiesMixin, {}));
+    var Claz = nova.Class.$extend(_.extend({}, nova.PropertiesMixin, {}));
     var x = new Claz();
     var y = new Claz();
     x.set({test: 1});
@@ -101,7 +101,7 @@ test("base", function() {
 });
 
 test("change event only when changed", function() {
-    var Claz = nova.Class.extend(_.extend({}, nova.PropertiesMixin, {}));
+    var Claz = nova.Class.$extend(_.extend({}, nova.PropertiesMixin, {}));
     var x = new Claz();
     var exec1 = false;
     var exec2 = false;
@@ -120,7 +120,7 @@ test("change event only when changed", function() {
 module("Widget");
 
 test("base", function() {
-    var Claz = nova.Widget.extend({
+    var Claz = nova.Widget.$extend({
         renderElement: function() {
             this.$element.attr("id", "testdiv");
             this.$element.html("test");

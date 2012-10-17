@@ -1,4 +1,5 @@
 /*
+Copyright (c) 2012, Nicolas Vanhoren
 Copyright (c) 2011, OpenERP S.A.
 All rights reserved.
 
@@ -28,15 +29,15 @@ nova = (function() {
     lib.internal = {};
 
     /*
-     * (Almost) unmodified John Resig's inheritance.
+     * Modified Armin Ronacher's Classy library.
      *
      * Defines The Class object. That object can be used to define and inherit classes using
-     * the extend() method.
+     * the $extend() method.
      *
      * Example:
      *
-     * var Person = nova.Class.extend({
-     *  init: function(isDancing){
+     * var Person = nova.Class.$extend({
+     *  __init__: function(isDancing){
      *     this.dancing = isDancing;
      *   },
      *   dance: function(){
@@ -44,93 +45,167 @@ nova = (function() {
      *   }
      * });
      *
-     * The init() method act as a constructor. This class can be instancied this way:
+     * The __init__() method act as a constructor. This class can be instancied this way:
      *
      * var person = new Person(true);
      * person.dance();
      *
      * The Person class can also be extended again:
      *
-     * var Ninja = Person.extend({
-     *   init: function(){
-     *     this._super( false );
+     * var Ninja = Person.$extend({
+     *   __init__: function(){
+     *     this.$super( false );
      *   },
      *   dance: function(){
      *     // Call the inherited version of dance()
-     *     return this._super();
+     *     return this.$super();
      *   },
      *   swingSword: function(){
      *     return true;
      *   }
      * });
      *
-     * When extending a class, each re-defined method can use this._super() to call the previous
+     * When extending a class, each re-defined method can use this.$super() to call the previous
      * implementation of that method.
      */
-    /* Simple JavaScript Inheritance
-     * By John Resig http://ejohn.org/
-     * MIT Licensed.
-     */
-    // Inspired by base2 and Prototype
+    /**
+    * Classy - classy classes for JavaScript
+    *
+    * :copyright: (c) 2011 by Armin Ronacher. 
+    * :license: BSD.
+    */
     (function(){
-      var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
-      // The base Class implementation (does nothing)
-      this.Class = function(){};
-      
-      // Create a new Class that inherits from this class
-      this.Class.extend = function(prop) {
-        var _super = this.prototype;
-        
-        // Instantiate a base class (but only create the instance,
-        // don't run the init constructor)
-        initializing = true;
-        var prototype = new this();
-        initializing = false;
-        
-        // Copy the properties over onto the new prototype
-        for (var name in prop) {
-          // Check if we're overwriting an existing function
-          prototype[name] = typeof prop[name] == "function" && 
-            typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-            (function(name, fn){
-              return function() {
-                var tmp = this._super;
-                
-                // Add a new ._super() method that is the same method
-                // but on the super-class
-                this._super = _super[name];
-                
-                // The method only need to be bound temporarily, so we
-                // remove it when we're done executing
-                var ret = fn.apply(this, arguments);        
-                this._super = tmp;
-                
-                return ret;
-              };
-            })(name, prop[name]) :
-            prop[name];
+        var
+            // nico: don't know if this is really useless, so i let that here for now
+            context = this,
+            disable_constructor = false;
+
+        /* we check if $super is in use by a class if we can.  But first we have to
+         check if the JavaScript interpreter supports that.  This also matches
+         to false positives later, but that does not do any harm besides slightly
+         slowing calls down. */
+        var probe_super = (function(){$super();}).toString().indexOf('$super') > 0;
+        function usesSuper(obj) {
+            return !probe_super || /\B\$super\b/.test(obj.toString());
         }
-        
-        // The dummy class constructor
-        function Class() {
-          // All construction is actually done in the init method
-          if ( !initializing && this.init )
-            this.init.apply(this, arguments);
+
+        /* helper function to set the attribute of something to a value or
+         removes it if the value is undefined. */
+        function setOrUnset(obj, key, value) {
+            if (value === undefined)
+                delete obj[key];
+            else
+                obj[key] = value;
         }
-        
-        // Populate our constructed prototype object
-        Class.prototype = prototype;
-        
-        // Enforce the constructor to be what we expect
-        Class.prototype.constructor = Class;
-    
-        // And make this class extendable
-        for(el in this) {
-            Class[el] = this[el];
+
+        /* gets the own property of an object */
+        function getOwnProperty(obj, name) {
+            return Object.prototype.hasOwnProperty.call(obj, name)
+                ? obj[name] : undefined;
         }
-        
-        return Class;
-      };
+
+        /* instanciate a class without calling the constructor */
+        function cheapNew(cls) {
+            disable_constructor = true;
+            var rv = new cls;
+            disable_constructor = false;
+            return rv;
+        }
+
+        /* the base class we export */
+        var Class = function() {};
+
+        /* extend functionality */
+        Class.$extend = function(properties) {
+            var super_prototype = this.prototype;
+
+            /* disable constructors and instanciate prototype.  Because the
+               prototype can't raise an exception when created, we are safe
+               without a try/finally here. */
+            var prototype = cheapNew(this);
+
+            /* copy all properties of the includes over if there are any */
+            if (properties.__include__)
+                for (var i = 0, n = properties.__include__.length; i != n; ++i) {
+                    var mixin = properties.__include__[i];
+                    for (var name in mixin) {
+                        var value = getOwnProperty(mixin, name);
+                        if (value !== undefined)
+                            prototype[name] = mixin[name];
+                    }
+                }
+
+            /* copy class vars from the superclass */
+            properties.__classvars__ = properties.__classvars__ || {};
+            if (prototype.__classvars__)
+                for (var key in prototype.__classvars__)
+                    if (!properties.__classvars__[key]) {
+                        var value = getOwnProperty(prototype.__classvars__, key);
+                        properties.__classvars__[key] = value;
+                    }
+
+            /* copy all properties over to the new prototype */
+            for (var name in properties) {
+                var value = getOwnProperty(properties, name);
+                if (name === '__include__' ||
+                    value === undefined)
+                    continue;
+
+                prototype[name] = typeof value === 'function' && usesSuper(value) ?
+                    (function(meth, name) {
+                        return function() {
+                            var old_super = getOwnProperty(this, '$super');
+                            this.$super = super_prototype[name];
+                            try {
+                                return meth.apply(this, arguments);
+                            }
+                            finally {
+                                setOrUnset(this, '$super', old_super);
+                            }
+                        };
+                    })(value, name) : value
+            }
+
+            /* dummy constructor */
+            var rv = function() {
+                if (disable_constructor)
+                    return;
+                var proper_this = context === this ? cheapNew(arguments.callee) : this;
+                if (proper_this.__init__)
+                    proper_this.__init__.apply(proper_this, arguments);
+                proper_this.$class = rv;
+                return proper_this;
+            }
+
+            /* copy all class vars over of any */
+            for (var key in properties.__classvars__) {
+                var value = getOwnProperty(properties.__classvars__, key);
+                if (value !== undefined)
+                    rv[key] = value;
+            }
+
+            /* copy prototype and constructor over, reattach $extend and
+               return the class */
+            rv.prototype = prototype;
+            rv.constructor = rv;
+            rv.$extend = Class.$extend;
+            rv.$withData = Class.$withData;
+            return rv;
+        };
+
+        /* instanciate with data functionality */
+        Class.$withData = function(data) {
+            var rv = cheapNew(this);
+            for (var key in data) {
+                var value = getOwnProperty(data, key);
+                if (value !== undefined)
+                    rv[key] = value;
+            }
+            return rv;
+        };
+
+        /* export the class */
+        this.Class = Class;
     }).call(lib);
     // end of John Resig's code
 
@@ -140,7 +215,7 @@ nova = (function() {
      * it could have reserved before.
      */
     lib.DestroyableMixin = {
-        init: function() {
+        __init__: function() {
             this.__destroyableDestroyed = false;
         },
         /**
@@ -165,8 +240,8 @@ nova = (function() {
      */
     lib.ParentedMixin = _.extend({}, lib.DestroyableMixin, {
         __parentedMixin : true,
-        init: function() {
-            lib.DestroyableMixin.init.call(this);
+        __init__: function() {
+            lib.DestroyableMixin.__init__.call(this);
             this.__parentedChildren = [];
             this.__parentedParent = null;
         },
@@ -222,7 +297,7 @@ nova = (function() {
     // Backbone may be freely distributed under the MIT license.
     // For all details and documentation:
     // http://backbonejs.org
-    lib.internal.Events = lib.Class.extend({
+    lib.internal.Events = lib.Class.$extend({
 
         on : function(events, callback, context) {
             var ev;
@@ -296,8 +371,8 @@ nova = (function() {
     
     lib.EventDispatcherMixin = _.extend({}, lib.ParentedMixin, {
         __eventDispatcherMixin: true,
-        init: function() {
-            lib.ParentedMixin.init.call(this);
+        __init__: function() {
+            lib.ParentedMixin.__init__.call(this);
             this.__edispatcherEvents = new lib.internal.Events();
             this.__edispatcherRegisteredEvents = [];
         },
@@ -341,8 +416,8 @@ nova = (function() {
     });
     
     lib.PropertiesMixin = _.extend({}, lib.EventDispatcherMixin, {
-        init: function() {
-            lib.EventDispatcherMixin.init.call(this);
+        __init__: function() {
+            lib.EventDispatcherMixin.__init__.call(this);
             this.__getterSetterInternalMap = {};
         },
         set: function(map) {
@@ -371,7 +446,7 @@ nova = (function() {
         
     });
     
-    lib.Widget = lib.Class.extend(_.extend({}, lib.PropertiesMixin, {
+    lib.Widget = lib.Class.$extend(_.extend({}, lib.PropertiesMixin, {
         /**
          * Tag name when creating a default $element.
          * @type string
@@ -391,8 +466,8 @@ nova = (function() {
          * with the DOM insertion methods provided by the current implementation of Widget. So
          * for new components this argument should not be provided any more.
          */
-        init: function(parent) {
-            lib.PropertiesMixin.init.call(this);
+        __init__: function(parent) {
+            lib.PropertiesMixin.__init__.call(this);
             this.$element = $(document.createElement(this.tagName));
     
             this.setParent(parent);
