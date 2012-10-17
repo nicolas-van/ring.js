@@ -23,8 +23,10 @@ test("class_init", function() {
     var Claz = nova.Class.$extend({
         testf: function() {}
     });
+    var executed = false;
     var Claz2 = Claz.$extend({
         __class_init__: function(proto) {
+            executed = true;
             var foundTestf = false;
             _.each(proto, function(el, k) {
                 if (k === "testf")
@@ -39,6 +41,7 @@ test("class_init", function() {
             test = 1;
         }
     });
+    equal(executed, true);
     new Claz2().testf2();
     equal(test, 2);
 });
@@ -195,6 +198,18 @@ test("change event only when changed", function() {
     x.set({"test": 3});
     equal(exec1, false);
     equal(exec2, false);
+});
+
+test("hard properties", function() {
+    var Claz = nova.Class.$extend({
+        __include__: [nova.Properties],
+        getStuff: function() {
+            return "stuff";
+        }
+    });
+    var Claz2 = Claz.$extend({});
+    var x = new Claz();
+    equal(x.get("stuff"), "stuff");
 });
 
 module("Widget");

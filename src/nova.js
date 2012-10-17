@@ -149,7 +149,7 @@ nova = (function() {
             /* copy all properties over to the new prototype */
             for (var name in properties) {
                 var value = getOwnProperty(properties, name);
-                if (name === '__include__' || name === "__class_init__" ||
+                if (name === '__include__' ||
                     value === undefined)
                     continue;
 
@@ -169,7 +169,8 @@ nova = (function() {
             }
 
             var class_init = this.__class_init__ || function() {};
-            var p_class_init = properties.__class_init__ || function() {};
+            var p_class_init = prototype.__class_init__ || function() {};
+            delete prototype.__class_init__;
             var n_class_init = function() {
                 class_init.apply(null, arguments);
                 p_class_init.apply(null, arguments);
@@ -492,6 +493,23 @@ nova = (function() {
     });
     
     nova.Properties = new nova.Mixin(nova.EventDispatcher, {
+        __class_init__: function(proto) {
+            var props = {};
+            _.each(proto.__properties || {}, function(v, k) {
+                props[k] = _.clone(v);
+            });
+            _.each(proto, function(v, k) {
+                if (typeof v === "function") {
+                    var res = /^((?:get)|(?:set))([A-Z]\w*)$/.exec(k);
+                    if (! res)
+                        return;
+                    var name = res[2][0].toLowerCase() + res[2].slice(1);
+                    var prop = props[name] || (props[name] = {});
+                    prop[res[1]] = v;
+                }
+            });
+            proto.__properties = props;
+        },
         __init__: function() {
             nova.EventDispatcher.call(this, "__init__");
             this.__getterSetterInternalMap = {};
@@ -499,22 +517,50 @@ nova = (function() {
         set: function(map) {
             var self = this;
             var changed = false;
+            var tmp_set = this.__props_setting;
+            this.__props_setting = false;
             _.each(map, function(val, key) {
-                var tmp = self.__getterSetterInternalMap[key];
-                if (tmp === val)
-                    return;
-                changed = true;
-                self.__getterSetterInternalMap[key] = val;
-                self.trigger("change:" + key, self, {
-                    oldValue: tmp,
-                    newValue: val
-                });
+                var prop = self.__properties[key];
+                if (prop) {
+                    if (! prop.set)
+                        throw new nova.InvalidArgumentError("Property " + key + " does not have a setter method.");
+                    prop.set.call(self, val);
+                } else {
+                    var tmp = self.__getterSetterInternalMap[key];
+                    if (tmp === val)
+                        return;
+                    changed = true;
+                    self.__getterSetterInternalMap[key] = val;
+                    self.trigger("change:" + key, self, {
+                        oldValue: tmp,
+                        newValue: val
+                    });
+                }
             });
-            if (changed)
+            this.__props_setting = tmp_set;
+            if (! this.__props_setting && this.__props_setted) {
+                this.__props_setted = false;
                 self.trigger("change", self);
+            }
         },
         get: function(key) {
-            return this.__getterSetterInternalMap[key];
+            var prop = this.__properties[key];
+            if (prop) {
+                if (! prop.get)
+                    throw new nova.InvalidArgumentError("Property " + key + " does not have a getter method.");
+                return prop.get.call(this);
+            } else {
+                return this.__getterSetterInternalMap[key];
+            }
+        },
+        trigger: function(name) {
+            nova.EventDispatcher.call.apply(nova.EventDispatcher, [this, "trigger"].concat(_.toArray(arguments)));
+            if (/^change\:.*$/.exec(name)) {
+                if (! this.__props_setting)
+                    this.trigger("change");
+                else
+                    this.__props_setted = true;
+            }
         }
     });
     
