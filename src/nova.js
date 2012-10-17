@@ -170,13 +170,13 @@ nova = (function() {
             }
 
             /* dummy constructor */
-            var rv = function() {
+            var instance = function() {
                 if (disable_constructor)
                     return;
                 var proper_this = context === this ? cheapNew(arguments.callee) : this;
                 if (proper_this.__init__)
                     proper_this.__init__.apply(proper_this, arguments);
-                proper_this.$class = rv;
+                proper_this.$class = instance;
                 return proper_this;
             }
 
@@ -184,16 +184,16 @@ nova = (function() {
             for (var key in properties.__classvars__) {
                 var value = getOwnProperty(properties.__classvars__, key);
                 if (value !== undefined)
-                    rv[key] = value;
+                    instance[key] = value;
             }
 
             /* copy prototype and constructor over, reattach $extend and
                return the class */
-            rv.prototype = prototype;
-            rv.constructor = rv;
-            rv.$extend = Class.$extend;
-            rv.$withData = Class.$withData;
-            return rv;
+            instance.prototype = prototype;
+            instance.constructor = instance;
+            instance.$extend = Class.$extend;
+            instance.$withData = Class.$withData;
+            return instance;
         };
 
         /* instanciate with data functionality */
