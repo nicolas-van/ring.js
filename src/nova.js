@@ -236,6 +236,8 @@ nova = (function() {
                     nprops[k] = function() {
                         throw new nova.NotImplementedError();
                     };
+                } else {
+                    throw new nova.InvalidArgumentError("Any other type than function is not supported in interfaces.");
                 }
             });
             this.$super(nprops);
@@ -259,6 +261,10 @@ nova = (function() {
     nova.NotImplementedError = nova.Error.$extend({
         name: "nova.NotImplementedError",
         defaultMessage: "This method is not implemented"
+    });
+
+    nova.InvalidArgumentError = nova.Error.$extend({
+        name: "nova.InvalidArgumentError"
     });
 
     /**
