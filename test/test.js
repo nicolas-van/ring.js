@@ -18,11 +18,11 @@ test("base", function() {
     equal(new Claz2().test(), "ok2");
 });
 
-module("DestroyableMixin");
+module("Destroyable");
 
 test("base", function() {
     var Claz = nova.Class.$extend({
-        __include__: [nova.DestroyableMixin],
+        __include__: [nova.Destroyable],
     });
     var x = new Claz();
     equal(!!x.isDestroyed(), false);
@@ -30,11 +30,11 @@ test("base", function() {
     equal(x.isDestroyed(), true);
 });
 
-module("ParentedMixin");
+module("Parented");
 
 test("base", function() {
     var Claz = nova.Class.$extend({
-        __include__: [nova.ParentedMixin],
+        __include__: [nova.Parented],
     });
     var x = new Claz();
     var y = new Claz();
@@ -61,11 +61,11 @@ test("base", function() {
     equal(tmp, 0);
 });
 
-module("EventDispatcherMixin");
+module("EventDispatcher");
 
 test("base", function() {
     var Claz = nova.Class.$extend({
-        __include__: [nova.EventDispatcherMixin],
+        __include__: [nova.EventDispatcher],
     });
     var x = new Claz();
     var y = new Claz();
@@ -86,11 +86,11 @@ test("base", function() {
     equal(tmp, 0);
 });
 
-module("PropertiesMixin");
+module("Properties");
 
 test("base", function() {
     var Claz = nova.Class.$extend({
-        __include__: [nova.PropertiesMixin],
+        __include__: [nova.Properties],
     });
     var x = new Claz();
     var y = new Claz();
@@ -110,7 +110,7 @@ test("base", function() {
 
 test("change event only when changed", function() {
     var Claz = nova.Class.$extend({
-        __include__: [nova.PropertiesMixin],
+        __include__: [nova.Properties],
     });
     var x = new Claz();
     var exec1 = false;

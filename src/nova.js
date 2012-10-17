@@ -249,7 +249,7 @@ nova = (function() {
      * When an object is destroyed, it should release any resource
      * it could have reserved before.
      */
-    lib.DestroyableMixin = new lib.Mixin({
+    lib.Destroyable = new lib.Mixin({
         __init__: function() {
             this.__destroyableDestroyed = false;
         },
@@ -273,10 +273,10 @@ nova = (function() {
      * relationship. Each object can a have a parent and multiple children.
      * When an object is destroyed, all its children are destroyed too.
      */
-    lib.ParentedMixin = new lib.Mixin(lib.DestroyableMixin, {
+    lib.Parented = new lib.Mixin(lib.Destroyable, {
         __parentedMixin : true,
         __init__: function() {
-            lib.DestroyableMixin.call(this, "__init__");
+            lib.Destroyable.call(this, "__init__");
             this.__parentedChildren = [];
             this.__parentedParent = null;
         },
@@ -317,7 +317,7 @@ nova = (function() {
                 el.destroy();
             });
             this.setParent(undefined);
-            lib.DestroyableMixin.call(this, "destroy");
+            lib.Destroyable.call(this, "destroy");
         }
     });
 
@@ -326,7 +326,7 @@ nova = (function() {
      * 
      * This class just handle the dispatching of events, it is not meant to be extended,
      * nor used directly. All integration with parenting and automatic unregistration of
-     * events is done in EventDispatcherMixin.
+     * events is done in the mixin EventDispatcher.
      */
     // (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
     // Backbone may be freely distributed under the MIT license.
@@ -404,10 +404,10 @@ nova = (function() {
     });
     // end of Backbone's events class
     
-    lib.EventDispatcherMixin = new lib.Mixin(lib.ParentedMixin, {
+    lib.EventDispatcher = new lib.Mixin(lib.Parented, {
         __eventDispatcherMixin: true,
         __init__: function() {
-            lib.ParentedMixin.call(this, "__init__");
+            lib.Parented.call(this, "__init__");
             this.__edispatcherEvents = new lib.internal.Events();
             this.__edispatcherRegisteredEvents = [];
         },
@@ -446,13 +446,13 @@ nova = (function() {
             });
             this.__edispatcherRegisteredEvents = [];
             this.__edispatcherEvents.off();
-            lib.ParentedMixin.call(this, "destroy");
+            lib.Parented.call(this, "destroy");
         }
     });
     
-    lib.PropertiesMixin = new lib.Mixin(lib.EventDispatcherMixin, {
+    lib.Properties = new lib.Mixin(lib.EventDispatcher, {
         __init__: function() {
-            lib.EventDispatcherMixin.call(this, "__init__");
+            lib.EventDispatcher.call(this, "__init__");
             this.__getterSetterInternalMap = {};
         },
         set: function(map) {
@@ -478,7 +478,7 @@ nova = (function() {
     });
     
     lib.Widget = lib.Class.$extend({
-        __include__ : [lib.PropertiesMixin],
+        __include__ : [lib.Properties],
         /**
          * Tag name when creating a default $element.
          * @type string
@@ -499,7 +499,7 @@ nova = (function() {
          * for new components this argument should not be provided any more.
          */
         __init__: function(parent) {
-            lib.PropertiesMixin.call(this, "__init__");
+            lib.Properties.call(this, "__init__");
             this.$element = $(document.createElement(this.tagName));
     
             this.setParent(parent);
@@ -514,7 +514,7 @@ nova = (function() {
             if(this.$element != null) {
                 this.$element.remove();
             }
-            lib.PropertiesMixin.call(this, "destroy");
+            lib.Properties.call(this, "destroy");
         },
         /**
          * Renders the current widget and appends it to the given jQuery object or Widget.
