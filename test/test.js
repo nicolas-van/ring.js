@@ -258,3 +258,16 @@ test("inheritance", function() {
         equal(ex.message, "my exception");
     }
 });
+test("debug", function() {
+    var message;
+    try {
+        throw new Error("aie");
+    } catch (e) {
+        message = e.message;
+    }
+    try {
+        throw new nova.Error("aie");
+    } catch (e) {
+        equal(e.message, message.replace("Error", "nova.Error"));
+    }
+});
