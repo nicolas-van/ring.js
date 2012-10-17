@@ -128,6 +128,9 @@ nova = (function() {
             if (properties.__include__)
                 for (var i = 0, n = properties.__include__.length; i != n; ++i) {
                     var mixin = properties.__include__[i];
+                    if (mixin instanceof Mixin) {
+                        mixin = mixin.props;
+                    }
                     for (var name in mixin) {
                         var value = getOwnProperty(mixin, name);
                         if (value !== undefined)
@@ -204,8 +207,36 @@ nova = (function() {
             return rv;
         };
 
+        var Mixin = Class.$extend({
+            __init__: function(props) {
+                this.props = props;
+            },
+            call: function(newthis, fct_name) {
+                this.props[fct_name].apply(this, _.toArray(arguments).slice(2));
+            },
+            extend: function(nprops) {
+                return new Mixin(_.extend({}, this.props, nprops));
+            },
+        });
+
+        var Interface = Mixin.$extend({
+            __init__: function(props) {
+                var nprops = {};
+                _.each(props, function(v, k) {
+                    if (typeof v === "function") {
+                        nprops[k] = function() {
+                            throw new Error("Unimplemented method: " + k);
+                        };
+                    }
+                });
+                this.$super(nprops);
+            },
+        });
+
         /* export the class */
         this.Class = Class;
+        this.Mixin = Mixin;
+        this.Interface = Interface;
     }).call(lib);
     // end of John Resig's code
 

@@ -151,3 +151,76 @@ test("base", function() {
     equal($el.length, 0);
 });
 
+module("Mixin");
+
+test("base", function() {
+    var test = false;
+    var Switcher = new nova.Mixin({
+        switch: function() {
+            test = true;
+        },
+    });
+    var Claz = nova.Class.$extend({
+        __include__: [Switcher],
+    });
+    var obj = new Claz();
+    obj.switch();
+    equal(test, true);
+});
+
+test("extend", function() {
+    var test = 0;
+    var Switcher = new nova.Mixin({
+        switch: function() {
+            test = 1;
+        },
+    });
+    var Switcher2 = Switcher.extend({
+        switch: function() {
+            equal(test, 0);
+            Switcher.call(this, 'switch');
+            equal(test, 1);
+            test = 2;
+        },
+    });
+    var Claz = nova.Class.$extend({
+        __include__: [Switcher2],
+    });
+    var obj = new Claz();
+    obj.switch();
+    equal(test, 2);
+});
+
+test("interface", function() {
+    var test = 0;
+    var Switcher = new nova.Interface({
+        switch: function() {},
+    });
+    var Claz = nova.Class.$extend({
+        __include__: [Switcher],
+        switch: function() {
+            test = 1;
+        }
+    });
+    var obj = new Claz();
+    obj.switch();
+    equal(test, 1);
+});
+
+test("interface_unimplemented", function() {
+    var test = 0;
+    var Switcher = new nova.Interface({
+        switch: function() {},
+    });
+    var Claz = nova.Class.$extend({
+        __include__: [Switcher],
+    });
+    var obj = new Claz();
+    try {
+        obj.switch();
+    } catch(e) {
+        equal(e instanceof Error, true);
+        test = 1;
+    }
+    equal(test, 1);
+});
