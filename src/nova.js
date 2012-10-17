@@ -219,7 +219,7 @@ nova = (function() {
                 }, this);
             },
             call: function(newthis, fct_name) {
-                this.props[fct_name].apply(this, _.toArray(arguments).slice(2));
+                return this.props[fct_name].apply(newthis, _.toArray(arguments).slice(2));
             },
         });
 
@@ -249,7 +249,7 @@ nova = (function() {
      * When an object is destroyed, it should release any resource
      * it could have reserved before.
      */
-    lib.DestroyableMixin = {
+    lib.DestroyableMixin = new lib.Mixin({
         __init__: function() {
             this.__destroyableDestroyed = false;
         },
@@ -266,17 +266,17 @@ nova = (function() {
         destroy : function() {
             this.__destroyableDestroyed = true;
         }
-    };
+    });
 
     /**
      * Mixin to structure objects' life-cycles folowing a parent-children
      * relationship. Each object can a have a parent and multiple children.
      * When an object is destroyed, all its children are destroyed too.
      */
-    lib.ParentedMixin = _.extend({}, lib.DestroyableMixin, {
+    lib.ParentedMixin = new lib.Mixin(lib.DestroyableMixin, {
         __parentedMixin : true,
         __init__: function() {
-            lib.DestroyableMixin.__init__.call(this);
+            lib.DestroyableMixin.call(this, "__init__");
             this.__parentedChildren = [];
             this.__parentedParent = null;
         },
@@ -317,7 +317,7 @@ nova = (function() {
                 el.destroy();
             });
             this.setParent(undefined);
-            lib.DestroyableMixin.destroy.call(this);
+            lib.DestroyableMixin.call(this, "destroy");
         }
     });
 
@@ -404,10 +404,10 @@ nova = (function() {
     });
     // end of Backbone's events class
     
-    lib.EventDispatcherMixin = _.extend({}, lib.ParentedMixin, {
+    lib.EventDispatcherMixin = new lib.Mixin(lib.ParentedMixin, {
         __eventDispatcherMixin: true,
         __init__: function() {
-            lib.ParentedMixin.__init__.call(this);
+            lib.ParentedMixin.call(this, "__init__");
             this.__edispatcherEvents = new lib.internal.Events();
             this.__edispatcherRegisteredEvents = [];
         },
@@ -446,13 +446,13 @@ nova = (function() {
             });
             this.__edispatcherRegisteredEvents = [];
             this.__edispatcherEvents.off();
-            lib.ParentedMixin.destroy.call(this);
+            lib.ParentedMixin.call(this, "destroy");
         }
     });
     
-    lib.PropertiesMixin = _.extend({}, lib.EventDispatcherMixin, {
+    lib.PropertiesMixin = new lib.Mixin(lib.EventDispatcherMixin, {
         __init__: function() {
-            lib.EventDispatcherMixin.__init__.call(this);
+            lib.EventDispatcherMixin.call(this, "__init__");
             this.__getterSetterInternalMap = {};
         },
         set: function(map) {
@@ -499,7 +499,7 @@ nova = (function() {
          * for new components this argument should not be provided any more.
          */
         __init__: function(parent) {
-            lib.PropertiesMixin.__init__.call(this);
+            lib.PropertiesMixin.call(this, "__init__");
             this.$element = $(document.createElement(this.tagName));
     
             this.setParent(parent);
@@ -514,7 +514,7 @@ nova = (function() {
             if(this.$element != null) {
                 this.$element.remove();
             }
-            lib.PropertiesMixin.destroy.call(this);
+            lib.PropertiesMixin.call(this, "destroy");
         },
         /**
          * Renders the current widget and appends it to the given jQuery object or Widget.
