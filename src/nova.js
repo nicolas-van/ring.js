@@ -229,7 +229,7 @@ nova = (function() {
                 _.each(props, function(v, k) {
                     if (typeof v === "function") {
                         nprops[k] = function() {
-                            throw new Error("Unimplemented method: " + k);
+                            throw new NotImplementedException();
                         };
                     }
                 });
@@ -244,10 +244,16 @@ nova = (function() {
         ExceptionBase.$withData = Class.$withData;
 
         var Exception = ExceptionBase.$extend({
+            name: "nova.Exception",
+            defaultMessage: "",
             __init__: function(message) {
                 this.message = message;
-                this.name = "Exception";
             }
+        });
+
+        var NotImplementedException = Exception.$extend({
+            name: "nova.NotImplementedException",
+            defaultMessage: "This method is not implemented"
         });
 
         /* export the class */
@@ -255,8 +261,9 @@ nova = (function() {
         this.Mixin = Mixin;
         this.Interface = Interface;
         this.Exception = Exception;
+        this.NotImplementedException = NotImplementedException;
     }).call(nova);
-    // end of John Resig's code
+    // end of Armin Ronacher's code
 
     /**
      * Mixin to express the concept of destroying an object.

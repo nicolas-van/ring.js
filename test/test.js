@@ -219,7 +219,7 @@ test("interface_unimplemented", function() {
     try {
         obj.switch();
     } catch(e) {
-        equal(e instanceof Error, true);
+        equal(e instanceof nova.NotImplementedException, true);
         test = 1;
     }
     equal(test, 1);
