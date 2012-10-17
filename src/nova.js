@@ -128,7 +128,7 @@ nova = (function() {
             if (properties.__include__)
                 for (var i = 0, n = properties.__include__.length; i != n; ++i) {
                     var mixin = properties.__include__[i];
-                    if (mixin instanceof Mixin) {
+                    if (mixin instanceof nova.Mixin) {
                         mixin = mixin.props;
                     }
                     for (var name in mixin) {
@@ -207,63 +207,59 @@ nova = (function() {
             return rv;
         };
 
-        var Mixin = Class.$extend({
-            __init__: function() {
-                this.props = {};
-                _.each(_.toArray(arguments), function(el) {
-                    if (el instanceof Mixin) {
-                        _.extend(this.props, el.props);
-                    } else {
-                        _.extend(this.props, el)
-                    }
-                }, this);
-            },
-            call: function(newthis, fct_name) {
-                return this.props[fct_name].apply(newthis, _.toArray(arguments).slice(2));
-            }
-        });
-
-        var Interface = Mixin.$extend({
-            __init__: function(props) {
-                var nprops = {};
-                _.each(props, function(v, k) {
-                    if (typeof v === "function") {
-                        nprops[k] = function() {
-                            throw new NotImplementedError();
-                        };
-                    }
-                });
-                this.$super(nprops);
-            }
-        });
-
-        var ErrorBase = function() {
-        };
-        ErrorBase.prototype = new window.Error();
-        ErrorBase.$extend = Class.$extend;
-        ErrorBase.$withData = Class.$withData;
-
-        var Error = ErrorBase.$extend({
-            name: "nova.Error",
-            defaultMessage: "",
-            __init__: function(message) {
-                this.message = message || this.defaultMessage;
-            }
-        });
-
-        var NotImplementedError = Error.$extend({
-            name: "nova.NotImplementedError",
-            defaultMessage: "This method is not implemented"
-        });
-
         /* export the class */
         this.Class = Class;
-        this.Mixin = Mixin;
-        this.Interface = Interface;
-        this.Error = Error;
-        this.NotImplementedError = NotImplementedError;
     }).call(nova);
     // end of Armin Ronacher's code
+
+    nova.Mixin = nova.Class.$extend({
+        __init__: function() {
+            this.props = {};
+            _.each(_.toArray(arguments), function(el) {
+                if (el instanceof nova.Mixin) {
+                    _.extend(this.props, el.props);
+                } else {
+                    _.extend(this.props, el)
+                }
+            }, this);
+        },
+        call: function(newthis, fct_name) {
+            return this.props[fct_name].apply(newthis, _.toArray(arguments).slice(2));
+        }
+    });
+
+    nova.Interface = nova.Mixin.$extend({
+        __init__: function(props) {
+            var nprops = {};
+            _.each(props, function(v, k) {
+                if (typeof v === "function") {
+                    nprops[k] = function() {
+                        throw new nova.NotImplementedError();
+                    };
+                }
+            });
+            this.$super(nprops);
+        }
+    });
+
+    var ErrorBase = function() {
+    };
+    ErrorBase.prototype = new window.Error();
+    ErrorBase.$extend = nova.Class.$extend;
+    ErrorBase.$withData = nova.Class.$withData;
+
+    nova.Error = ErrorBase.$extend({
+        name: "nova.Error",
+        defaultMessage: "",
+        __init__: function(message) {
+            this.message = message || this.defaultMessage;
+        }
+    });
+
+    nova.NotImplementedError = nova.Error.$extend({
+        name: "nova.NotImplementedError",
+        defaultMessage: "This method is not implemented"
+    });
 
     /**
      * Mixin to express the concept of destroying an object.
