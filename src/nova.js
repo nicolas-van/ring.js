@@ -247,7 +247,7 @@ nova = (function() {
             name: "nova.Exception",
             defaultMessage: "",
             __init__: function(message) {
-                this.message = message;
+                this.message = message || this.defaultMessage;
             }
         });
 
