@@ -356,7 +356,6 @@ nova = (function() {
     // For all details and documentation:
     // http://backbonejs.org
     nova.internal.Events = nova.Class.$extend({
-
         on : function(events, callback, context) {
             var ev;
             events = events.split(/\s+/);
@@ -370,7 +369,6 @@ nova = (function() {
             }
             return this;
         },
-
         off : function(events, callback, context) {
             var ev, calls, node;
             if (!events) {
@@ -392,7 +390,16 @@ nova = (function() {
             }
             return this;
         },
-
+        callbackList: function() {
+            var lst = [];
+            _.each(this._callbacks || {}, function(el, eventName) {
+                var node = el;
+                while ((node = node.next) && node.next) {
+                    lst.push([eventName, node.callback, node.context]);
+                }
+            });
+            return lst;
+        },
         trigger : function(events) {
             var event, node, calls, tail, args, all, rest;
             if (!(calls = this._callbacks))
@@ -468,6 +475,9 @@ nova = (function() {
                 event.source.__edispatcherEvents.off(event.name, event.func, self);
             });
             this.__edispatcherRegisteredEvents = [];
+            _.each(this.__edispatcherEvents.callbackList(), function(cal) {
+                this.off(cal[0], cal[2], cal[1]);
+            }, this);
             this.__edispatcherEvents.off();
             nova.Parented.call(this, "destroy");
         }

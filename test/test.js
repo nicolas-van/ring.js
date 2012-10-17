@@ -85,6 +85,34 @@ test("base", function() {
     x.trigger("test");
     equal(tmp, 0);
 });
+test("memoryLeak", function() {
+    var Claz = nova.Class.$extend({
+        __include__: [nova.EventDispatcher],
+    });
+    var x = new Claz();
+    var y = new Claz();
+    equal(x.__edispatcherRegisteredEvents.length, 0);
+    equal(y.__edispatcherRegisteredEvents.length, 0);
+    var fct = function() {};
+    x.on("test", y, fct);
+    equal(x.__edispatcherRegisteredEvents.length, 0);
+    equal(y.__edispatcherRegisteredEvents.length, 1);
+    y.destroy();
+    equal(x.__edispatcherRegisteredEvents.length, 0);
+    equal(y.__edispatcherRegisteredEvents.length, 0);
+
+    var x = new Claz();
+    var y = new Claz();
+    equal(x.__edispatcherRegisteredEvents.length, 0);
+    equal(y.__edispatcherRegisteredEvents.length, 0);
+    var fct = function() {};
+    x.on("test", y, fct);
+    equal(x.__edispatcherRegisteredEvents.length, 0);
+    equal(y.__edispatcherRegisteredEvents.length, 1);
+    x.destroy();
+    equal(x.__edispatcherRegisteredEvents.length, 0);
+    equal(y.__edispatcherRegisteredEvents.length, 0);
+});
 
 module("Properties");
 
