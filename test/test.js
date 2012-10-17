@@ -224,3 +224,37 @@ test("interface_unimplemented", function() {
     }
     equal(test, 1);
 });
+
+module("Exception");
+
+test("base", function() {
+    try {
+        throw new nova.Exception("my exception");
+    } catch(ex) {
+        equal(ex instanceof Error, true);
+        equal(ex instanceof nova.Exception, true);
+        equal(ex.message, "my exception");
+    }
+});
+test("inheritance", function() {
+    var Ex1 = nova.Exception.$extend({});
+    var Ex2 = nova.Exception.$extend({});
+    try {
+        throw new Ex1("my exception");
+    } catch(ex) {
+        equal(ex instanceof Error, true);
+        equal(ex instanceof nova.Exception, true);
+        equal(ex instanceof Ex1, true);
+        equal(ex instanceof Ex2, false);
+        equal(ex.message, "my exception");
+    }
+    try {
+        throw new Ex2("my exception");
+    } catch(ex) {
+        equal(ex instanceof Error, true);
+        equal(ex instanceof nova.Exception, true);
+        equal(ex instanceof Ex1, false);
+        equal(ex instanceof Ex2, true);
+        equal(ex.message, "my exception");
+    }
+});

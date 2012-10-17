@@ -220,7 +220,7 @@ nova = (function() {
             },
             call: function(newthis, fct_name) {
                 return this.props[fct_name].apply(newthis, _.toArray(arguments).slice(2));
-            },
+            }
         });
 
         var Interface = Mixin.$extend({
@@ -234,13 +234,27 @@ nova = (function() {
                     }
                 });
                 this.$super(nprops);
-            },
+            }
+        });
+
+        var ExceptionBase = function() {
+        };
+        ExceptionBase.prototype = new Error();
+        ExceptionBase.$extend = Class.$extend;
+        ExceptionBase.$withData = Class.$withData;
+
+        var Exception = ExceptionBase.$extend({
+            __init__: function(message) {
+                this.message = message;
+                this.name = "Exception";
+            }
         });
 
         /* export the class */
         this.Class = Class;
         this.Mixin = Mixin;
         this.Interface = Interface;
+        this.Exception = Exception;
     }).call(nova);
     // end of John Resig's code
 
