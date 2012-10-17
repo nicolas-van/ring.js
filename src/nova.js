@@ -441,12 +441,9 @@ nova = (function() {
             return this.__getterSetterInternalMap[key];
         }
     });
-
-    lib.Model = _.extend({}, lib.PropertiesMixin, {
-        
-    });
     
-    lib.Widget = lib.Class.$extend(_.extend({}, lib.PropertiesMixin, {
+    lib.Widget = lib.Class.$extend({
+        __include__ : [lib.PropertiesMixin],
         /**
          * Tag name when creating a default $element.
          * @type string
@@ -557,7 +554,7 @@ nova = (function() {
          * @returns {jQuery.Deferred}
          */
         start: function() {}
-    }));
+    });
 
     return lib;
 })();
