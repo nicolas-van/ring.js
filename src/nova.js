@@ -25,8 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 nova = (function() {
-    var lib = {};
-    lib.internal = {};
+    var nova = {};
+    nova.internal = {};
 
     /*
      * Modified Armin Ronacher's Classy library.
@@ -241,7 +241,7 @@ nova = (function() {
         this.Class = Class;
         this.Mixin = Mixin;
         this.Interface = Interface;
-    }).call(lib);
+    }).call(nova);
     // end of John Resig's code
 
     /**
@@ -249,7 +249,7 @@ nova = (function() {
      * When an object is destroyed, it should release any resource
      * it could have reserved before.
      */
-    lib.Destroyable = new lib.Mixin({
+    nova.Destroyable = new nova.Mixin({
         __init__: function() {
             this.__destroyableDestroyed = false;
         },
@@ -273,10 +273,10 @@ nova = (function() {
      * relationship. Each object can a have a parent and multiple children.
      * When an object is destroyed, all its children are destroyed too.
      */
-    lib.Parented = new lib.Mixin(lib.Destroyable, {
+    nova.Parented = new nova.Mixin(nova.Destroyable, {
         __parentedMixin : true,
         __init__: function() {
-            lib.Destroyable.call(this, "__init__");
+            nova.Destroyable.call(this, "__init__");
             this.__parentedChildren = [];
             this.__parentedParent = null;
         },
@@ -317,7 +317,7 @@ nova = (function() {
                 el.destroy();
             });
             this.setParent(undefined);
-            lib.Destroyable.call(this, "destroy");
+            nova.Destroyable.call(this, "destroy");
         }
     });
 
@@ -332,7 +332,7 @@ nova = (function() {
     // Backbone may be freely distributed under the MIT license.
     // For all details and documentation:
     // http://backbonejs.org
-    lib.internal.Events = lib.Class.$extend({
+    nova.internal.Events = nova.Class.$extend({
 
         on : function(events, callback, context) {
             var ev;
@@ -404,11 +404,11 @@ nova = (function() {
     });
     // end of Backbone's events class
     
-    lib.EventDispatcher = new lib.Mixin(lib.Parented, {
+    nova.EventDispatcher = new nova.Mixin(nova.Parented, {
         __eventDispatcherMixin: true,
         __init__: function() {
-            lib.Parented.call(this, "__init__");
-            this.__edispatcherEvents = new lib.internal.Events();
+            nova.Parented.call(this, "__init__");
+            this.__edispatcherEvents = new nova.internal.Events();
             this.__edispatcherRegisteredEvents = [];
         },
         on: function(events, dest, func) {
@@ -446,13 +446,13 @@ nova = (function() {
             });
             this.__edispatcherRegisteredEvents = [];
             this.__edispatcherEvents.off();
-            lib.Parented.call(this, "destroy");
+            nova.Parented.call(this, "destroy");
         }
     });
     
-    lib.Properties = new lib.Mixin(lib.EventDispatcher, {
+    nova.Properties = new nova.Mixin(nova.EventDispatcher, {
         __init__: function() {
-            lib.EventDispatcher.call(this, "__init__");
+            nova.EventDispatcher.call(this, "__init__");
             this.__getterSetterInternalMap = {};
         },
         set: function(map) {
@@ -477,8 +477,8 @@ nova = (function() {
         }
     });
     
-    lib.Widget = lib.Class.$extend({
-        __include__ : [lib.Properties],
+    nova.Widget = nova.Class.$extend({
+        __include__ : [nova.Properties],
         /**
          * Tag name when creating a default $element.
          * @type string
@@ -499,7 +499,7 @@ nova = (function() {
          * for new components this argument should not be provided any more.
          */
         __init__: function(parent) {
-            lib.Properties.call(this, "__init__");
+            nova.Properties.call(this, "__init__");
             this.$element = $(document.createElement(this.tagName));
     
             this.setParent(parent);
@@ -514,7 +514,7 @@ nova = (function() {
             if(this.$element != null) {
                 this.$element.remove();
             }
-            lib.Properties.call(this, "destroy");
+            nova.Properties.call(this, "destroy");
         },
         /**
          * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -591,5 +591,5 @@ nova = (function() {
         start: function() {}
     });
 
-    return lib;
+    return nova;
 })();
