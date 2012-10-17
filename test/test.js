@@ -42,6 +42,23 @@ test("class_init", function() {
     new Claz2().testf2();
     equal(test, 2);
 });
+test("class_init_recursive", function() {
+    var test = 0;
+    var Claz = nova.Class.$extend({
+        __class_init__: function(proto) {
+            _.each(_.keys(proto), function(k) {
+                proto[k] = function() {
+                    test = 1;
+                }
+            });
+        },
+    });
+    var Claz2 = Claz.$extend({
+        test: function() {}
+    });
+    new Claz2().test();
+    equal(test, 1);
+});
 
 module("Destroyable");
 

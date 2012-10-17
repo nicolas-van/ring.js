@@ -169,7 +169,13 @@ nova = (function() {
                     })(value, name) : value
             }
 
-            (properties.__class_init__ || function() {})(prototype);
+            var class_init = this.__class_init__ || function() {};
+            var p_class_init = properties.__class_init__ || function() {};
+            var n_class_init = function() {
+                class_init.apply(null, arguments);
+                p_class_init.apply(null, arguments);
+            }
+            n_class_init(prototype);
 
             /* dummy constructor */
             var instance = function() {
@@ -193,8 +199,9 @@ nova = (function() {
                return the class */
             instance.prototype = prototype;
             instance.constructor = instance;
-            instance.$extend = Class.$extend;
-            instance.$withData = Class.$withData;
+            instance.$extend = this.$extend;
+            instance.$withData = this.$withData;
+            instance.__class_init__ = n_class_init;
             return instance;
         };
 
