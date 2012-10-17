@@ -555,7 +555,7 @@ nova = (function() {
         },
         trigger: function(name) {
             nova.EventDispatcher.call.apply(nova.EventDispatcher, [this, "trigger"].concat(_.toArray(arguments)));
-            if (/^change\:.*$/.exec(name)) {
+            if (/(\s|^)change\:.*/.exec(name)) {
                 if (! this.__props_setting)
                     this.trigger("change");
                 else
