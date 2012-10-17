@@ -524,15 +524,7 @@ nova = (function() {
                         throw new nova.InvalidArgumentError("Property " + key + " does not have a setter method.");
                     prop.set.call(self, val);
                 } else {
-                    var tmp = self.__getterSetterInternalMap[key];
-                    if (tmp === val)
-                        return;
-                    changed = true;
-                    self.__getterSetterInternalMap[key] = val;
-                    self.trigger("change:" + key, self, {
-                        oldValue: tmp,
-                        newValue: val
-                    });
+                    self.fallbackSet(key, val);
                 }
             });
             this.__props_setting = tmp_set;
@@ -548,8 +540,14 @@ nova = (function() {
                     throw new nova.InvalidArgumentError("Property " + key + " does not have a getter method.");
                 return prop.get.call(this);
             } else {
-                return this.__getterSetterInternalMap[key];
+                return this.fallbackGet(key);
             }
+        },
+        fallbackSet: function(key, val) {
+            throw new nova.InvalidArgumentError("Property " + key + " is not defined.");
+        },
+        fallbackGet: function(key) {
+            throw new nova.InvalidArgumentError("Property " + key + " is not defined.");
         },
         trigger: function(name) {
             nova.EventDispatcher.trigger.apply(this, arguments);
@@ -559,6 +557,27 @@ nova = (function() {
                 else
                     this.__props_setted = true;
             }
+        }
+    });
+
+    nova.DynamicProperties = new nova.Mixin(nova.Properties, {
+        __init__: function() {
+            nova.Properties.__init__.apply(this);
+            this.__getterSetterInternalMap = {};
+        },
+        fallbackSet: function(key, val) {
+            var tmp = this.__getterSetterInternalMap[key];
+            if (tmp === val)
+                return;
+            changed = true;
+            this.__getterSetterInternalMap[key] = val;
+            this.trigger("change:" + key, this, {
+                oldValue: tmp,
+                newValue: val
+            });
+        },
+        fallbackGet: function(key) {
+            return this.__getterSetterInternalMap[key];
         }
     });
     

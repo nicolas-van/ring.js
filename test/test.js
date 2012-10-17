@@ -163,7 +163,25 @@ module("Properties");
 
 test("base", function() {
     var Claz = nova.Class.$extend({
-        __include__: [nova.Properties],
+        __include__: [nova.DynamicProperties],
+        getStuff: function() {
+            return this.stuff;
+        },
+        setStuff: function(val) {
+            this.stuff = val;
+        }
+    });
+    var Claz2 = Claz.$extend({});
+    var x = new Claz();
+    x.set({"stuff": "stuff"});
+    equal(x.get("stuff"), "stuff");
+});
+
+module("DynamicProperties");
+
+test("base", function() {
+    var Claz = nova.Class.$extend({
+        __include__: [nova.DynamicProperties],
     });
     var x = new Claz();
     var y = new Claz();
@@ -183,7 +201,7 @@ test("base", function() {
 
 test("change event only when changed", function() {
     var Claz = nova.Class.$extend({
-        __include__: [nova.Properties],
+        __include__: [nova.DynamicProperties],
     });
     var x = new Claz();
     var exec1 = false;
@@ -198,18 +216,6 @@ test("change event only when changed", function() {
     x.set({"test": 3});
     equal(exec1, false);
     equal(exec2, false);
-});
-
-test("hard properties", function() {
-    var Claz = nova.Class.$extend({
-        __include__: [nova.Properties],
-        getStuff: function() {
-            return "stuff";
-        }
-    });
-    var Claz2 = Claz.$extend({});
-    var x = new Claz();
-    equal(x.get("stuff"), "stuff");
 });
 
 module("Widget");
