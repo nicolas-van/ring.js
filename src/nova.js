@@ -76,7 +76,6 @@ nova = (function() {
     */
     (function(){
         var
-            // nico: don't know if this is really useless, so i let that here for now
             context = this,
             disable_constructor = false;
 
