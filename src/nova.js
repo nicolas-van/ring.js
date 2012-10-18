@@ -612,25 +612,28 @@ nova = (function() {
          */
         __init__: function(parent) {
             nova.Properties.__init__.apply(this);
-            this.$el = $(document.createElement(this.tagName));
-            this.$el.addClass(this.className);
+            this.__widget_element = $(document.createElement(this.tagName));
+            this.$().addClass(this.className);
             _.each(this.attributes, function(val, key) {
-                this.$el.attr(key, val);
+                this.$().attr(key, val);
             }, this);
             _.each(this.events, function(val, key) {
                 key = key.split(" ");
                 val = _.bind(typeof val === "string" ? this[val] : val, this);
                 if (key.length > 1) {
-                    this.$el.on(key[0], key[1], val);
+                    this.$().on(key[0], key[1], val);
                 } else {
-                    this.$el.on(key[0], val);
+                    this.$().on(key[0], val);
                 }
             }, this);
     
             this.setParent(parent);
         },
-        $: function() {
-            return this.$el.find.apply(this.$el, arguments);
+        $: function(attr) {
+            if (attr)
+                return this.__widget_element.find.apply(this.__widget_element, arguments);
+            else
+                return this.__widget_element;
         },
         /**
          * Destroys the current widget, also destroys all its children before destroying itself.
@@ -639,7 +642,7 @@ nova = (function() {
             _.each(this.getChildren(), function(el) {
                 el.destroy();
             });
-            this.$el.remove();
+            this.$().remove();
             nova.Properties.destroy.apply(this);
         },
         /**
@@ -648,7 +651,7 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         appendTo: function(target) {
-            this.$el.appendTo(target);
+            this.$().appendTo(target);
             return this.renderElement();
         },
         /**
@@ -657,7 +660,7 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         prependTo: function(target) {
-            this.$el.prependTo(target);
+            this.$().prependTo(target);
             return this.renderElement();
         },
         /**
@@ -666,7 +669,7 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         insertAfter: function(target) {
-            this.$el.insertAfter(target);
+            this.$().insertAfter(target);
             return this.renderElement();
         },
         /**
@@ -675,7 +678,7 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         insertBefore: function(target) {
-            this.$el.insertBefore(target);
+            this.$().insertBefore(target);
             return this.renderElement();
         },
         /**
@@ -684,7 +687,7 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         replace: function(target) {
-            this.$el.replace(target);
+            this.$().replace(target);
             return this.renderElement();
         },
         /**

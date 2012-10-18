@@ -228,7 +228,7 @@ test("base", function() {
             "id": "testspan"
         },
         renderElement: function() {
-            this.$el.html("test");
+            this.$().html("test");
         }
     });
     var x = new Claz();
@@ -259,13 +259,13 @@ test("events", function() {
             }
         },
         renderElement: function() {
-            this.$el.html("<span class='testspan'></span>");
+            this.$().html("<span class='testspan'></span>");
         }
     });
     var x = new Claz();
     x.appendTo($("body"));
     equal(test, 0);
-    x.$el.trigger("testevent");
+    x.$().trigger("testevent");
     equal(test, 1);
     x.$(".testspan").trigger("testevent2");
     equal(test, 2);
