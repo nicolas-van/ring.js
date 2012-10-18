@@ -222,24 +222,53 @@ module("Widget");
 
 test("base", function() {
     var Claz = nova.Widget.$extend({
+        tagName: "span",
+        className: "mytestspan",
+        attributes: {
+            "id": "testspan"
+        },
         renderElement: function() {
-            this.$el.attr("id", "testdiv");
             this.$el.html("test");
         }
     });
     var x = new Claz();
     x.appendTo($("body"));
-    var $el = $("#testdiv");
+    var $el = $("#testspan");
     equal($el.length, 1);
     equal($el.parents()[0], $("body")[0]);
     equal($el.html(), "test");
+    equal($el[0], $("span.mytestspan")[0]);
     
     var y = new Claz(x);
     equal(y.getParent(), x);
     
     x.destroy();
-    $el = $("#testdiv");
+    $el = $("#testspan");
     equal($el.length, 0);
+});
+
+test("events", function() {
+    var test = 0;
+    var Claz = nova.Widget.$extend({
+        events: {
+            "testevent": function() {
+                test = 1;
+            },
+            "testevent2 .testspan": function() {
+                test = 2;
+            }
+        },
+        renderElement: function() {
+            this.$el.html("<span class='testspan'></span>");
+        }
+    });
+    var x = new Claz();
+    x.appendTo($("body"));
+    equal(test, 0);
+    x.$el.trigger("testevent");
+    equal(test, 1);
+    x.$(".testspan").trigger("testevent2");
+    equal(test, 2);
 });
 
 module("Mixin");

@@ -593,6 +593,9 @@ nova = (function() {
          * @type string
          */
         tagName: 'div',
+        className: '',
+        attributes: {},
+        events: {},
         /**
          * Constructs the widget and sets its parent if a parent is given.
          *
@@ -610,8 +613,24 @@ nova = (function() {
         __init__: function(parent) {
             nova.Properties.__init__.apply(this);
             this.$el = $(document.createElement(this.tagName));
+            this.$el.addClass(this.className);
+            _.each(this.attributes, function(val, key) {
+                this.$el.attr(key, val);
+            }, this);
+            _.each(this.events, function(val, key) {
+                key = key.split(" ");
+                val = _.bind(typeof val === "string" ? this[val] : val, this);
+                if (key.length > 1) {
+                    this.$el.on(key[0], key[1], val);
+                } else {
+                    this.$el.on(key[0], val);
+                }
+            }, this);
     
             this.setParent(parent);
+        },
+        $: function() {
+            return this.$el.find.apply(this.$el, arguments);
         },
         /**
          * Destroys the current widget, also destroys all its children before destroying itself.
@@ -620,9 +639,7 @@ nova = (function() {
             _.each(this.getChildren(), function(el) {
                 el.destroy();
             });
-            if(this.$el != null) {
-                this.$el.remove();
-            }
+            this.$el.remove();
             nova.Properties.destroy.apply(this);
         },
         /**
@@ -631,10 +648,8 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         appendTo: function(target) {
-            var self = this;
-            return this.__widgetRenderAndInsert(function(t) {
-                self.$el.appendTo(t);
-            }, target);
+            this.$el.appendTo(target);
+            return this.renderElement();
         },
         /**
          * Renders the current widget and prepends it to the given jQuery object or Widget.
@@ -642,10 +657,8 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         prependTo: function(target) {
-            var self = this;
-            return this.__widgetRenderAndInsert(function(t) {
-                self.$el.prependTo(t);
-            }, target);
+            this.$el.prependTo(target);
+            return this.renderElement();
         },
         /**
          * Renders the current widget and inserts it after to the given jQuery object or Widget.
@@ -653,10 +666,8 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         insertAfter: function(target) {
-            var self = this;
-            return this.__widgetRenderAndInsert(function(t) {
-                self.$el.insertAfter(t);
-            }, target);
+            this.$el.insertAfter(target);
+            return this.renderElement();
         },
         /**
          * Renders the current widget and inserts it before to the given jQuery object or Widget.
@@ -664,10 +675,8 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         insertBefore: function(target) {
-            var self = this;
-            return this.__widgetRenderAndInsert(function(t) {
-                self.$el.insertBefore(t);
-            }, target);
+            this.$el.insertBefore(target);
+            return this.renderElement();
         },
         /**
          * Renders the current widget and replaces the given jQuery object.
@@ -675,29 +684,13 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         replace: function(target) {
-            return this.__widgetRenderAndInsert(_.bind(function(t) {
-                this.$el.replaceAll(t);
-            }, this), target);
-        },
-        __widgetRenderAndInsert: function(insertion, target) {
-            this.renderElement();
-            insertion(target);
-            return this.start();
+            this.$el.replace(target);
+            return this.renderElement();
         },
         /**
          * This is the method to implement to render the Widget.
          */
-        renderElement: function() {},
-        /**
-         * Method called after rendering. Mostly used to bind actions, perform asynchronous
-         * calls, etc...
-         *
-         * By convention, the method should return a promise to inform the caller when
-         * this widget has been initialized.
-         *
-         * @returns {jQuery.Deferred}
-         */
-        start: function() {}
+        renderElement: function() {}
     });
 
     return nova;
