@@ -575,7 +575,6 @@ nova = (function() {
             var tmp = this.__getterSetterInternalMap[key];
             if (tmp === val)
                 return;
-            changed = true;
             this.__getterSetterInternalMap[key] = val;
             this.trigger("change:" + key, this, {
                 oldValue: tmp,
