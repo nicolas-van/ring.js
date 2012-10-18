@@ -652,7 +652,7 @@ nova = (function() {
          */
         appendTo: function(target) {
             this.$().appendTo(target);
-            return this.renderElement();
+            return this.render();
         },
         /**
          * Renders the current widget and prepends it to the given jQuery object or Widget.
@@ -661,7 +661,7 @@ nova = (function() {
          */
         prependTo: function(target) {
             this.$().prependTo(target);
-            return this.renderElement();
+            return this.render();
         },
         /**
          * Renders the current widget and inserts it after to the given jQuery object or Widget.
@@ -670,7 +670,7 @@ nova = (function() {
          */
         insertAfter: function(target) {
             this.$().insertAfter(target);
-            return this.renderElement();
+            return this.render();
         },
         /**
          * Renders the current widget and inserts it before to the given jQuery object or Widget.
@@ -679,7 +679,7 @@ nova = (function() {
          */
         insertBefore: function(target) {
             this.$().insertBefore(target);
-            return this.renderElement();
+            return this.render();
         },
         /**
          * Renders the current widget and replaces the given jQuery object.
@@ -688,12 +688,12 @@ nova = (function() {
          */
         replace: function(target) {
             this.$().replace(target);
-            return this.renderElement();
+            return this.render();
         },
         /**
          * This is the method to implement to render the Widget.
          */
-        renderElement: function() {}
+        render: function() {}
     });
 
     return nova;

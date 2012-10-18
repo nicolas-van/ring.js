@@ -227,7 +227,7 @@ test("base", function() {
         attributes: {
             "id": "testspan"
         },
-        renderElement: function() {
+        render: function() {
             this.$().html("test");
         }
     });
@@ -258,7 +258,7 @@ test("events", function() {
                 test = 2;
             }
         },
-        renderElement: function() {
+        render: function() {
             this.$().html("<span class='testspan'></span>");
         }
     });
