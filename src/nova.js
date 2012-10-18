@@ -128,7 +128,7 @@ nova = (function() {
                 for (var i = 0, n = properties.__include__.length; i != n; ++i) {
                     var mixin = properties.__include__[i];
                     if (mixin instanceof nova.Mixin) {
-                        mixin = mixin.props;
+                        mixin = mixin.__mixin_properties;
                     }
                     for (var name in mixin) {
                         var value = getOwnProperty(mixin, name);
@@ -223,15 +223,15 @@ nova = (function() {
 
     nova.Mixin = nova.Class.$extend({
         __init__: function() {
-            this.props = {};
+            this.__mixin_properties = {};
             _.each(_.toArray(arguments), function(el) {
                 if (el instanceof nova.Mixin) {
-                    _.extend(this.props, el.props);
+                    _.extend(this.__mixin_properties, el.__mixin_properties);
                 } else {
-                    _.extend(this.props, el)
+                    _.extend(this.__mixin_properties, el)
                 }
             }, this);
-            _.extend(this, this.props);
+            _.extend(this, this.__mixin_properties);
         }
     });
 
