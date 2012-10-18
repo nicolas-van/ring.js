@@ -589,7 +589,7 @@ nova = (function() {
     nova.Widget = nova.Class.$extend({
         __include__ : [nova.DynamicProperties],
         /**
-         * Tag name when creating a default $element.
+         * Tag name when creating a default $el.
          * @type string
          */
         tagName: 'div',
@@ -609,7 +609,7 @@ nova = (function() {
          */
         __init__: function(parent) {
             nova.Properties.__init__.apply(this);
-            this.$element = $(document.createElement(this.tagName));
+            this.$el = $(document.createElement(this.tagName));
     
             this.setParent(parent);
         },
@@ -620,8 +620,8 @@ nova = (function() {
             _.each(this.getChildren(), function(el) {
                 el.destroy();
             });
-            if(this.$element != null) {
-                this.$element.remove();
+            if(this.$el != null) {
+                this.$el.remove();
             }
             nova.Properties.destroy.apply(this);
         },
@@ -633,7 +633,7 @@ nova = (function() {
         appendTo: function(target) {
             var self = this;
             return this.__widgetRenderAndInsert(function(t) {
-                self.$element.appendTo(t);
+                self.$el.appendTo(t);
             }, target);
         },
         /**
@@ -644,7 +644,7 @@ nova = (function() {
         prependTo: function(target) {
             var self = this;
             return this.__widgetRenderAndInsert(function(t) {
-                self.$element.prependTo(t);
+                self.$el.prependTo(t);
             }, target);
         },
         /**
@@ -655,7 +655,7 @@ nova = (function() {
         insertAfter: function(target) {
             var self = this;
             return this.__widgetRenderAndInsert(function(t) {
-                self.$element.insertAfter(t);
+                self.$el.insertAfter(t);
             }, target);
         },
         /**
@@ -666,7 +666,7 @@ nova = (function() {
         insertBefore: function(target) {
             var self = this;
             return this.__widgetRenderAndInsert(function(t) {
-                self.$element.insertBefore(t);
+                self.$el.insertBefore(t);
             }, target);
         },
         /**
@@ -676,7 +676,7 @@ nova = (function() {
          */
         replace: function(target) {
             return this.__widgetRenderAndInsert(_.bind(function(t) {
-                this.$element.replaceAll(t);
+                this.$el.replaceAll(t);
             }, this), target);
         },
         __widgetRenderAndInsert: function(insertion, target) {

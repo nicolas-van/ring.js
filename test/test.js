@@ -223,8 +223,8 @@ module("Widget");
 test("base", function() {
     var Claz = nova.Widget.$extend({
         renderElement: function() {
-            this.$element.attr("id", "testdiv");
-            this.$element.html("test");
+            this.$el.attr("id", "testdiv");
+            this.$el.html("test");
         }
     });
     var x = new Claz();
