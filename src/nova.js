@@ -510,7 +510,7 @@ nova = (function() {
         },
         __init__: function() {
             nova.EventDispatcher.__init__.apply(this);
-            this.__getterSetterInternalMap = {};
+            this.__dynamicProperties = {};
         },
         set: function(arg1, arg2) {
             var self = this;
@@ -569,20 +569,20 @@ nova = (function() {
     nova.DynamicProperties = new nova.Mixin(nova.Properties, {
         __init__: function() {
             nova.Properties.__init__.apply(this);
-            this.__getterSetterInternalMap = {};
+            this.__dynamicProperties = {};
         },
         fallbackSet: function(key, val) {
-            var tmp = this.__getterSetterInternalMap[key];
+            var tmp = this.__dynamicProperties[key];
             if (tmp === val)
                 return;
-            this.__getterSetterInternalMap[key] = val;
+            this.__dynamicProperties[key] = val;
             this.trigger("change:" + key, this, {
                 oldValue: tmp,
                 newValue: val
             });
         },
         fallbackGet: function(key) {
-            return this.__getterSetterInternalMap[key];
+            return this.__dynamicProperties[key];
         }
     });
     
