@@ -221,13 +221,19 @@ nova = (function() {
     }).call(nova);
     // end of Armin Ronacher's code
 
+    var mixinId = 1;
     nova.Mixin = nova.Class.$extend({
         __init__: function() {
             this.__mixin_properties = {};
+            this.__mixin_id = mixinId;
+            mixinId++;
+            this.__mixin_ids = {};
+            this.__mixin_ids[this.__mixin_id] = true;
             _.each(_.toArray(arguments), function(el) {
                 if (el instanceof nova.Mixin) {
                     _.extend(this.__mixin_properties, el.__mixin_properties);
-                } else {
+                    _.extend(this.__mixin_ids, el.__mixin_ids);
+                } else { // object
                     _.extend(this.__mixin_properties, el)
                 }
             }, this);
@@ -236,18 +242,26 @@ nova = (function() {
     });
 
     nova.Interface = nova.Mixin.$extend({
-        __init__: function(props) {
-            var nprops = {};
-            _.each(props, function(v, k) {
-                if (typeof v === "function") {
-                    nprops[k] = function() {
-                        throw new nova.NotImplementedError();
-                    };
-                } else {
-                    throw new nova.InvalidArgumentError("Any other type than function is not supported in interfaces.");
+        __init__: function() {
+            var lst = [];
+            _.each(_.toArray(arguments), function(el) {
+                if (el instanceof nova.Interface) {
+                    lst.push(el);
+                } else if (el instanceof nova.Mixin) {
+                    var tmp = new nova.Interface(el.__mixin_properties);
+                    mix.__mixin_ids = el.__mixin_ids;
+                    lst.push(tmp);
+                } else { // object
+                    var nprops = {};
+                    _.each(el, function(v, k) {
+                        nprops[k] = function() {
+                            throw new nova.NotImplementedError();
+                        };
+                    });
+                    lst.push(nprops);
                 }
             });
-            this.$super(nprops);
+            this.$super.apply(this, lst);
         }
     });
 
