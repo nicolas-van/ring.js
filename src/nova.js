@@ -124,10 +124,12 @@ nova = (function() {
             var prototype = cheapNew(this);
 
             /* copy all properties of the includes over if there are any */
+            prototype.__mixin_ids = _.clone(prototype.__mixin_ids || {});
             if (properties.__include__)
                 for (var i = 0, n = properties.__include__.length; i != n; ++i) {
                     var mixin = properties.__include__[i];
                     if (mixin instanceof nova.Mixin) {
+                        _.extend(prototype.__mixin_ids, mixin.__mixin_ids);
                         mixin = mixin.__mixin_properties;
                     }
                     for (var name in mixin) {
@@ -264,6 +266,12 @@ nova = (function() {
             this.$super.apply(this, lst);
         }
     });
+
+    nova.hasMixin = function(object, mixin) {
+        if (! object)
+            return false;
+        return (object.__mixin_ids || {})[mixin.__mixin_id] === true;
+    };
 
     var ErrorBase = function() {
     };

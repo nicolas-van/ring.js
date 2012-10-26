@@ -345,6 +345,24 @@ test("interface_unimplemented", function() {
     equal(test, 1);
 });
 
+test("hasMixin", function() {
+    var Mix = new nova.Mixin();
+    var Mix2 = new nova.Mixin(Mix);
+    var Claz = nova.Class.$extend({
+        __include__: [Mix]
+    });
+    var Claz2 = nova.Class.$extend({
+        __include__: [Mix2]
+    });
+    var Claz3 = Claz2.$extend({});
+    equal(nova.hasMixin(new Claz(), Mix), true);
+    equal(nova.hasMixin(new Claz(), Mix2), false);
+    equal(nova.hasMixin(new Claz2(), Mix), true);
+    equal(nova.hasMixin(new Claz2(), Mix2), true);
+    equal(nova.hasMixin(new Claz3(), Mix), true);
+    equal(nova.hasMixin(new Claz3(), Mix2), true);
+});
+
 module("Error");
 
 test("base", function() {
