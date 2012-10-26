@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<script type="text/javascript" src="jquery.js"></script>
+<link rel="stylesheet" href="qunit.css" type="text/css" media="screen" />
+<script type="text/javascript" src="qunit.js"></script>
+<script type="text/javascript" src="underscore.js"></script>
+<script type="text/javascript" src="underscore.string.js"></script>
+<script type="text/javascript" src="../src/templates.js"></script>
+
+<script type="text" id="test_template">
+<# template yop #>
+    Hello
+</# template #>
+<# template test #>
+    ${test_var}
+</# template #>
+<# template test2 #>
+    <% _.each(lst, function(el) { %>
+        ${el}
+    <% }
+    ); %>
+</# template #>
+<# template test3 #>
+    % _.each(lst, function(el) { 
+        ${el}
+    % }); 
+</# template #>
+<# template testfct #>
+    % var yop = function(arg) {
+        ${arg}
+    % }; 
+    <% yop("abc"); %>
+    % yop("def");
+</# template #>
+<# template testmacro #>
+    lalala
+</# template #>
+<# template testcallmacro #>
+    %{engine.testmacro()}
+</# template #>
+</script>
+
+  <script>
+  $(document).ready(function(){
+    
+test("loading", function() {
+    var e = new TemplateEngine();
+
+    e._parseFile($("#test_template").html());
+    var r = e.yop();
+    equal(r.trim(), "Hello");
+    r = e.test({test_var: "azerty"});
+    equal(r.trim(), "azerty");
+    r = e.test2({lst: [1, 2, 3]});
+    var transform = function(x) {
+    return _.filter(_.map(x.split("\n"), function(el) { return el.trim(); }), function(el) { return el; }).join(" ");
+    };
+    r = transform(r);
+    equal(r, "1 2 3"); 
+    r = e.test3({lst: [2, 3, 4]});
+    r = transform(r);
+    equal(r, "2 3 4");
+    r = e.testfct();
+    equal(transform(r), "abc def");
+
+    var tmpl = e.buildTemplate(" \\\\\\% lalala");
+    equal(tmpl(), " \\% lalala");
+
+    r = e.testcallmacro();
+    equal(transform(r), "lalala");
+});
+
+module("TemplateEngine");
+
+  });
+  </script>
+  
+</head>
+<body>
+  <h1 id="qunit-header">QUnit example</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+</body>
+</html>
