@@ -39,15 +39,21 @@
 <% def name="test_this" %>
     ${this.str}
 <% def %>
-<% def name="functional_prog_caller" %>
-    % var x = function() {
-        <span>test</span>
-    % };
-    %{engine.functional_prog_callee({x: x})}
+<% def name="testDef" %>
+    <% def name="test" %>
+        Test
+    <% def %>
+    %{test()}
 <% def %>
-<% def name="functional_prog_callee" %>
+<% def name="testFunctional" %>
+    <% def name="test" %>
+        Test
+    <% def %>
+    %{ engine.testFunctional2({test: test}) }
+<% def %>
+<% def name="testFunctional2" %>
     <div>
-        %{x()}
+        %{ test() }
     </div>
 <% def %>
 

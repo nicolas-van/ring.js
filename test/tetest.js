@@ -1,5 +1,9 @@
 
 var e = new nova.TemplateEngine();
+var transform = function(x) {
+    return _.filter(_.map(x.split("\n"), function(el) { return el.trim(); }),
+        function(el) { return el; }).join("");
+};
 
 e.loadFile("templates.html").pipe(function() {
 
@@ -11,17 +15,13 @@ test("base", function() {
     r = e.test({test_var: "azerty"});
     equal(r.trim(), "azerty");
     r = e.test2({lst: [1, 2, 3]});
-    var transform = function(x) {
-        return _.filter(_.map(x.split("\n"), function(el) { return el.trim(); }),
-            function(el) { return el; }).join(" ");
-    };
     r = transform(r);
-    equal(r, "1 2 3"); 
+    equal(r, "123"); 
     r = e.test3({lst: [2, 3, 4]});
     r = transform(r);
-    equal(r, "2 3 4");
+    equal(r, "234");
     r = e.testfct();
-    equal(transform(r), "abc def");
+    equal(transform(r), "abcdef");
 
 });
 
@@ -54,11 +54,15 @@ test("slash_escape", function() {
     equal(tmpl(), "\\\\${1+1}");
 });
 
-/*
+test("def", function() {
+    var r = e.testDef();
+    equal(r.trim(), "Test");
+});
+
 test("functional_prog", function() {
-    var r = e.functional_prog_caller();
-    debugger;
-});*/
+    var r = e.testFunctional();
+    equal(transform(r), "<div>Test</div>");
+});
 
 
 });

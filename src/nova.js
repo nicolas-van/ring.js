@@ -739,6 +739,8 @@ nova = (function() {
     }
 
     var tparams = {
+        def_begin: /<%\s*def\s+(?:name=(?:"(.+?)"))\s*%>/g,
+        def_end: /<%\s*def\s*%>/g,
         eval_long_begin: /<%/g,
         eval_long_end: /%>/g,
         eval_short_begin: /%/g,
@@ -746,8 +748,11 @@ nova = (function() {
         escape_begin: /\${/g,
         interpolate_begin: /%{/g,
     };
+    // /<%\s*def\s+(?:name=(?:"(.+?)"))\s*%>([\s\S]*?)<%\s*def\s*%>/g
     var allbegin = new RegExp(
         "((?:\\\\)*)(" +
+        "(" + tparams.def_begin.source + ")|" +
+        "(" + tparams.def_end.source + ")|" +
         "(" + tparams.eval_long_begin.source + ")|" +
         "(" + tparams.interpolate_begin.source + ")|" +
         "(" + tparams.eval_short_begin.source + ")|" +
@@ -756,35 +761,55 @@ nova = (function() {
     , "g");
     allbegin.global = true;
     var regexes = {
-        eval_long: 3,
-        interpolate: 4,
-        eval_short: 5,
-        escape: 6,
+        slashes: 1,
+        match: 2,
+        def_begin: 3,
+        def_name: 4,
+        def_end: 5,
+        eval_long: 6,
+        interpolate: 7,
+        eval_short: 8,
+        escape: 9
     };
     var regex_count = 4;
 
-    var compileTemplate = function(text) {
+    var compileTemplate = function(text, func_obj, start) {
+        start = start || 0;
         var source = "";
-        var current = 0;
-        allbegin.lastIndex = 0;
+        var current = start;
+        allbegin.lastIndex = current;
+        var end = text.length;
+        var restart = end;
         var found;
         while (found = allbegin.exec(text)) {
             source += "__p+='" + escape_(text.slice(current, found.index)) + "';";
             current = found.index;
 
             // slash escaping handling
-            var slashes = found[1] || "";
+            var slashes = found[regexes.slashes] || "";
             var nbr = slashes.length;
             var nslash = slashes.slice(0, Math.floor(nbr / 2));
             source += nbr === 0 ? "" : "__p+='" + escape_(nslash) + "';";
             if (nbr % 2 !== 0) {
-                source += "__p+='" + escape_(found[2]) + "';";
+                source += "__p+='" + escape_(found[regexes.match]) + "';";
                 current = found.index + found[0].length;
                 allbegin.lastIndex = current;
                 break;
             }
 
-            if (found[regexes.eval_long]) {
+            if (found[regexes.def_begin]) {
+                var sub_compile = compileTemplate(text, null, found.index + found[0].length);
+                if (! func_obj) {
+                    source += "function " + found[regexes.def_name] + "(context) {" + sub_compile.compiled + "}";
+                } else {
+                    func_obj[found[regexes.def_name]] = new Function("context", sub_compile.compiled);
+                }
+                current = sub_compile.end;
+            } else if (found[regexes.def_end]) {
+                end = found.index;
+                restart = found.index + found[0].length;
+                break;
+            } else if (found[regexes.eval_long]) {
                 tparams.eval_long_end.lastIndex = found.index + found[0].length;
                 var end = tparams.eval_long_end.exec(text);
                 if (!end)
@@ -837,18 +862,21 @@ nova = (function() {
             }
             allbegin.lastIndex = current;
         }
-        source += "__p+='" + escape_(text.slice(current, text.length)) + "';";
+        source += "__p+='" + escape_(text.slice(current, end)) + "';";
 
         source = "var __p='';" +
           "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" +
           "with(context || {}){\n" + source + "\n}\nreturn __p;\n";
 
-        return new Function('context', source);
+        return {
+            compiled: source,
+            end: restart
+        };
     };
 
     nova.TemplateEngine = nova.Class.$extend({
         __init__: function() {
-            this.setEnvironment({_: _});
+            this.resetEnvironment();
         },
         loadFile: function(filename) {
             var self = this;
@@ -857,23 +885,30 @@ nova = (function() {
             });
         },
         _parseFile: function(file_content) {
-            var reg = /<%\s*def\s+(?:name=(?:"(.+?)"))\s*%>([\s\S]*?)<%\s*def\s*%>/g;
-            var search;
-            while (search = reg.exec(file_content)) {
-                if (this[search[1]])
-                    throw new Error(search[1] + " is an already defined template");
-                this[search[1]] = this.buildTemplate(search[2]);
-            }
+            var funcs = {};
+            compileTemplate(file_content, funcs);
+            _.each(funcs, function(func, name) {
+                if (this[name])
+                    throw new Error("The template '" + name + "' is already defined");
+                this[name] = this._convertTemplate(func);
+            }, this);
         },
-        buildTemplate: function(template_) {
+        _convertTemplate: function(func) {
             var self = this;
-            var result = compileTemplate(template_);
             return function(data) {
-                return result.call(this, _.extend({engine: self}, self._env, data));
+                return func.call(this, _.extend({engine: self}, self._env, data));
             };
         },
-        setEnvironment: function(env) {
-            this._env = env;
+        buildTemplate: function(text) {
+            var result = compileTemplate(text).compiled;
+            return this._convertTemplate(new Function('context', result));
+        },
+        resetEnvironment: function(nenv) {
+            this._env = {_: _};
+            this.extendEnvironment(nenv);
+        },
+        extendEnvironment: function(env) {
+            _.extend(this._env, env || {});
         },
     });
 
