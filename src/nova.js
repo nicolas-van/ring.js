@@ -733,7 +733,7 @@ nova = (function() {
     // following template settings to use alternative delimiters.
     var templateSettings = {
         interpolate : /((?:\\\\)*)(%\{(.+?)\})/g,
-        escape: /((?:\\\\)*)(\$\{([^%].*?)\})/g,
+        escape: /((?:\\\\)*)(\$\{(.*?)\})/g,
         evaluate: /((?:\\\\)*)(<%([\s\S]+?)%>|%(.+?)(?:\\n|$))/g,
     };
 
@@ -836,7 +836,7 @@ nova = (function() {
             });
         },
         _parseFile: function(file_content) {
-            var reg = /<%\s*def\s+(?:name=(?:"([^"]+)"))\s*%>([\s\S]*?)<%\s*def\s*%>/g;
+            var reg = /<%\s*def\s+(?:name=(?:"(.+?)"))\s*%>([\s\S]*?)<%\s*def\s*%>/g;
             var search;
             while (search = reg.exec(file_content)) {
                 if (this[search[1]])
