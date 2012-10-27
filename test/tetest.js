@@ -30,4 +30,15 @@ test("loading", function() {
     equal(transform(r), "lalala");
 });
 
+test("escaping", function() {
+    var r = e.testescaping();
+    equal(r.trim(), "&lt;div&gt;&lt;&#x2F;div&gt;");
+});
+
+test("noescaping", function() {
+    var r = e.testnoescaping();
+    equal(r.trim(), "<div></div>");
+});
+
+
 });

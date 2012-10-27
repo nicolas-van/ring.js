@@ -28,10 +28,11 @@
 <% def name="testcallmacro" %>
     %{engine.testmacro()}
 <% def %>
-<% def name="truc" %>
-    <div>
-        % if (yop) {
-        <span>${yop}</span>
-        % }
-    </div>
+<% def name="testescaping" %>
+    % var x = "<div></div>";
+    ${x}
+<% def %>
+<% def name="testnoescaping" %>
+    % var x = "<div></div>";
+    %{x}
 <% def %>
