@@ -5,7 +5,7 @@ e.loadFile("templates.html").pipe(function() {
 
 module("TemplateEngine");
 
-test("loading", function() {
+test("base", function() {
     var r = e.yop();
     equal(r.trim(), "Hello");
     r = e.test({test_var: "azerty"});
@@ -38,6 +38,12 @@ test("escaping", function() {
 test("noescaping", function() {
     var r = e.testnoescaping();
     equal(r.trim(), "<div></div>");
+});
+
+test("this", function() {
+    var obj = {str: "test"};
+    var r = e.test_this.call(obj);
+    equal(r.trim(), obj.str);
 });
 
 

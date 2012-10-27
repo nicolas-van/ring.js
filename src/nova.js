@@ -848,7 +848,7 @@ nova = (function() {
             var self = this;
             var result = template(template_);
             return function(data) {
-                return result(_.extend({engine: self}, self._env, data));
+                return result.call(this, _.extend({engine: self}, self._env, data));
             };
         },
         setEnvironment: function(env) {
