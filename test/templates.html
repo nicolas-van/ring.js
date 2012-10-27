@@ -1,30 +1,37 @@
-<# template yop #>
+<% def name="yop" %>
     Hello
-</# template #>
-<# template test #>
+<% def %>
+<% def name="test" %>
     ${test_var}
-</# template #>
-<# template test2 #>
+<% def %>
+<% def name="test2" %>
     <% _.each(lst, function(el) { %>
-        ${el}
+    ${el}
     <% }
     ); %>
-</# template #>
-<# template test3 #>
+<% def %>
+<% def name="test3" %>
     % _.each(lst, function(el) { 
-        ${el}
+    ${el}
     % }); 
-</# template #>
-<# template testfct #>
+<% def %>
+<% def name="testfct" %>
     % var yop = function(arg) {
-        ${arg}
+    ${arg}
     % }; 
     <% yop("abc"); %>
     % yop("def");
-</# template #>
-<# template testmacro #>
+<% def %>
+<% def name="testmacro" %>
     lalala
-</# template #>
-<# template testcallmacro #>
+<% def %>
+<% def name="testcallmacro" %>
     %{engine.testmacro()}
-</# template #>
+<% def %>
+<% def name="truc" %>
+    <div>
+        % if (yop) {
+        <span>${yop}</span>
+        % }
+    </div>
+<% def %>

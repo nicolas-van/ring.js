@@ -836,7 +836,7 @@ nova = (function() {
             });
         },
         _parseFile: function(file_content) {
-            var reg = /<\#\s*template\s+(\w+)\s*\#>([\s\S]*?)<\/\#\s*template\s*\#>/g;
+            var reg = /<%\s*def\s+(?:name=(?:"([^"]+)"))\s*%>([\s\S]*?)<%\s*def\s*%>/g;
             var search;
             while (search = reg.exec(file_content)) {
                 if (this[search[1]])
