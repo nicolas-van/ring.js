@@ -45,6 +45,11 @@ test("this", function() {
     var r = e.test_this.call(obj);
     equal(r.trim(), obj.str);
 });
+/*
+test("functional_prog", function() {
+    var r = e.functional_prog_caller();
+    debugger;
+});*/
 
 
 });

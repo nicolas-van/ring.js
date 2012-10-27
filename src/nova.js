@@ -732,8 +732,8 @@ nova = (function() {
     // By default, Underscore uses ERB-style template delimiters, change the
     // following template settings to use alternative delimiters.
     var templateSettings = {
-        interpolate : /((?:\\\\)*)(%\{(.+?)\})/g,
-        escape: /((?:\\\\)*)(\$\{(.*?)\})/g,
+        interpolate : /((?:\\\\)*)(%{(.+?)}%)/g,
+        escape: /((?:\\\\)*)(\${(.*?)}\$)/g,
         evaluate: /((?:\\\\)*)(<%([\s\S]+?)%>|%(.+?)(?:\\n|$))/g,
     };
 
