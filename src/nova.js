@@ -747,6 +747,8 @@ nova = (function() {
         eval_short_end: /\n|$/g,
         escape_begin: /\${/g,
         interpolate_begin: /%{/g,
+        comment_begin: /##/g,
+        comment_end: /\n|$/g
     };
     // /<%\s*def\s+(?:name=(?:"(.+?)"))\s*%>([\s\S]*?)<%\s*def\s*%>/g
     var allbegin = new RegExp(
@@ -756,7 +758,8 @@ nova = (function() {
         "(" + tparams.eval_long_begin.source + ")|" +
         "(" + tparams.interpolate_begin.source + ")|" +
         "(" + tparams.eval_short_begin.source + ")|" +
-        "(" + tparams.escape_begin.source + ")" +
+        "(" + tparams.escape_begin.source + ")|" +
+        "(" + tparams.comment_begin.source + ")" +
         ")"
     , "g");
     allbegin.global = true;
@@ -769,7 +772,8 @@ nova = (function() {
         eval_long: 6,
         interpolate: 7,
         eval_short: 8,
-        escape: 9
+        escape: 9,
+        comment: 10
     };
     var regex_count = 4;
 
@@ -841,7 +845,7 @@ nova = (function() {
                     throw new Error("impossible state!!");
                 source += text.slice(found.index + found[0].length, end.index);
                 current = end.index + end[0].length;
-            } else { // regexes.escape
+            } else if (found[regexes.escape]) {
                 var braces = /{|}/g;
                 braces.lastIndex = found.index + found[0].length;
                 var b_count = 1;
@@ -859,6 +863,12 @@ nova = (function() {
                     throw new Error("${ without a matching }");
                 source += "__p+=_.escape(" + text.slice(found.index + found[0].length, brace.index) + ");"
                 current = brace.index + brace[0].length;
+            } else { // comment 
+                tparams.comment_end.lastIndex = found.index + found[0].length;
+                var end = tparams.comment_end.exec(text);
+                if (!end)
+                    throw new Error("impossible state!!");
+                current = end.index + end[0].length;
             }
             allbegin.lastIndex = current;
         }

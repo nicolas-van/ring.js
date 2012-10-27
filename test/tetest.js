@@ -64,5 +64,10 @@ test("functional_prog", function() {
     equal(transform(r), "<div>Test</div>");
 });
 
+test("comment", function() {
+    var r = e.testComment();
+    equal(transform(r), "Test");
+});
+
 
 });
