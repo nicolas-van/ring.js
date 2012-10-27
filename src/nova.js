@@ -719,9 +719,8 @@ nova = (function() {
     });
 
     /**
-        Heavily modified version of underscore's templates.
+        Near-complete rewrite of underscore's templates.
     */
-
     var escapes = {
         '\\': '\\',
         "'": "'",
@@ -764,7 +763,7 @@ nova = (function() {
     };
     var regex_count = 4;
 
-    var template = function(text, data) {
+    var compileTemplate = function(text) {
         var source = "";
         var current = 0;
         allbegin.lastIndex = 0;
@@ -840,30 +839,16 @@ nova = (function() {
         }
         source += "__p+='" + escape_(text.slice(current, text.length)) + "';";
 
-        // If a variable is not specified, place data values in local scope.
-        if (!tparams.variable) source = 'with(obj||{}){\n' + source + '}\n';
-
         source = "var __p='';" +
           "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" +
-          source + "return __p;\n";
+          "with(context || {}){\n" + source + "\n}\nreturn __p;\n";
 
-        var render = new Function(tparams.variable || 'obj', '_', source);
-        if (data) return render(data, _);
-        var template = function(data) {
-          return render.call(this, data, _);
-        };
-
-        // Provide the compiled function source as a convenience for build time
-        // precompilation.
-        template.source = 'function(' + (tparams.variable || 'obj') + '){\n' +
-          source + '}';
-
-        return template;
+        return new Function('context', source);
     };
 
     nova.TemplateEngine = nova.Class.$extend({
         __init__: function() {
-            this.setEnvironment({});
+            this.setEnvironment({_: _});
         },
         loadFile: function(filename) {
             var self = this;
@@ -882,7 +867,7 @@ nova = (function() {
         },
         buildTemplate: function(template_) {
             var self = this;
-            var result = template(template_);
+            var result = compileTemplate(template_);
             return function(data) {
                 return result.call(this, _.extend({engine: self}, self._env, data));
             };
