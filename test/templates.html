@@ -1,0 +1,30 @@
+<# template yop #>
+    Hello
+</# template #>
+<# template test #>
+    ${test_var}
+</# template #>
+<# template test2 #>
+    <% _.each(lst, function(el) { %>
+        ${el}
+    <% }
+    ); %>
+</# template #>
+<# template test3 #>
+    % _.each(lst, function(el) { 
+        ${el}
+    % }); 
+</# template #>
+<# template testfct #>
+    % var yop = function(arg) {
+        ${arg}
+    % }; 
+    <% yop("abc"); %>
+    % yop("def");
+</# template #>
+<# template testmacro #>
+    lalala
+</# template #>
+<# template testcallmacro #>
+    %{engine.testmacro()}
+</# template #>
