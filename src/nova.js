@@ -729,19 +729,6 @@ nova = (function() {
     //     For all details and documentation:
     //     http://documentcloud.github.com/underscore
 
-    // By default, Underscore uses ERB-style template delimiters, change the
-    // following template settings to use alternative delimiters.
-    var templateSettings = {
-        interpolate : /((?:\\\\)*)(%{(.+?)}%)/g,
-        escape: /((?:\\\\)*)(\${(.*?)}\$)/g,
-        evaluate: /((?:\\\\)*)(<%([\s\S]+?)%>|%(.+?)(?:\\n|$))/g,
-    };
-
-    // When customizing `templateSettings`, if you don't want to define an
-    // interpolation, evaluation or escaping regex, we need one that is
-    // guaranteed not to match.
-    var noMatch = /.^/;
-
     // Certain characters need to be escaped so that they can be put into a
     // string literal.
     var escapes = {
@@ -778,12 +765,17 @@ nova = (function() {
         };
     };
 
+    var tparams = {
+        interpolate : /((?:\\\\)*)(%{(.+?)}%)/g,
+        escape: /((?:\\\\)*)(\${(.*?)}\$)/g,
+        evaluate: /((?:\\\\)*)(<%([\s\S]+?)%>|%(.+?)(?:\\n|$))/g,
+    };
+    var noMatch = /.^/;
+
     // JavaScript micro-templating, similar to John Resig's implementation.
     // Underscore templating handles arbitrary delimiters, preserves whitespace,
     // and correctly escapes quotes within interpolated code.
-    var template = function(text, data, settings) {
-        settings = _.defaults(settings || {}, templateSettings);
-
+    var template = function(text, data) {
         // Compile the template source, taking care to escape characters that
         // cannot be included in a string literal and then unescape them in code
         // blocks.
@@ -791,25 +783,25 @@ nova = (function() {
           .replace(escaper, function(match) {
             return '\\' + escapes[match];
           })
-          .replace(settings.escape || noMatch, slashsec(function(match, code) {
+          .replace(tparams.escape || noMatch, slashsec(function(match, code) {
             return "'+\n_.escape(" + unescape(code) + ")+\n'";
           }))
-          .replace(settings.interpolate || noMatch, slashsec(function(match, code) {
+          .replace(tparams.interpolate || noMatch, slashsec(function(match, code) {
             return "'+\n(" + unescape(code) + ")+\n'";
           }))
-          .replace(settings.evaluate || noMatch, slashsec(function(match, code1, code2) {
+          .replace(tparams.evaluate || noMatch, slashsec(function(match, code1, code2) {
             var code = code1 || code2;
             return "';\n" + unescape(code) + "\n;__p+='";
           })) + "';\n";
 
         // If a variable is not specified, place data values in local scope.
-        if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+        if (!tparams.variable) source = 'with(obj||{}){\n' + source + '}\n';
 
         source = "var __p='';" +
           "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" +
           source + "return __p;\n";
 
-        var render = new Function(settings.variable || 'obj', '_', source);
+        var render = new Function(tparams.variable || 'obj', '_', source);
         if (data) return render(data, _);
         var template = function(data) {
           return render.call(this, data, _);
@@ -817,7 +809,7 @@ nova = (function() {
 
         // Provide the compiled function source as a convenience for build time
         // precompilation.
-        template.source = 'function(' + (settings.variable || 'obj') + '){\n' +
+        template.source = 'function(' + (tparams.variable || 'obj') + '){\n' +
           source + '}';
 
         return template;
