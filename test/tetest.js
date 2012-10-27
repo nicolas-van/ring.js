@@ -23,11 +23,6 @@ test("base", function() {
     r = e.testfct();
     equal(transform(r), "abc def");
 
-    var tmpl = e.buildTemplate(" \\\\\\% lalala");
-    equal(tmpl(), " \\% lalala");
-
-    r = e.testcallmacro();
-    equal(transform(r), "lalala");
 });
 
 test("escaping", function() {
@@ -45,6 +40,20 @@ test("this", function() {
     var r = e.test_this.call(obj);
     equal(r.trim(), obj.str);
 });
+
+test("slash_escape", function() {
+    var tmpl = e.buildTemplate("\\${1+1}");
+    equal(tmpl(), "${1+1}");
+    var tmpl = e.buildTemplate("\\\\${1+1}");
+    equal(tmpl(), "\\2");
+    var tmpl = e.buildTemplate("\\\\\\${1+1}");
+    equal(tmpl(), "\\${1+1}");
+    var tmpl = e.buildTemplate("\\\\\\\\${1+1}");
+    equal(tmpl(), "\\\\2");
+    var tmpl = e.buildTemplate("\\\\\\\\\\${1+1}");
+    equal(tmpl(), "\\\\${1+1}");
+});
+
 /*
 test("functional_prog", function() {
     var r = e.functional_prog_caller();

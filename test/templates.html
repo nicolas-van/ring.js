@@ -2,22 +2,22 @@
     Hello
 <% def %>
 <% def name="test" %>
-    ${test_var}$
+    ${test_var}
 <% def %>
 <% def name="test2" %>
     <% _.each(lst, function(el) { %>
-    ${el}$
+    ${el}
     <% }
     ); %>
 <% def %>
 <% def name="test3" %>
     % _.each(lst, function(el) { 
-    ${el}$
+    ${el}
     % }); 
 <% def %>
 <% def name="testfct" %>
     % var yop = function(arg) {
-    ${arg}$
+    ${arg}
     % }; 
     <% yop("abc"); %>
     % yop("def");
@@ -26,28 +26,28 @@
     lalala
 <% def %>
 <% def name="testcallmacro" %>
-    %{engine.testmacro()}%
+    %{engine.testmacro()}
 <% def %>
 <% def name="testescaping" %>
     % var x = "<div></div>";
-    ${x}$
+    ${x}
 <% def %>
 <% def name="testnoescaping" %>
     % var x = "<div></div>";
-    %{x}%
+    %{x}
 <% def %>
 <% def name="test_this" %>
-    ${this.str}$
+    ${this.str}
 <% def %>
 <% def name="functional_prog_caller" %>
     % var x = function() {
         <span>test</span>
     % };
-    %{engine.functional_prog_callee({x: x})}%
+    %{engine.functional_prog_callee({x: x})}
 <% def %>
 <% def name="functional_prog_callee" %>
     <div>
-        %{x()}%
+        %{x()}
     </div>
 <% def %>
 

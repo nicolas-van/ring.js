@@ -721,16 +721,7 @@ nova = (function() {
     /**
         Heavily modified version of underscore's templates.
     */
-    //     Underscore.js 1.3.3
-    //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
-    //     Underscore is freely distributable under the MIT license.
-    //     Portions of Underscore are inspired or borrowed from Prototype,
-    //     Oliver Steele's Functional, and John Resig's Micro-Templating.
-    //     For all details and documentation:
-    //     http://documentcloud.github.com/underscore
 
-    // Certain characters need to be escaped so that they can be put into a
-    // string literal.
     var escapes = {
         '\\': '\\',
         "'": "'",
@@ -740,59 +731,114 @@ nova = (function() {
         'u2028': '\u2028',
         'u2029': '\u2029'
     };
-
     for (var p in escapes) escapes[escapes[p]] = p;
     var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
-    var unescaper = /\\(\\|'|r|n|t|u2028|u2029)/g;
-
-    // Within an interpolation, evaluation, or escaping, remove HTML escaping
-    // that had been previously added.
-    var unescape = function(code) {
-        return code.replace(unescaper, function(match, escape) {
-            return escapes[escape];
+    var escape_ = function(text) {
+        return text.replace(escaper, function(match) {
+            return '\\' + escapes[match];
         });
-    };
-
-    var slashsec = function(function_) {
-        return function(match, slashes, content, code1, code2) {
-            slashes = slashes || "";
-            var nbr = slashes.length / 2;
-            var nslash = slashes.slice(0, nbr - (nbr % 2));
-            if (slashes.length % 4 === 0)
-                return nslash + function_(match, code1, code2);
-            else
-                return nslash + (content);
-        };
-    };
+    }
 
     var tparams = {
-        interpolate : /((?:\\\\)*)(%{(.+?)}%)/g,
-        escape: /((?:\\\\)*)(\${(.*?)}\$)/g,
-        evaluate: /((?:\\\\)*)(<%([\s\S]+?)%>|%(.+?)(?:\\n|$))/g,
+        eval_long_begin: /<%/g,
+        eval_long_end: /%>/g,
+        eval_short_begin: /%/g,
+        eval_short_end: /\n|$/g,
+        escape_begin: /\${/g,
+        interpolate_begin: /%{/g,
     };
-    var noMatch = /.^/;
+    var allbegin = new RegExp(
+        "((?:\\\\)*)(" +
+        "(" + tparams.eval_long_begin.source + ")|" +
+        "(" + tparams.interpolate_begin.source + ")|" +
+        "(" + tparams.eval_short_begin.source + ")|" +
+        "(" + tparams.escape_begin.source + ")" +
+        ")"
+    , "g");
+    allbegin.global = true;
+    var regexes = {
+        eval_long: 3,
+        interpolate: 4,
+        eval_short: 5,
+        escape: 6,
+    };
+    var regex_count = 4;
 
-    // JavaScript micro-templating, similar to John Resig's implementation.
-    // Underscore templating handles arbitrary delimiters, preserves whitespace,
-    // and correctly escapes quotes within interpolated code.
     var template = function(text, data) {
-        // Compile the template source, taking care to escape characters that
-        // cannot be included in a string literal and then unescape them in code
-        // blocks.
-        var source = "__p+='" + text
-          .replace(escaper, function(match) {
-            return '\\' + escapes[match];
-          })
-          .replace(tparams.escape || noMatch, slashsec(function(match, code) {
-            return "'+\n_.escape(" + unescape(code) + ")+\n'";
-          }))
-          .replace(tparams.interpolate || noMatch, slashsec(function(match, code) {
-            return "'+\n(" + unescape(code) + ")+\n'";
-          }))
-          .replace(tparams.evaluate || noMatch, slashsec(function(match, code1, code2) {
-            var code = code1 || code2;
-            return "';\n" + unescape(code) + "\n;__p+='";
-          })) + "';\n";
+        var source = "";
+        var current = 0;
+        allbegin.lastIndex = 0;
+        var found;
+        while (found = allbegin.exec(text)) {
+            source += "__p+='" + escape_(text.slice(current, found.index)) + "';";
+            current = found.index;
+
+            // slash escaping handling
+            var slashes = found[1] || "";
+            var nbr = slashes.length;
+            var nslash = slashes.slice(0, Math.floor(nbr / 2));
+            source += nbr === 0 ? "" : "__p+='" + escape_(nslash) + "';";
+            if (nbr % 2 !== 0) {
+                source += "__p+='" + escape_(found[2]) + "';";
+                current = found.index + found[0].length;
+                allbegin.lastIndex = current;
+                break;
+            }
+
+            if (found[regexes.eval_long]) {
+                tparams.eval_long_end.lastIndex = found.index + found[0].length;
+                var end = tparams.eval_long_end.exec(text);
+                if (!end)
+                    throw new Error("<% without matching %>");
+                source += text.slice(found.index + found[0].length, end.index);
+                current = end.index + end[0].length;
+            } else if (found[regexes.interpolate]) {
+                var braces = /{|}/g;
+                braces.lastIndex = found.index + found[0].length;
+                var b_count = 1;
+                var brace;
+                while (brace = braces.exec(text)) {
+                    if (brace[0] === "{")
+                        b_count++;
+                    else {
+                        b_count--;
+                    }
+                    if (b_count === 0)
+                        break;
+                }
+                if (b_count !== 0)
+                    throw new Error("%{ without a matching }");
+                source += "__p+=" + text.slice(found.index + found[0].length, brace.index) + ";"
+                current = brace.index + brace[0].length;
+            } else if (found[regexes.eval_short]) {
+                tparams.eval_short_end.lastIndex = found.index + found[0].length;
+                var end = tparams.eval_short_end.exec(text);
+                if (!end)
+                    throw new Error("impossible state!!");
+                source += text.slice(found.index + found[0].length, end.index);
+                current = end.index + end[0].length;
+            } else { // regexes.escape
+                var braces = /{|}/g;
+                braces.lastIndex = found.index + found[0].length;
+                var b_count = 1;
+                var brace;
+                while (brace = braces.exec(text)) {
+                    if (brace[0] === "{")
+                        b_count++;
+                    else {
+                        b_count--;
+                    }
+                    if (b_count === 0)
+                        break;
+                }
+                if (b_count !== 0)
+                    throw new Error("${ without a matching }");
+                source += "__p+=_.escape(" + text.slice(found.index + found[0].length, brace.index) + ");"
+                current = brace.index + brace[0].length;
+            }
+            allbegin.lastIndex = current;
+        }
+        source += "__p+='" + escape_(text.slice(current, text.length)) + "';";
 
         // If a variable is not specified, place data values in local scope.
         if (!tparams.variable) source = 'with(obj||{}){\n' + source + '}\n';
@@ -814,8 +860,6 @@ nova = (function() {
 
         return template;
     };
-
-    // end of Jeremy Ashkenas' code
 
     nova.TemplateEngine = nova.Class.$extend({
         __init__: function() {
