@@ -86,5 +86,12 @@ test("print", function() {
     equal(transform(r), "Test");
 });
 
+test("singleLineEventSlashEscape", function() {
+    var r = e.eval("\\\n%print(1+1)");
+    equal(r, "\n%print(1+1)");
+    var r = e.eval("\\\\\n%print(1+1)");
+    equal(r, "\\2");
+});
+
 
 });
