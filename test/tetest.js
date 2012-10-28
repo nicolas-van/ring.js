@@ -81,5 +81,10 @@ test("multiSingleLine", function() {
     equal(r, "\n\nTest\n\n");
 });
 
+test("print", function() {
+    var r = e.print();
+    equal(transform(r), "Test");
+});
+
 
 });

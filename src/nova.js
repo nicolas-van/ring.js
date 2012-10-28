@@ -889,7 +889,7 @@ nova = (function() {
         source += to_add ? "__p.push('" + to_add + "');\n" : "";
 
         source = "var __p=[];" +
-          "var print=function(){__p.push(Array.prototype.join.call(arguments, ''))};\n" +
+          "var print=function(){for (var i=0; i<arguments.length; i++) __p.push(arguments[i])};\n" +
           "with(context || {}){\n" + source + "}\nreturn __p.join('');\n";
 
         return {
