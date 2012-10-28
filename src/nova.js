@@ -792,16 +792,16 @@ nova = (function() {
         var found;
         while (found = allbegin.exec(text)) {
             var to_add = escape_(text.slice(current, found.index));
-            source += to_add ? "__p+='" + to_add + "';\n" : '';
+            source += to_add ? "__p.push('" + to_add + "');\n" : '';
             current = found.index;
 
             // slash escaping handling
             var slashes = found[regexes.slashes] || "";
             var nbr = slashes.length;
             var nslash = slashes.slice(0, Math.floor(nbr / 2));
-            source += nbr !== 0 ? "__p+='" + escape_(nslash) + "';\n" : "";
+            source += nbr !== 0 ? "__p.push('" + escape_(nslash) + "');\n" : "";
             if (nbr % 2 !== 0) {
-                source += "__p+='" + escape_(found[regexes.match]) + "';\n";
+                source += "__p.push('" + escape_(found[regexes.match]) + "');\n";
                 current = found.index + found[0].length;
                 allbegin.lastIndex = current;
                 break;
@@ -849,7 +849,7 @@ nova = (function() {
                 }
                 if (b_count !== 0)
                     throw new Error("%{ without a matching }");
-                source += "__p+=" + text.slice(found.index + found[0].length, brace.index) + ";\n"
+                source += "__p.push(" + text.slice(found.index + found[0].length, brace.index) + ");\n"
                 current = brace.index + brace[0].length;
             } else if (found[regexes.eval_short]) {
                 tparams.eval_short_end.lastIndex = found.index + found[0].length;
@@ -874,7 +874,7 @@ nova = (function() {
                 }
                 if (b_count !== 0)
                     throw new Error("${ without a matching }");
-                source += "__p+=_.escape(" + text.slice(found.index + found[0].length, brace.index) + ");\n"
+                source += "__p.push(_.escape(" + text.slice(found.index + found[0].length, brace.index) + "));\n"
                 current = brace.index + brace[0].length;
             } else { // comment 
                 tparams.comment_end.lastIndex = found.index + found[0].length;
@@ -886,11 +886,11 @@ nova = (function() {
             allbegin.lastIndex = current;
         }
         var to_add = escape_(text.slice(current, text_end));
-        source += to_add ? "__p+='" + to_add + "';\n" : "";
+        source += to_add ? "__p.push('" + to_add + "');\n" : "";
 
-        source = "var __p='';" +
-          "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" +
-          "with(context || {}){\n" + source + "}\nreturn __p;\n";
+        source = "var __p=[];" +
+          "var print=function(){__p.push(Array.prototype.join.call(arguments, ''))};\n" +
+          "with(context || {}){\n" + source + "}\nreturn __p.join('');\n";
 
         return {
             compiled: source,
