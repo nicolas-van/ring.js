@@ -74,5 +74,10 @@ test("multiComment", function() {
     equal(transform(r), "Test");
 });
 
+test("multiSingleLine", function() {
+    var r = e.multiSingleLine();
+    equal(transform(r), "Test");
+});
+
 
 });
