@@ -745,7 +745,7 @@ nova = (function() {
         comment_multi_end: /<\/%\s*doc\s*>/g,
         eval_long_begin: /<%/g,
         eval_long_end: /%>/g,
-        eval_short_begin: /(?:^|\n)[\s^\n]*%(?!{)/g,
+        eval_short_begin: /(?:^|\n)[[ \t]*%(?!{)/g,
         eval_short_end: /\n|$/g,
         escape_begin: /\${/g,
         interpolate_begin: /%{/g,
@@ -787,7 +787,7 @@ nova = (function() {
         var source = "";
         var current = start;
         allbegin.lastIndex = current;
-        var end = text.length;
+        var text_end = text.length;
         var restart = end;
         var found;
         while (found = allbegin.exec(text)) {
@@ -817,7 +817,7 @@ nova = (function() {
                 }
                 current = sub_compile.end;
             } else if (found[regexes.def_end]) {
-                end = found.index;
+                text_end = found.index;
                 restart = found.index + found[0].length;
                 break;
             } else if (found[regexes.comment_multi_begin]) {
@@ -857,7 +857,7 @@ nova = (function() {
                 if (!end)
                     throw new Error("impossible state!!");
                 source += text.slice(found.index + found[0].length, end.index) + "\n";
-                current = end.index + end[0].length - 1;
+                current = end.index;
             } else if (found[regexes.escape]) {
                 var braces = /{|}/g;
                 braces.lastIndex = found.index + found[0].length;
@@ -885,7 +885,7 @@ nova = (function() {
             }
             allbegin.lastIndex = current;
         }
-        var to_add = escape_(text.slice(current, end));
+        var to_add = escape_(text.slice(current, text_end));
         source += to_add ? "__p+='" + to_add + "';\n" : "";
 
         source = "var __p='';" +
@@ -926,6 +926,9 @@ nova = (function() {
         buildTemplate: function(text) {
             var result = compileTemplate(text).compiled;
             return this._convertTemplate(new Function('context', result));
+        },
+        eval: function(text, context) {
+            return this.buildTemplate(text)(context);
         },
         resetEnvironment: function(nenv) {
             this._env = {_: _};
