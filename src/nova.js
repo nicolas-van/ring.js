@@ -739,7 +739,7 @@ nova = (function() {
     }
 
     var tparams = {
-        def_begin: /<%\s*def\s+(?:name=(?:"(.+?)"))\s*>/g,
+        def_begin: /<%\s*def\s+(?:name=(?:(?:"(.+?)")|(?:'(.+?)')))\s*>/g,
         def_end: /<\/%\s*def\s*>/g,
         comment_multi_begin: /<%\s*doc\s*>/g,
         comment_multi_end: /<\/%\s*doc\s*>/g,
@@ -770,14 +770,15 @@ nova = (function() {
         slashes: 1,
         match: 2,
         def_begin: 3,
-        def_name: 4,
-        def_end: 5,
-        comment_multi_begin: 6,
-        eval_long: 7,
-        interpolate: 8,
-        eval_short: 9,
-        escape: 10,
-        comment: 11
+        def_name1: 4,
+        def_name2: 5,
+        def_end: 6,
+        comment_multi_begin: 7,
+        eval_long: 8,
+        interpolate: 9,
+        eval_short: 10,
+        escape: 11,
+        comment: 12
     };
     var regex_count = 4;
 
@@ -807,10 +808,11 @@ nova = (function() {
 
             if (found[regexes.def_begin]) {
                 var sub_compile = compileTemplate(text, null, found.index + found[0].length);
+                var name = (found[regexes.def_name1] || found[regexes.def_name2])
                 if (! func_obj) {
-                    source += "function " + found[regexes.def_name] + "(context) {" + sub_compile.compiled + "}";
+                    source += "function " + name  + "(context) {" + sub_compile.compiled + "}";
                 } else {
-                    func_obj[found[regexes.def_name]] = new Function("context", sub_compile.compiled);
+                    func_obj[name] = new Function("context", sub_compile.compiled);
                 }
                 current = sub_compile.end;
             } else if (found[regexes.def_end]) {
