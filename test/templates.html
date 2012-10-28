@@ -1,66 +1,66 @@
-<% def name="yop" %>
+
+<%def name="yop">
     Hello
-<% def %>
-<% def name="test" %>
+</%def>
+<%def name="test">
     ${test_var}
-<% def %>
-<% def name="test2" %>
+</%def>
+<%def name="test2">
     <% _.each(lst, function(el) { %>
     ${el}
     <% }
     ); %>
-<% def %>
-<% def name="test3" %>
+</%def>
+<%def name="test3">
     % _.each(lst, function(el) { 
     ${el}
     % }); 
-<% def %>
-<% def name="testfct" %>
+</%def>
+<%def name="testfct">
     % var yop = function(arg) {
     ${arg}
     % }; 
     <% yop("abc"); %>
     % yop("def");
-<% def %>
-<% def name="testmacro" %>
+</%def>
+<%def name="testmacro">
     lalala
-<% def %>
-<% def name="testcallmacro" %>
+</%def>
+<%def name="testcallmacro">
     %{engine.testmacro()}
-<% def %>
-<% def name="testescaping" %>
+</%def>
+<%def name="testescaping">
     % var x = "<div></div>";
     ${x}
-<% def %>
-<% def name="testnoescaping" %>
+</%def>
+<%def name="testnoescaping">
     % var x = "<div></div>";
     %{x}
-<% def %>
-<% def name="test_this" %>
+</%def>
+<%def name="test_this">
     ${this.str}
-<% def %>
-<% def name="testDef" %>
-    <% def name="test" %>
+</%def>
+<%def name="testDef">
+    <%def name="test">
         Test
-    <% def %>
+    </%def>
     %{test()}
-<% def %>
-<% def name="testFunctional" %>
+</%def>
+<%def name="testFunctional">
     % var x = "Test";
-    <% def name="test" %>
+    <%def name="test">
         ${ x }
-    <% def %>
+    </%def>
     %{ engine.testFunctional2({test: test}) }
-<% def %>
-<% def name="testFunctional2" %>
+</%def>
+<%def name="testFunctional2">
     <div>
         %{ test() }
     </div>
-<% def %>
+</%def>
 ## this is a comment
-<% def name="testComment" %>
+<%def name="testComment">
     ## this is another comment
     Test
-<% def %>
-
+</%def>
 

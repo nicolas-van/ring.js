@@ -739,8 +739,10 @@ nova = (function() {
     }
 
     var tparams = {
-        def_begin: /<%\s*def\s+(?:name=(?:"(.+?)"))\s*%>/g,
-        def_end: /<%\s*def\s*%>/g,
+        def_begin: /<%\s*def\s+(?:name=(?:"(.+?)"))\s*>/g,
+        def_end: /<\/%\s*def\s*>/g,
+        comment_multi_begin: /<%\s*doc\s*>/g,
+        comment_multi_end: /<\/%\s*dov\s*>/g,
         eval_long_begin: /<%/g,
         eval_long_end: /%>/g,
         eval_short_begin: /%/g,
@@ -755,6 +757,7 @@ nova = (function() {
         "((?:\\\\)*)(" +
         "(" + tparams.def_begin.source + ")|" +
         "(" + tparams.def_end.source + ")|" +
+        "(" + tparams.comment_multi_begin.source + ")|" +
         "(" + tparams.eval_long_begin.source + ")|" +
         "(" + tparams.interpolate_begin.source + ")|" +
         "(" + tparams.eval_short_begin.source + ")|" +
@@ -769,11 +772,12 @@ nova = (function() {
         def_begin: 3,
         def_name: 4,
         def_end: 5,
-        eval_long: 6,
-        interpolate: 7,
-        eval_short: 8,
-        escape: 9,
-        comment: 10
+        comment_multi_begin: 6,
+        eval_long: 7,
+        interpolate: 8,
+        eval_short: 9,
+        escape: 10,
+        comment: 11
     };
     var regex_count = 4;
 
@@ -813,6 +817,12 @@ nova = (function() {
                 end = found.index;
                 restart = found.index + found[0].length;
                 break;
+            } else if (found[regexes.comment_multi_begin]) {
+                tparams.comment_multi_end.lastIndex = found.index + found[0].length;
+                var end = tparams.comment_multi_end.exec(text);
+                if (!end)
+                    throw new Error("impossible state!!");
+                current = end.index + end[0].length;
             } else if (found[regexes.eval_long]) {
                 tparams.eval_long_end.lastIndex = found.index + found[0].length;
                 var end = tparams.eval_long_end.exec(text);
