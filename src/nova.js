@@ -742,7 +742,7 @@ nova = (function() {
         def_begin: /<%\s*def\s+(?:name=(?:"(.+?)"))\s*>/g,
         def_end: /<\/%\s*def\s*>/g,
         comment_multi_begin: /<%\s*doc\s*>/g,
-        comment_multi_end: /<\/%\s*dov\s*>/g,
+        comment_multi_end: /<\/%\s*doc\s*>/g,
         eval_long_begin: /<%/g,
         eval_long_end: /%>/g,
         eval_short_begin: /%/g,
@@ -821,7 +821,7 @@ nova = (function() {
                 tparams.comment_multi_end.lastIndex = found.index + found[0].length;
                 var end = tparams.comment_multi_end.exec(text);
                 if (!end)
-                    throw new Error("impossible state!!");
+                    throw new Error("<%doc> without corresponding </%doc>");
                 current = end.index + end[0].length;
             } else if (found[regexes.eval_long]) {
                 tparams.eval_long_end.lastIndex = found.index + found[0].length;

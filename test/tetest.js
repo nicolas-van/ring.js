@@ -69,5 +69,10 @@ test("comment", function() {
     equal(transform(r), "Test");
 });
 
+test("multiComment", function() {
+    var r = e.testMultiComment();
+    equal(transform(r), "Test");
+});
+
 
 });
