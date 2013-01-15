@@ -898,11 +898,11 @@ nova = (function() {
         },
         _parseFile: function(file_content) {
             var result = compileTemplate(file_content);
-            var to_append = "return (function() {\nvar fcts = {};\n";
+            var to_append = "return {\n";
             _.each(result.functions, function(name) {
-                to_append += "fcts." + name + " = " + name + ";\n";
+                to_append += name + ": " + name + ",\n";
             }, this);
-            to_append += "return fcts;\n})();\n";
+            to_append += "};\n";
             var add = _.extend({engine: this}, this._env);
             var functions = new Function('context', result.header + result.source + to_append + result.footer)(add);
             _.each(functions, function(func, name) {
