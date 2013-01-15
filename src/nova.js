@@ -767,8 +767,9 @@ nova = (function() {
     };
     var regex_count = 4;
 
-    var compileTemplate = function(text, start) {
-        start = start || 0;
+    var compileTemplate = function(text, options) {
+        options = _.extend({start: 0, indent: true}, options);
+        start = options.start;
         var source = "";
         var current = start;
         allbegin.lastIndex = current;
@@ -776,6 +777,9 @@ nova = (function() {
         var restart = end;
         var found;
         var functions = [];
+        var indent = options.indent ?
+            function(txt) { return _.map(txt.split("\n"), function(x) { return "    " + x; }).join("\n"); } :
+            function (txt) { return txt; };
         while (found = allbegin.exec(text)) {
             var to_add = escape_(text.slice(current, found.index));
             source += to_add ? "__p+='" + to_add + "';\n" : '';
@@ -794,10 +798,10 @@ nova = (function() {
             }
 
             if (found[regexes.def_begin]) {
-                var sub_compile = compileTemplate(text, found.index + found[0].length);
+                var sub_compile = compileTemplate(text, _.extend({}, options, {start: found.index + found[0].length}));
                 var name = (found[regexes.def_name1] || found[regexes.def_name2]);
-                source += "var " + name  + " = function(context) {" + sub_compile.header + sub_compile.source
-                    + sub_compile.footer + "}\n";
+                source += "var " + name  + " = function(context) {" + indent(sub_compile.header + sub_compile.source
+                    + sub_compile.footer) + "}\n";
                 functions.push(name);
                 current = sub_compile.end;
             } else if (found[regexes.def_end]) {
@@ -876,6 +880,7 @@ nova = (function() {
           "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" +
           "with(context || {}){\n";
         var footer = "}\nreturn __p;\n";
+        source = indent(source);
 
         return {
             header: header,
@@ -889,7 +894,10 @@ nova = (function() {
     nova.TemplateEngine = nova.Class.$extend({
         __init__: function() {
             this.resetEnvironment();
-            this.includeInDom = true;
+            this.options = {
+                includeInDom: true,
+                indent: true,
+            };
         },
         loadFile: function(filename) {
             var self = this;
@@ -898,7 +906,7 @@ nova = (function() {
             });
         },
         _parseFile: function(file_content) {
-            var result = compileTemplate(file_content);
+            var result = compileTemplate(file_content, {indent: this.options.indent});
             var to_append = "return {\n";
             _.each(result.functions, function(name) {
                 to_append += name + ": " + name + ",\n";
@@ -915,7 +923,7 @@ nova = (function() {
                     this[name] = func;
                 }, this);
             }, this);
-            if (this.includeInDom) {
+            if (this.options.includeInDom) {
                 var varname = _.uniqueId("novajstemplate");
                 code = "window." + varname + " = function(context) {\n" + code + "};\n";
                 var def = $.Deferred();
@@ -936,7 +944,7 @@ nova = (function() {
             }
         },
         buildTemplate: function(text) {
-            var comp = compileTemplate(text);
+            var comp = compileTemplate(text, {indent: this.options.indent});
             var result = comp.header + comp.source + comp.footer;
             var add = _.extend({engine: this}, this._env);
             var func = new Function('context', result);
