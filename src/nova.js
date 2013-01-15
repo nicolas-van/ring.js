@@ -23,7 +23,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-nova = (function() {
+(function() {
+
+nova = nova_declare($, _);
+
+function nova_declare($, _) {
     var nova = {};
     nova.internal = {};
 
@@ -969,4 +973,5 @@ nova = (function() {
     });
 
     return nova;
+};
 })();
