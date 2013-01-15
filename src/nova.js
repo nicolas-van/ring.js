@@ -778,7 +778,12 @@ nova = (function() {
         var found;
         var functions = [];
         var indent = options.indent ?
-            function(txt) { return _.map(txt.split("\n"), function(x) { return "    " + x; }).join("\n"); } :
+            function(txt) {
+                var tmp = _.map(txt.split("\n"), function(x) { return "    " + x; });
+                tmp.pop();
+                tmp.push("");
+                return tmp.join("\n");
+            } :
             function (txt) { return txt; };
         while (found = allbegin.exec(text)) {
             var to_add = escape_(text.slice(current, found.index));
@@ -800,7 +805,7 @@ nova = (function() {
             if (found[regexes.def_begin]) {
                 var sub_compile = compileTemplate(text, _.extend({}, options, {start: found.index + found[0].length}));
                 var name = (found[regexes.def_name1] || found[regexes.def_name2]);
-                source += "var " + name  + " = function(context) {" + indent(sub_compile.header + sub_compile.source
+                source += "var " + name  + " = function(context) {\n" + indent(sub_compile.header + sub_compile.source
                     + sub_compile.footer) + "}\n";
                 functions.push(name);
                 current = sub_compile.end;
@@ -876,8 +881,7 @@ nova = (function() {
         var to_add = escape_(text.slice(current, text_end));
         source += to_add ? "__p+='" + to_add + "';\n" : "";
 
-        var header = "var __p='';" +
-          "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" +
+        var header = "var __p = ''; var print = function() { __p+=Array.prototype.join.call(arguments, '') };\n" +
           "with(context || {}){\n";
         var footer = "}\nreturn __p;\n";
         source = indent(source);
