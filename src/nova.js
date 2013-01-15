@@ -767,7 +767,7 @@ nova = (function() {
     };
     var regex_count = 4;
 
-    var compileTemplate = function(text, func_obj, start) {
+    var compileTemplate = function(text, start) {
         start = start || 0;
         var source = "";
         var current = start;
@@ -775,6 +775,7 @@ nova = (function() {
         var text_end = text.length;
         var restart = end;
         var found;
+        var functions = [];
         while (found = allbegin.exec(text)) {
             var to_add = escape_(text.slice(current, found.index));
             source += to_add ? "__p+='" + to_add + "';\n" : '';
@@ -793,13 +794,11 @@ nova = (function() {
             }
 
             if (found[regexes.def_begin]) {
-                var sub_compile = compileTemplate(text, null, found.index + found[0].length);
-                var name = (found[regexes.def_name1] || found[regexes.def_name2])
-                if (! func_obj) {
-                    source += "function " + name  + "(context) {" + sub_compile.compiled + "}\n";
-                } else {
-                    func_obj[name] = new Function("context", sub_compile.compiled);
-                }
+                var sub_compile = compileTemplate(text, found.index + found[0].length);
+                var name = (found[regexes.def_name1] || found[regexes.def_name2]);
+                source += "var " + name  + " = function(context) {" + sub_compile.header + sub_compile.source
+                    + sub_compile.footer + "}\n";
+                functions.push(name);
                 current = sub_compile.end;
             } else if (found[regexes.def_end]) {
                 text_end = found.index;
@@ -873,13 +872,17 @@ nova = (function() {
         var to_add = escape_(text.slice(current, text_end));
         source += to_add ? "__p+='" + to_add + "';\n" : "";
 
-        source = "var __p='';" +
+        var header = "var __p='';" +
           "var print=function(){__p+=Array.prototype.join.call(arguments, '')};\n" +
-          "with(context || {}){\n" + source + "}\nreturn __p;\n";
+          "with(context || {}){\n";
+        var footer = "}\nreturn __p;\n";
 
         return {
-            compiled: source,
-            end: restart
+            header: header,
+            source: source,
+            footer: footer,
+            end: restart,
+            functions: functions,
         };
     };
 
@@ -894,23 +897,28 @@ nova = (function() {
             });
         },
         _parseFile: function(file_content) {
-            var funcs = {};
-            compileTemplate(file_content, funcs);
-            _.each(funcs, function(func, name) {
+            var result = compileTemplate(file_content);
+            var to_append = "return (function() {\nvar fcts = {};\n";
+            _.each(result.functions, function(name) {
+                to_append += "fcts." + name + " = " + name + ";\n";
+            }, this);
+            to_append += "return fcts;\n})();\n";
+            var add = _.extend({engine: this}, this._env);
+            var functions = new Function('context', result.header + result.source + to_append + result.footer)(add);
+            _.each(functions, function(func, name) {
                 if (this[name])
                     throw new Error("The template '" + name + "' is already defined");
-                this[name] = this._convertTemplate(func);
+                this[name] = func;
             }, this);
         },
-        _convertTemplate: function(func) {
-            var self = this;
-            return function(data) {
-                return func.call(this, _.extend({engine: self}, self._env, data));
-            };
-        },
         buildTemplate: function(text) {
-            var result = compileTemplate(text).compiled;
-            return this._convertTemplate(new Function('context', result));
+            var comp = compileTemplate(text);
+            var result = comp.header + comp.source + comp.footer;
+            var add = _.extend({engine: this}, this._env);
+            var func = new Function('context', result);
+            return function(data) {
+                return func.call(this, _.extend(add, data));
+            };
         },
         eval: function(text, context) {
             return this.buildTemplate(text)(context);

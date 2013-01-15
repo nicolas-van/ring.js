@@ -86,7 +86,7 @@ test("multiSingleLine", function() {
 });
 
 test("print", function() {
-    var r = e.print();
+    var r = e.printtest();
     equal(transform(r), "Test");
 });
 
