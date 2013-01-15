@@ -1,6 +1,5 @@
 /*
 Copyright (c) 2012, Nicolas Vanhoren
-Copyright (c) 2011, OpenERP S.A.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -618,20 +617,6 @@ nova = (function() {
         className: '',
         attributes: {},
         events: {},
-        /**
-         * Constructs the widget and sets its parent if a parent is given.
-         *
-         * @constructs openerp.web.Widget
-         * @extends openerp.web.CallbackEnabled
-         *
-         * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
-         * When that widget is destroyed by calling destroy(), the current instance will be
-         * destroyed too. Can be null.
-         * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
-         * to bind the current Widget to an already existing part of the DOM, which is not compatible
-         * with the DOM insertion methods provided by the current implementation of Widget. So
-         * for new components this argument should not be provided any more.
-         */
         __init__: function(parent) {
             nova.Properties.__init__.apply(this);
             this.__widget_element = $(document.createElement(this.tagName));
