@@ -25,7 +25,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (function() {
 
-nova = nova_declare($, _);
+if (typeof(define) !== "undefined") { // use requirejs
+    define(["jquery", "underscore"], nova_declare);
+} else { // simply define the global variable 'nova'
+    nova = nova_declare($, _);
+}
 
 function nova_declare($, _) {
     var nova = {};
