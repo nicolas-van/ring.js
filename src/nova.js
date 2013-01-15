@@ -889,6 +889,7 @@ nova = (function() {
     nova.TemplateEngine = nova.Class.$extend({
         __init__: function() {
             this.resetEnvironment();
+            this.includeInDom = true;
         },
         loadFile: function(filename) {
             var self = this;
@@ -903,13 +904,36 @@ nova = (function() {
                 to_append += name + ": " + name + ",\n";
             }, this);
             to_append += "};\n";
-            var add = _.extend({engine: this}, this._env);
-            var functions = new Function('context', result.header + result.source + to_append + result.footer)(add);
-            _.each(functions, function(func, name) {
-                if (this[name])
-                    throw new Error("The template '" + name + "' is already defined");
-                this[name] = func;
+            var code = result.header + result.source + to_append + result.footer;
+
+            var include = _.bind(function(fct) {
+                var add = _.extend({engine: this}, this._env);
+                var functions = fct(add);
+                _.each(functions, function(func, name) {
+                    if (this[name])
+                        throw new Error("The template '" + name + "' is already defined");
+                    this[name] = func;
+                }, this);
             }, this);
+            if (this.includeInDom) {
+                var varname = _.uniqueId("novajstemplate");
+                code = "window." + varname + " = function(context) {\n" + code + "};\n";
+                var def = $.Deferred();
+                var script   = document.createElement("script");
+                script.type  = "text/javascript";
+                script.text  = code;
+                $("head")[0].appendChild(script);
+                $(script).ready(function() {
+                    def.resolve();
+                });
+                def.then(function() {
+                    include(window[varname]);
+                    delete window[varname];
+                });
+                return def;
+            } else {
+                return include(new Function('context', code));
+            }
         },
         buildTemplate: function(text) {
             var comp = compileTemplate(text);
