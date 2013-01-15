@@ -789,7 +789,7 @@ nova = (function() {
                 source += "__p+='" + escape_(found[regexes.match]) + "';\n";
                 current = found.index + found[0].length;
                 allbegin.lastIndex = current;
-                break;
+                continue;
             }
 
             if (found[regexes.def_begin]) {

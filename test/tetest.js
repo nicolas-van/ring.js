@@ -52,6 +52,10 @@ test("slash_escape", function() {
     equal(tmpl(), "\\\\2");
     var tmpl = e.buildTemplate("\\\\\\\\\\${1+1}");
     equal(tmpl(), "\\\\${1+1}");
+    var tmpl = e.buildTemplate("\\${1+1}\n${1+1}");
+    equal(tmpl(), "${1+1}\n2");
+    var tmpl = e.buildTemplate("\\\\${1+1}\n${1+1}");
+    equal(tmpl(), "\\2\n2");
 });
 
 test("def", function() {
