@@ -902,10 +902,10 @@ function nova_declare($, _) {
         loadFile: function(filename) {
             var self = this;
             return $.get(filename).pipe(function(content) {
-                return self._parseFile(content);
+                return self.loadFileContent(content);
             });
         },
-        _parseFile: function(file_content) {
+        loadFileContent: function(file_content) {
             var result = compileTemplate(file_content, {indent: this.options.indent});
             var to_append = "";
             _.each(result.functions, function(name) {
