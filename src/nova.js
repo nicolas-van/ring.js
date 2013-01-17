@@ -778,8 +778,17 @@ function nova_declare($, _) {
         var found;
         var functions = [];
         var indent = options.indent ? indent_ : function (txt) { return txt; };
+        var rmWhite = options.removeWhitespaces ? function(txt) {
+            if (! txt)
+                return txt;
+            txt = _.map(txt.split("\n"), function(x) { return x.trim() });
+            var last = txt.pop();
+            txt = _.reject(txt, function(x) { return !x });
+            txt.push(last);
+            return txt.join("\n") || "\n";
+        } : function(x) { return x };
         while (found = allbegin.exec(text)) {
-            var to_add = text.slice(current, found.index);
+            var to_add = rmWhite(text.slice(current, found.index));
             source += to_add ? "__p+=" + escape_(to_add) + ";\n" : '';
             current = found.index;
 
@@ -874,7 +883,7 @@ function nova_declare($, _) {
             }
             allbegin.lastIndex = current;
         }
-        var to_add = text.slice(current, text_end);
+        var to_add = rmWhite(text.slice(current, text_end));
         source += to_add ? "__p+=" + escape_(to_add) + ";\n" : "";
 
         var header = "var __p = ''; var print = function() { __p+=Array.prototype.join.call(arguments, '') };\n" +
@@ -897,6 +906,7 @@ function nova_declare($, _) {
             this.options = {
                 includeInDom: true,
                 indent: true,
+                removeWhitespaces: true,
             };
         },
         loadFile: function(filename) {
@@ -932,7 +942,7 @@ function nova_declare($, _) {
             }
         },
         compileFile: function(file_content) {
-            var result = compileTemplate(file_content, {indent: this.options.indent});
+            var result = compileTemplate(file_content, _.extend({}, this.options));
             var to_append = "";
             _.each(result.functions, function(name) {
                 to_append += name + ": " + name + ",\n";
@@ -954,7 +964,7 @@ function nova_declare($, _) {
             }, this);
         },
         buildTemplate: function(text) {
-            var comp = compileTemplate(text, {indent: this.options.indent});
+            var comp = compileTemplate(text, _.extend({}, this.options));
             var result = comp.header + comp.source + comp.footer;
             var add = _.extend({engine: this}, this._env);
             var func = new Function('context', result);

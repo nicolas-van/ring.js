@@ -82,7 +82,7 @@ test("multiSingleLine", function() {
     var r = e.multiSingleLine();
     equal(transform(r), "Test");
     r = e.eval("\n\n%if (true === true) {\nTest\n%}\n\n");
-    equal(r, "\n\nTest\n\n");
+    equal(r, "\nTest\n");
 });
 
 test("print", function() {
