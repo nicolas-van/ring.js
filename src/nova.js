@@ -911,7 +911,7 @@ function nova_declare($, _) {
             if (this.options.includeInDom) {
                 var varname = _.uniqueId("novajstemplate");
                 var previous = window[varname];
-                code = "window." + varname + " = " + code;
+                code = "window." + varname + " = " + code + ";";
                 var def = $.Deferred();
                 var script   = document.createElement("script");
                 script.type  = "text/javascript";
@@ -927,6 +927,7 @@ function nova_declare($, _) {
                 }, this));
                 return def;
             } else {
+                console.log("return (" + code + ")(context);");
                 return this.includeTemplates(new Function('context', "return (" + code + ")(context);"));
             }
         },
@@ -940,7 +941,7 @@ function nova_declare($, _) {
             to_append = "return {\n" + to_append + "};\n";
             to_append = this.options.indent ? indent_(to_append) : to_append;
             var code = "function(context) {\n" + result.header +
-                result.source + to_append + result.footer + "};\n";
+                result.source + to_append + result.footer + "}\n";
             return code;
         },
         includeTemplates: function(fct) {
