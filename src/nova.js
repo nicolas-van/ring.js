@@ -832,7 +832,10 @@ function nova_declare($, _) {
                 var end = tparams.eval_long_end.exec(text);
                 if (!end)
                     throw new Error("<% without matching %>");
-                source += text.slice(found.index + found[0].length, end.index) + "\n";
+                var code = text.slice(found.index + found[0].length, end.index);
+                code = _(code.split("\n")).chain().map(function(x) { return x.trim() })
+                    .reject(function(x) { return !x }).value().join("\n");
+                source += code + "\n";
                 current = end.index + end[0].length;
             } else if (found[regexes.interpolate]) {
                 var braces = /{|}/g;
@@ -857,7 +860,7 @@ function nova_declare($, _) {
                 var end = tparams.eval_short_end.exec(text);
                 if (!end)
                     throw new Error("impossible state!!");
-                source += text.slice(found.index + found[0].length, end.index) + "\n";
+                source += text.slice(found.index + found[0].length, end.index).trim() + "\n";
                 current = end.index;
             } else if (found[regexes.escape]) {
                 var braces = /{|}/g;
@@ -890,7 +893,7 @@ function nova_declare($, _) {
         source += to_add ? "__p+='" + to_add + "';\n" : "";
 
         var header = "var __p = ''; var print = function() { __p+=Array.prototype.join.call(arguments, '') };\n" +
-          "with(context || {}){\n";
+          "with (context || {}) {\n";
         var footer = "}\nreturn __p;\n";
         source = indent(source);
 
