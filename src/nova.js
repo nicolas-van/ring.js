@@ -717,6 +717,12 @@ function nova_declare($, _) {
     var escape_ = function(text) {
         return JSON.stringify(text);
     }
+    var indent_ = function(txt) {
+        var tmp = _.map(txt.split("\n"), function(x) { return "    " + x; });
+        tmp.pop();
+        tmp.push("");
+        return tmp.join("\n");
+    };
     var tparams = {
         def_begin: /<%\s*def\s+(?:name=(?:(?:"(.+?)")|(?:'(.+?)')))\s*>/g,
         def_end: /<\/%\s*def\s*>/g,
@@ -771,14 +777,7 @@ function nova_declare($, _) {
         var restart = end;
         var found;
         var functions = [];
-        var indent = options.indent ?
-            function(txt) {
-                var tmp = _.map(txt.split("\n"), function(x) { return "    " + x; });
-                tmp.pop();
-                tmp.push("");
-                return tmp.join("\n");
-            } :
-            function (txt) { return txt; };
+        var indent = options.indent ? indent_ : function (txt) { return txt; };
         while (found = allbegin.exec(text)) {
             var to_add = text.slice(current, found.index);
             source += to_add ? "__p+=" + escape_(to_add) + ";\n" : '';
@@ -908,11 +907,13 @@ function nova_declare($, _) {
         },
         _parseFile: function(file_content) {
             var result = compileTemplate(file_content, {indent: this.options.indent});
-            var to_append = "return {\n";
+            var to_append = "";
             _.each(result.functions, function(name) {
                 to_append += name + ": " + name + ",\n";
             }, this);
-            to_append += "};\n";
+            to_append = this.options.indent ? indent_(to_append) : to_append;
+            to_append = "return {\n" + to_append + "};\n";
+            to_append = this.options.indent ? indent_(to_append) : to_append;
             var code = result.header + result.source + to_append + result.footer;
 
             var include = _.bind(function(fct) {
