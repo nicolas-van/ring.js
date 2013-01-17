@@ -906,28 +906,12 @@ function nova_declare($, _) {
             });
         },
         loadFileContent: function(file_content) {
-            var result = compileTemplate(file_content, {indent: this.options.indent});
-            var to_append = "";
-            _.each(result.functions, function(name) {
-                to_append += name + ": " + name + ",\n";
-            }, this);
-            to_append = this.options.indent ? indent_(to_append) : to_append;
-            to_append = "return {\n" + to_append + "};\n";
-            to_append = this.options.indent ? indent_(to_append) : to_append;
-            var code = result.header + result.source + to_append + result.footer;
+            var code = this.compileFile(file_content);
 
-            var include = _.bind(function(fct) {
-                var add = _.extend({engine: this}, this._env);
-                var functions = fct(add);
-                _.each(functions, function(func, name) {
-                    if (this[name])
-                        throw new Error("The template '" + name + "' is already defined");
-                    this[name] = func;
-                }, this);
-            }, this);
             if (this.options.includeInDom) {
                 var varname = _.uniqueId("novajstemplate");
-                code = "window." + varname + " = function(context) {\n" + code + "};\n";
+                var previous = window[varname];
+                code = "window." + varname + " = " + code;
                 var def = $.Deferred();
                 var script   = document.createElement("script");
                 script.type  = "text/javascript";
@@ -936,14 +920,37 @@ function nova_declare($, _) {
                 $(script).ready(function() {
                     def.resolve();
                 });
-                def.then(function() {
-                    include(window[varname]);
-                    delete window[varname];
-                });
+                def.then(_.bind(function() {
+                    var tmp = window[varname];
+                    window[varname] = previous;
+                    this.includeTemplates(tmp);
+                }, this));
                 return def;
             } else {
-                return include(new Function('context', code));
+                return this.includeTemplates(new Function('context', "return (" + code + ")(context);"));
             }
+        },
+        compileFile: function(file_content) {
+            var result = compileTemplate(file_content, {indent: this.options.indent});
+            var to_append = "";
+            _.each(result.functions, function(name) {
+                to_append += name + ": " + name + ",\n";
+            }, this);
+            to_append = this.options.indent ? indent_(to_append) : to_append;
+            to_append = "return {\n" + to_append + "};\n";
+            to_append = this.options.indent ? indent_(to_append) : to_append;
+            var code = "function(context) {\n" + result.header +
+                result.source + to_append + result.footer + "};\n";
+            return code;
+        },
+        includeTemplates: function(fct) {
+            var add = _.extend({engine: this}, this._env);
+            var functions = fct(add);
+            _.each(functions, function(func, name) {
+                if (this[name])
+                    throw new Error("The template '" + name + "' is already defined");
+                this[name] = func;
+            }, this);
         },
         buildTemplate: function(text) {
             var comp = compileTemplate(text, {indent: this.options.indent});
