@@ -711,26 +711,12 @@ function nova_declare($, _) {
         render: function() {}
     });
 
-    /**
-        Near-complete rewrite of underscore's templates.
+    /*
+        Nova Template Engine
     */
-    var escapes = {
-        '\\': '\\',
-        "'": "'",
-        'r': '\r',
-        'n': '\n',
-        't': '\t',
-        'u2028': '\u2028',
-        'u2029': '\u2029'
-    };
-    for (var p in escapes) escapes[escapes[p]] = p;
-    var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
     var escape_ = function(text) {
-        return text.replace(escaper, function(match) {
-            return '\\' + escapes[match];
-        });
+        return JSON.stringify(text);
     }
-
     var tparams = {
         def_begin: /<%\s*def\s+(?:name=(?:(?:"(.+?)")|(?:'(.+?)')))\s*>/g,
         def_end: /<\/%\s*def\s*>/g,
@@ -794,17 +780,17 @@ function nova_declare($, _) {
             } :
             function (txt) { return txt; };
         while (found = allbegin.exec(text)) {
-            var to_add = escape_(text.slice(current, found.index));
-            source += to_add ? "__p+='" + to_add + "';\n" : '';
+            var to_add = text.slice(current, found.index);
+            source += to_add ? "__p+=" + escape_(to_add) + ";\n" : '';
             current = found.index;
 
             // slash escaping handling
             var slashes = found[regexes.slashes] || "";
             var nbr = slashes.length;
             var nslash = slashes.slice(0, Math.floor(nbr / 2));
-            source += nbr !== 0 ? "__p+='" + escape_(nslash) + "';\n" : "";
+            source += nbr !== 0 ? "__p+=" + escape_(nslash) + ";\n" : "";
             if (nbr % 2 !== 0) {
-                source += "__p+='" + escape_(found[regexes.match]) + "';\n";
+                source += "__p+=" + escape_(found[regexes.match]) + ";\n";
                 current = found.index + found[0].length;
                 allbegin.lastIndex = current;
                 continue;
@@ -889,8 +875,8 @@ function nova_declare($, _) {
             }
             allbegin.lastIndex = current;
         }
-        var to_add = escape_(text.slice(current, text_end));
-        source += to_add ? "__p+='" + to_add + "';\n" : "";
+        var to_add = text.slice(current, text_end);
+        source += to_add ? "__p+=" + escape_(to_add) + ";\n" : "";
 
         var header = "var __p = ''; var print = function() { __p+=Array.prototype.join.call(arguments, '') };\n" +
           "with (context || {}) {\n";
