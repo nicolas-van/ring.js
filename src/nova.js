@@ -29,7 +29,7 @@ if (typeof(define) !== "undefined") { // requirejs
     define(["jquery", "underscore"], nova_declare);
 } else if (typeof(exports) !== "undefined") { // node
     var _ = require("underscore")
-    _.extend(exports, nova_declare(require("jquery"), _));
+    _.extend(exports, nova_declare(null, _));
 } else { // define global variable 'nova'
     nova = nova_declare($, _);
 }
@@ -620,10 +620,6 @@ function nova_declare($, _) {
     
     nova.Widget = nova.Class.$extend({
         __include__ : [nova.DynamicProperties],
-        /**
-         * Tag name when creating a default $el.
-         * @type string
-         */
         tagName: 'div',
         className: '',
         attributes: {},
