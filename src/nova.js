@@ -907,7 +907,7 @@ function nova_declare($, _) {
         __init__: function() {
             this.resetEnvironment();
             this.options = {
-                includeInDom: true,
+                includeInDom: typeof(exports) === undefined ? true : false,
                 indent: true,
                 removeWhitespaces: true,
             };
