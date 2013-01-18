@@ -25,9 +25,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (function() {
 
-if (typeof(define) !== "undefined") { // use requirejs
+if (typeof(define) !== "undefined") { // requirejs
     define(["jquery", "underscore"], nova_declare);
-} else { // simply define the global variable 'nova'
+} else if (typeof(exports) !== "undefined") { // node
+    var _ = require("underscore")
+    _.extend(exports, nova_declare(require("jquery"), _));
+} else { // define global variable 'nova'
     nova = nova_declare($, _);
 }
 
@@ -282,7 +285,7 @@ function nova_declare($, _) {
 
     var ErrorBase = function() {
     };
-    ErrorBase.prototype = new window.Error();
+    ErrorBase.prototype = new Error();
     ErrorBase.$extend = nova.Class.$extend;
     ErrorBase.$withData = nova.Class.$withData;
 
