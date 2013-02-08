@@ -28,8 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 if (typeof(define) !== "undefined") { // requirejs
     define(["jquery", "underscore"], nova_declare);
 } else if (typeof(exports) !== "undefined") { // node
-    var _ = require("underscore")
-    _.extend(exports, nova_declare(null, _));
+    var und = require("underscore")
+    und.extend(exports, nova_declare(null, und));
 } else { // define global variable 'nova'
     nova = nova_declare($, _);
 }
@@ -780,11 +780,13 @@ function nova_declare($, _) {
         var rmWhite = options.removeWhitespaces ? function(txt) {
             if (! txt)
                 return txt;
-            txt = _.map(txt.split("\n"), function(x) { return x.trim() });
-            var last = txt.pop();
-            txt = _.reject(txt, function(x) { return !x });
-            txt.push(last);
-            return txt.join("\n") || "\n";
+            var tmp = _.chain(txt.split("\n")).map(function(x) { return x.trim() })
+                .reject(function(x) { return !x }).value().join("\n");
+            if (txt.length >= 1 && txt[0].match(/\s/))
+                tmp = txt[0] + tmp;
+            if (txt.length >= 2 && txt[txt.length - 1].match(/\s/))
+                tmp += txt[txt.length - 1];
+            return tmp;
         } : function(x) { return x };
         while (found = allbegin.exec(text)) {
             var to_add = rmWhite(text.slice(current, found.index));

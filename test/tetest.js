@@ -1,8 +1,8 @@
 
 var e = new nova.TemplateEngine();
 var transform = function(x) {
-    return _.filter(_.map(x.split("\n"), function(el) { return el.trim(); }),
-        function(el) { return el; }).join("");
+    return _.filter(_.map(x.split(/\s+/), function(el) { return el.trim(); }),
+        function(el) { return el; }).join(" ");
 };
 
 e.loadFile("templates.html").pipe(function() {
@@ -16,12 +16,12 @@ test("base", function() {
     equal(r.trim(), "azerty");
     r = e.test2({lst: [1, 2, 3]});
     r = transform(r);
-    equal(r, "123"); 
+    equal(r, "1 2 3"); 
     r = e.test3({lst: [2, 3, 4]});
     r = transform(r);
-    equal(r, "234");
+    equal(r, "2 3 4");
     r = e.testfct();
-    equal(transform(r), "abcdef");
+    equal(transform(r), "abc def");
 
 });
 
@@ -65,7 +65,7 @@ test("def", function() {
 
 test("functional_prog", function() {
     var r = e.testFunctional();
-    equal(transform(r), "<div>Test</div>");
+    equal(transform(r), "<div> Test </div>");
 });
 
 test("comment", function() {
@@ -82,7 +82,7 @@ test("multiSingleLine", function() {
     var r = e.multiSingleLine();
     equal(transform(r), "Test");
     r = e.eval("\n\n%if (true === true) {\nTest\n%}\n\n");
-    equal(r, "\nTest\n");
+    equal(transform(r), "Test");
 });
 
 test("print", function() {
@@ -95,6 +95,22 @@ test("singleLineEventSlashEscape", function() {
     equal(r, "\n%print(1+1)");
     var r = e.eval("\\\\\n%print(1+1)");
     equal(r, "\\2");
+});
+
+test("keepUsefulWhitespaces", function() {
+    var r = e.eval("Foo ${bar}", {bar:"Bar"});
+    equal(r, "Foo Bar");
+    var r = e.eval("${bar} Foo", {bar:"Bar"});
+    equal(r, "Bar Foo");
+    var r = e.eval("Foo\n%if(true===true)\nBar", {bar:"Bar"});
+    equal(transform(r), "Foo Bar");
+});
+
+test("doesNotAddSpaces", function() {
+    var r = e.eval("Foo${bar}", {bar:"Bar"});
+    equal(r, "FooBar");
+    var r = e.eval("${bar}Foo", {bar:"Bar"});
+    equal(r, "BarFoo");
 });
 
 
