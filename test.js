@@ -5,24 +5,24 @@ if (typeof(exports) !== "undefined") { // nodejs
 
 test("base", function() {
     var C = ring.class({});
-    deepEqual(C.__mro__, [C, ring.object]);
+    deepEqual(C.__mro__, [C, ring.Object]);
 });
 
 test("mro", function() {
     var f = ring.class("f", [], {});
-    deepEqual(f.__mro__, [f, ring.object]);
+    deepEqual(f.__mro__, [f, ring.Object]);
     var e = ring.class("e", [], {});
-    deepEqual(e.__mro__, [e, ring.object]);
+    deepEqual(e.__mro__, [e, ring.Object]);
     var d = ring.class("d", [], {});
-    deepEqual(d.__mro__, [d, ring.object]);
+    deepEqual(d.__mro__, [d, ring.Object]);
 
     var c = ring.class("c", [d, f], {});
-    deepEqual(c.__mro__, [c, d, f, ring.object]);
+    deepEqual(c.__mro__, [c, d, f, ring.Object]);
     var b = ring.class("b", [d, e], {});
-    deepEqual(b.__mro__, [b, d, e, ring.object]);
+    deepEqual(b.__mro__, [b, d, e, ring.Object]);
 
     var a = ring.class("a", [b, c], {});
-    deepEqual(a.__mro__, [a, b, c, d, e, f, ring.object]);
+    deepEqual(a.__mro__, [a, b, c, d, e, f, ring.Object]);
 });
 
 test("inherit", function() {
@@ -43,5 +43,25 @@ test("inherit", function() {
         x: function() { return this.$super() + 5; },
     });
     equal(new D().x(), 6);
+});
 
+test("$init", function() {
+    var A = ring.class({
+        $init: function() {
+            this.x = 3;
+        },
+    });
+    equal(new A().x, 3);
+});
+
+test("instance", function() {
+    var A = ring.class({});
+    var B = ring.class([A], {});
+    ok(ring.instance(new A(), A));
+    ok(ring.instance(new B(), B));
+    ok(ring.instance(new B(), A));
+    ok(! ring.instance(new A(), B));
+    ok(ring.instance([], Array));
+    ok(! ring.instance([], A));
+    ok(! ring.instance(new A(), Array));
 });

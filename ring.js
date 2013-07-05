@@ -38,15 +38,18 @@ if (typeof(exports) !== "undefined") { // nodejs
 function declare(_) {
     var ring = {};
 
-    function object() {};
-    ring.object = object;
-    _.extend(ring.object, {
-        __mro__: [ring.object],
+    function Object() {};
+    ring.Object = Object;
+    _.extend(ring.Object, {
+        __mro__: [ring.Object],
         __properties__: {},
-        prototype: {},
-        $class: ring.object,
+        prototype: {
+            $class: ring.Object,
+        },
+        __class_id__: 1,
     });
 
+    var classCounter = 2;
     var fnTest = /xyz/.test(function(){xyz;}) ? /\$super\b/ : /.*/;
 
     ring.class = function() {
@@ -56,11 +59,12 @@ function declare(_) {
         var props = args[0];
         var parents = args.length >= 2 ? args[1] : [];
         if (parents.length == 0)
-            parents = [ring.object];
-        var name = args.length >= 3 ? args[2] : "class_";
+            parents = [ring.Object];
+        var id = classCounter++;
+        var name = args.length >= 3 ? args[2] : "Class" + id;
         // class/function creation
         var claz = new Function("function " + name +
-            "() {if (this.init)this.$init.apply(this, arguments);}; return " + name + ";")();
+            "() {if (this.$init)this.$init.apply(this, arguments);}; return " + name + ";")();
         // mro creation
         var toMerge = _.pluck(parents, "__mro__");
         toMerge = toMerge.concat(parents);
@@ -71,6 +75,7 @@ function declare(_) {
         var prototype = {};
         claz.prototype = prototype;
         prototype.$class = claz;
+        claz.__class_id__ = classCounter;
         var keys = {};
         _.each(claz.__mro__, function(c) {
             _.each(c.__properties__, function(v, k) {
@@ -100,6 +105,14 @@ function declare(_) {
         _.each(keys, function(v, k) {
             claz.prototype[k] = getProperty(claz.__mro__, k);
         });
+        // construct classes index
+        claz.__class_index__ = {};
+        _.each(claz.__mro__, function(c) {
+            claz.__class_index__[c.__class_id__] = c;
+        });
+        claz.isSubClass = function(other) {
+            return this.__class_index__[other.__class_id__] !== undefined;
+        };
 
         return claz;
     };
@@ -135,6 +148,14 @@ function declare(_) {
                 return __mro__;
             throw new Exception("Cannot create a consistent method resolution order (MRO)");
         };
+    };
+
+    ring.instance = function(obj, type) {
+        if (typeof(obj) === "object" && obj.$class &&
+            typeof(type) === "function" && typeof(type.__class_id__) === "number") {
+            return obj.$class.isSubClass(type);
+        }
+        return obj instanceof type;
     };
 
     return ring;
