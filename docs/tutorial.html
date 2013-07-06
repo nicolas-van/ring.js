@@ -76,7 +76,16 @@ release but you can use another version if you want.</p>
 <p>Ring.js is also compatible with <a href="http://requirejs.org/">Require.js</a>. Simply load the <code>ring.js</code> file and it will call
 the <code>define()</code> method instead of defining a global variable.</p>
 <h2 id="installation-in-nodejs">Installation in node.js</h2>
-<p>TODO</p>
+<p>Use this command to install Ring.js:</p>
+<div class="codehilite"><pre>npm install ring
+</pre></div>
+
+
+<p>Then inside your program:</p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">ring</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ring&quot;</span><span class="p">);</span>
+</pre></div>
+
+
 <h2 id="declaring-classes">Declaring Classes</h2>
 <p>The <code>ring.create()</code> function is used to declare new classes:</p>
 <div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
