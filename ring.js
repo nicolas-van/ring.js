@@ -48,9 +48,13 @@ function declare(_) {
         },
         __class_id__: 1,
         parents: [],
+        __class_index__: {"1": ring.Object},
+        isSubClass: function(other) {
+            return this.__class_index__[other.__class_id__] !== undefined;
+        }
     });
 
-    var classCounter = 2;
+    var classCounter = 3;
     var fnTest = /xyz/.test(function(){xyz;}) ? /\$super\b/ : /.*/;
 
     ring.class = function() {
@@ -114,7 +118,9 @@ function declare(_) {
         }
         _.each(_.chain(claz.__mro__).clone().reverse().value(), function(c) {
             if (c.__class_init__) {
-                c.__class_init__(claz.prototype);
+                var ret = c.__class_init__(claz.prototype);
+                if (ret !== undefined)
+                    claz.prototype = ret;
             }
         });
         // construct classes index
@@ -122,9 +128,7 @@ function declare(_) {
         _.each(claz.__mro__, function(c) {
             claz.__class_index__[c.__class_id__] = c;
         });
-        claz.isSubClass = function(other) {
-            return this.__class_index__[other.__class_id__] !== undefined;
-        };
+        claz.isSubClass = ring.Object.isSubClass;
 
         return claz;
     };
@@ -169,6 +173,23 @@ function declare(_) {
         }
         return obj instanceof type;
     };
+
+    ring.Error = ring.class("RingError", [], {
+        name: "ring.Error",
+        defaultMessage: "",
+        $init: function(message) {
+            this.message = message || this.defaultMessage;
+        },
+        $classInit: function(prototype) {
+            var p = new Error();
+            _.extend(p, prototype);
+            return p;
+        }
+    });
+
+    ring.ValueError = ring.class([ring.Error], {
+        name: "ring.ValueError"
+    });
 
     return ring;
 };

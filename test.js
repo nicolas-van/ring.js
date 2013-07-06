@@ -81,3 +81,28 @@ test("$classInit", function() {
     equal(new B().x, 2);
     equal(new B().y, 3);
 });
+
+test("exceptions", function() {
+    try {
+        throw new ring.Error("test");
+    } catch(e) {
+        equal(e.message, "test");
+        equal(e.name, "ring.Error");
+        ok(e.stack.length > 0);
+        ok(!!e.toString);
+        ok(ring.instance(e, Error));
+        ok(ring.instance(e, ring.Error));
+    }
+
+    try {
+        throw new ring.ValueError("test");
+    } catch(e) {
+        equal(e.message, "test");
+        equal(e.name, "ring.ValueError");
+        ok(e.stack.length > 0);
+        ok(!!e.toString);
+        ok(ring.instance(e, Error));
+        ok(ring.instance(e, ring.Error));
+        ok(ring.instance(e, ring.ValueError));
+    }
+});
