@@ -52,7 +52,7 @@ function declare(_) {
         __mro__: [ring.Object],
         __properties__: {},
         prototype: {
-            $class: ring.Object,
+            $class: ring.Object
         },
         __class_id__: 1,
         parents: [],
@@ -66,7 +66,7 @@ function declare(_) {
     var fnTest = /xyz/.test(function(){xyz;}) ? /\$super\b/ : /.*/;
 
     /**
-        ring.class([className,[parents,]] properties)
+        ring.create([className,[parents,]] properties)
 
         Creates a new class and returns it.
 
@@ -82,7 +82,7 @@ function declare(_) {
         useful to ease debugging in some cases, so it's not necessary to specify it
         most of the time.
     */
-    ring.class = function() {
+    ring.create = function() {
         // arguments parsing
         var args = _.toArray(arguments);
         args.reverse();
@@ -233,7 +233,7 @@ function declare(_) {
         sub-class of ring.Error.
 
     */
-    ring.Error = ring.class("RingError", [], {
+    ring.Error = ring.create("RingError", [], {
         /**
             The name attribute is used in the default implementation of the toString() method
             of the standard JavaScript Error class. According to the standard, all sub-classes
@@ -264,7 +264,7 @@ function declare(_) {
     /**
         A type of exception to inform that a method received an argument with an incorrect value.
     */
-    ring.ValueError = ring.class([ring.Error], {
+    ring.ValueError = ring.create([ring.Error], {
         name: "ring.ValueError"
     });
 
