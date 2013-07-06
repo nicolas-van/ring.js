@@ -47,6 +47,7 @@ function declare(_) {
             $class: ring.Object,
         },
         __class_id__: 1,
+        parents: [],
     });
 
     var classCounter = 2;
@@ -70,6 +71,7 @@ function declare(_) {
         toMerge = toMerge.concat(parents);
         var __mro__ = [claz].concat(mergeMro(toMerge));
         claz.__mro__ = __mro__;
+        claz.parents = parents;
         //generate prototype
         claz.__properties__ = props;
         var prototype = {};
@@ -104,6 +106,16 @@ function declare(_) {
         };
         _.each(keys, function(v, k) {
             claz.prototype[k] = getProperty(claz.__mro__, k);
+        });
+        // class init
+        if (claz.prototype.$classInit) {
+            claz.__class_init__ = claz.prototype.$classInit;
+            delete claz.prototype.$classInit;
+        }
+        _.each(_.chain(claz.__mro__).clone().reverse().value(), function(c) {
+            if (c.__class_init__) {
+                c.__class_init__(claz.prototype);
+            }
         });
         // construct classes index
         claz.__class_index__ = {};

@@ -65,3 +65,19 @@ test("instance", function() {
     ok(! ring.instance([], A));
     ok(! ring.instance(new A(), Array));
 });
+
+test("$classInit", function() {
+    var A = ring.class({
+        $classInit: function(proto) {
+            proto.x = 2;
+        },
+    });
+    equal(new A().x, 2);
+    var B = ring.class([A], {
+        $classInit: function(proto) {
+            proto.y = 3;
+        },
+    });
+    equal(new B().x, 2);
+    equal(new B().y, 3);
+});
