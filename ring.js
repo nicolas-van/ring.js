@@ -66,7 +66,7 @@ function declare(_) {
     var fnTest = /xyz/.test(function(){xyz;}) ? /\$super\b/ : /.*/;
 
     /**
-        ring.create([className,[parents,]] properties)
+        ring.create([[className,] parents,] properties)
 
         Creates a new class and returns it.
 
