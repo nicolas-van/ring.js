@@ -17,8 +17,8 @@ Installation in Browser
 
 [Download the last release of Ring.js](/downloads.html). Then extract the zip file.
 
-Ring.js has only one dependency: [Underscore.js](http://underscorejs.org/). The underscore library is already provided
-in the Ring.js release but you can use another version if you want.
+Ring.js has only one dependency: [Underscore.js](http://underscorejs.org/). It is already provided in the Ring.js
+release but you can use another version if you want.
 
 To use Ring.js add theses lines to your HTML header:
 
@@ -46,16 +46,126 @@ The `ring.class()` function is used to declare new classes:
         },
     });
     var a = new A();
-    console.log(a.saySomething());
-    // will print "hello world" in the JavaScript console
+    console.log(a.saySomething()); // prints "hello world" in the JavaScript console
 
-`ring.class()`` takes a dictionary as argument. The methods in that 
+`ring.class()` takes a dictionary as argument. The content of that dictionary will be added to the class' prototype.
 
 Constructor
 -----------
 
+    :::javascript
+    var A = ring.class({
+        $init: function(name) {
+            this.name = name;
+        },
+    });
+    var a = new A("Nicolas");
+    console.log(a.name); // prints "Nicolas"
 
+When the dictionary of properties given to `ring.class()` contains a method named `$init`, that method will be called
+during the object construction with the arguments given to class when using `new`.
 
+Inheritance
+-----------
+
+To inherit from one or multiple classes, add a list of the classes to inherit as an argument of `ring.class()` *before*
+the properties dictionary.
+
+    :::javascript
+    var A = ring.class({
+        x: function() {
+            return "x";
+        },
+    });
+    var B = ring.class({
+        y: function() {
+            return "y";
+        },
+    });
+
+    var C = ring.class([A, B], {});
+
+    var c = new C();
+    console.log(c.x()); // prints "x";
+    console.log(c.y()); // prints "y";
+
+Diamond inheritance (ie: the classes B and C both inherit from A and the class D inherits from B *and* C) is allowed by
+Ring.js.
+
+Super Method
+------------
+
+To call the super method when overriding a method, use `this.$super()`. Pass arguments to `this.$super()' to forward
+arguments if necessary.
+
+    :::javascript
+    var A = ring.class({
+        sayHello: function(name) {
+            return "Hello " + name;
+        },
+    });
+    var B = ring.class([A], {
+        sayHello: function(name) {
+            return this.$super(name) + ", nice to meet you";
+        },
+    });
+
+    var b = new B();
+    console.log(b.sayHello("Nicolas")); // prints "Hello Nicolas, nice to meet you"
+
+Testing the Class of an Object
+------------------------------
+
+The standard procedure in JavaScript to test if an object is an instance of a class is to use `instanceof`. But, due to
+the implementation of inheritance in Ring.js (which is necessary to have multiple inheritance), `instanceof` can not
+work properly.
+
+So you should use `ring.instance()` instead.
+
+    :::javascript
+    var A = ring.class({});
+    var B = ring.class([A], {});
+
+    console.log(ring.instance(new A(), A)); // prints "true"
+    console.log(ring.instance(new B(), A)); // prints "true"
+
+`ring.instance(obj, type)` will return `true` if `obj` is an instance of `type` or an instance of a sub-class of `type`.
+
+`ring.instance()` can also be used with classes and objects that do not use the Ring.js class system. It will use the
+`instanceof` operator in that case. It means you can safely replace all the usages of `instanceof` in any programs by
+`ring.instance()` without causing problems.
+
+Additionally, `ring.instance()` can be used to test the type of basic data types in JavaScript. To do so, use a string
+as second argument instead of a class. Example:
+
+    :::javascript
+    console.log(ring.instance("", "string")); // prints "true"
+    console.log(ring.instance(function() {}, "function")); // prints "true"
+
+Creation of New Exception Types
+-------------------------------
+
+To create new exception types you are supposed to inherit from the standard `Error` class. But inheriting from that
+standard class can hard. That's why Ring.js contains a feature to bring a solution to that:
+
+    :::javascript
+    var MyError = ring.class([ring.Error], {
+        name: "MyError",
+    });
+
+    try {
+        throw new MyError("an error occured");
+    } catch(e) {
+        console.log(ring.instance(e, Error)); // prints "true"
+        console.log(ring.instance(e, ring.Error)); // prints "true"
+        console.log(ring.instance(e, MyError)); // prints "true"
+    }
+
+The `ring.Error` class is a special class using the Ring.js class system *but* also inherits from the standard `Error`
+class. You can create new exceptions classes inheriting from it and thus create complex exception hierarchies.
+
+Please note the `name` property is a property of the standard `Error` class that can be useful for debugging. So all
+exception classes should define one.
 
 </%text>
 </%block>

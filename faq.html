@@ -5,8 +5,8 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Ring.js Documentation</title>
-    <meta name="description" content="Ring.js Documentation">
+    <title>Ring.js FAQ</title>
+    <meta name="description" content="Ring.js FAQ">
     <meta name="author" content="Nicolas Vanhoren">
 
     
@@ -61,10 +61,14 @@
                     
                     
                     
-<h1>Documentation</h1>
-
-<ul><li><a href="/docs/tutorial.html#tutorial">Tutorial</a><ul><li><a href="/docs/tutorial.html#installation-in-browser">Installation in Browser</a></li><li><a href="/docs/tutorial.html#installation-in-nodejs">Installation in node.js</a></li><li><a href="/docs/tutorial.html#declaring-classes">Declaring Classes</a></li><li><a href="/docs/tutorial.html#constructor">Constructor</a></li><li><a href="/docs/tutorial.html#inheritance">Inheritance</a></li><li><a href="/docs/tutorial.html#super-method">Super Method</a></li><li><a href="/docs/tutorial.html#testing-the-class-of-an-object">Testing the Class of an Object</a></li><li><a href="/docs/tutorial.html#creation-of-new-exception-types">Creation of New Exception Types</a></li></ul></li></ul>
-
+<h1>FAQ</h1>
+<h3>How does Ring.js makes multiple inheritance?</h3>
+<p>Most inheritance systems in JavaScript (like John Resig's one) use prototype inheritance. They create a chain of
+prototypes and the JavaScript virtual machine will recursively search that chain to find the methods to call.</p>
+<p>Unfortunately this behavior makes it impossible to use multiple inheritance. So Ring.js uses a different system.</p>
+<p>When a new class is created, Ring.js creates a completely new prototype by using the methods defined in its whole set of
+base classes. To solve problems created by the diamond inheritances Ring.js linearize the classes graph using the <a href="http://www.python.org/download/releases/2.3/mro/">C3
+algorithm as defined in the Python standard</a>.</p>
 
 
                 </div>

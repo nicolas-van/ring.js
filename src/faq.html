@@ -1,0 +1,30 @@
+<%!
+    title = "Ring.js FAQ"
+    description = "Ring.js FAQ"
+
+    import mypygreen
+%>
+
+<%inherit file="/site_base.mako"/>
+
+
+<%block name="mainContent">
+<%text filter="markdown">
+
+FAQ
+===
+
+### How does Ring.js makes multiple inheritance?
+
+Most inheritance systems in JavaScript (like John Resig's one) use prototype inheritance. They create a chain of
+prototypes and the JavaScript virtual machine will recursively search that chain to find the methods to call.
+
+Unfortunately this behavior makes it impossible to use multiple inheritance. So Ring.js uses a different system.
+
+When a new class is created, Ring.js creates a completely new prototype by using the methods defined in its whole set of
+base classes. To solve problems created by the diamond inheritances Ring.js linearize the classes graph using the [C3
+algorithm as defined in the Python standard](http://www.python.org/download/releases/2.3/mro/).
+
+</%text>
+
+</%block>
