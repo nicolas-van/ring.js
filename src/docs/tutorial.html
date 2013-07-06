@@ -1,27 +1,61 @@
 <%!
-    title = "Ring.js Documentation"
-    description = "Ring.js Documentation Main Page"
-    nmarkdown = lambda text: markdown(text, extensions=["headerid"])
+    title = "Ring.js Tutorial"
+    description = "Ring.js Tutorial"
+    import mypygreen
 %>
 
 <%inherit file="/site_base.mako"/>
-<%namespace name="macros" file="/macros.mako"/>
 
 <%block name="mainContent">
-<%text filter="nmarkdown">
+<%text filter="mypygreen.markdown">
 
 Tutorial
 ========
 
+Installation in Browser
+-----------------------
+
+[Download the last release of Ring.js](/downloads.html). Then extract the zip file.
+
+Ring.js has only one dependency: [Underscore.js](http://underscorejs.org/). The underscore library is already provided
+in the Ring.js release but you can use another version if you want.
+
+To use Ring.js add theses lines to your HTML header:
+
+    :::html
+    <script type="text/javascript" src="underscore.js"></script>
+    <script type="text/javascript" src="ring.js"></script>
+
+Ring.js is also compatible with [Require.js](http://requirejs.org/). Simply load the `ring.js` file and it will call
+the `define()` method instead of defining a global variable.
+
+Installation in node.js
+-----------------------
+
+TODO
+
 Declaring Classes
 -----------------
 
-Stuff
+The `ring.class()` function is used to declare new classes:
 
-* example
-* other
-    * one level more
-    * second
+    :::javascript
+    var A = ring.class({
+        saySomething: function() {
+            return "hello world";
+        },
+    });
+    var a = new A();
+    console.log(a.saySomething());
+    // will print "hello world" in the JavaScript console
+
+`ring.class()`` takes a dictionary as argument. The methods in that 
+
+Constructor
+-----------
+
+
+
 
 </%text>
 </%block>

@@ -46,27 +46,29 @@
 </div>
 
 <p>Ring.js is a class system in JavaScript allowing multiple inheritance.</p>
-<pre><code>var Human = ring.class({
-    talk: function() {
-        return "hello";
-    },
-});
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">Human</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+    <span class="nx">talk</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s2">&quot;hello&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+<span class="p">});</span>
 
-var Spider = ring.class({
-    climb: function() {
-        return "climbing";
-    },
-});
+<span class="kd">var</span> <span class="nx">Spider</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+    <span class="nx">climb</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s2">&quot;climbing&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+<span class="p">});</span>
 
-var SpiderMan = ring.class([Spider, Human], {
-    talk: function() {
-        return this.$super() + ", I am your friendly neighborhood";
-    }
-});
+<span class="kd">var</span> <span class="nx">SpiderMan</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">([</span><span class="nx">Spider</span><span class="p">,</span> <span class="nx">Human</span><span class="p">],</span> <span class="p">{</span>
+    <span class="nx">talk</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$super</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;, I am your friendly neighborhood&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">});</span>
 
-var spiderman = new SpiderMan();
-console.log(spiderman.talk());
-</code></pre>
+<span class="kd">var</span> <span class="nx">spiderman</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SpiderMan</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">spiderman</span><span class="p">.</span><span class="nx">talk</span><span class="p">());</span>
+</pre></div>
+
+
 <p>Its advantages:</p>
 <ul>
 <li>Stop fighting against JavaScript prototype-based object oriented system. Use a class system like

@@ -742,7 +742,7 @@
 .progdesign li {
   text-align: justify;
 }
-.progdesign .highlight > pre,
+.progdesign .codehilite > pre,
 .progdesign pre > code {
   font-size: 13.299999999999999px;
   display: block;

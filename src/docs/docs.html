@@ -2,31 +2,7 @@
     title = "Ring.js Documentation"
     description = "Ring.js Documentation Main Page"
 
-    def render_list(pygreen, files_, levels=2):
-        headers = [('h%d' % x) for x in range(1, levels + 1)]
-        from pyquery import PyQuery as pq
-        lst = []
-        for f in files_:
-            c = pygreen.file_renderer(f)
-            d = pq(c)
-            d = d(".rightAreaCell")
-            hs = d.find(",".join(headers))
-            for el in [pq(x) for x in hs]:
-                level = int(el[0].tag[1]) - 1
-                text = el.text()
-                id = el.attr("id")
-                select = lambda lst, nb: lst if nb == 0 else select(lst[-1][2], nb - 1)
-                select(lst, level).append((text, "%s#%s" % (f, id), []))
-
-        def it(lst):
-            if len(lst) == 0:
-                return ""
-            tmp = ""
-            for i in lst:
-                tmp += '<li><a href="%s">%s</a>%s</li>' % (i[1], i[0], it(i[2]))
-            return "<ul>%s</ul>" % tmp
-
-        return it(lst)
+    import mypygreen
 %>
 
 <%inherit file="/site_base.mako"/>
@@ -40,7 +16,7 @@ Documentation
 
 </%text>
 
-${render_list(pygreen, ["/docs/tutorial.html"])}
+${mypygreen.generate_index(pygreen, ["/docs/tutorial.html"], selector=".rightAreaCell")}
 
 
 </%block>

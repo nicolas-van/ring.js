@@ -5,8 +5,8 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Ring.js Documentation</title>
-    <meta name="description" content="Ring.js Documentation">
+    <title>Ring.js Tutorial</title>
+    <meta name="description" content="Ring.js Tutorial">
     <meta name="author" content="Nicolas Vanhoren">
 
     
@@ -47,16 +47,35 @@
                     
                     
 <h1 id="tutorial">Tutorial</h1>
+<h2 id="installation-in-browser">Installation in Browser</h2>
+<p><a href="/downloads.html">Download the last release of Ring.js</a>. Then extract the zip file.</p>
+<p>Ring.js has only one dependency: <a href="http://underscorejs.org/">Underscore.js</a>. The underscore library is already provided
+in the Ring.js release but you can use another version if you want.</p>
+<p>To use Ring.js add theses lines to your HTML header:</p>
+<div class="codehilite"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;underscore.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;ring.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+
+<p>Ring.js is also compatible with <a href="http://requirejs.org/">Require.js</a>. Simply load the <code>ring.js</code> file and it will call
+the <code>define()</code> method instead of defining a global variable.</p>
+<h2 id="installation-in-nodejs">Installation in node.js</h2>
+<p>TODO</p>
 <h2 id="declaring-classes">Declaring Classes</h2>
-<p>Stuff</p>
-<ul>
-<li>example</li>
-<li>other<ul>
-<li>one level more</li>
-<li>second</li>
-</ul>
-</li>
-</ul>
+<p>The <code>ring.class()</code> function is used to declare new classes:</p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+    <span class="nx">saySomething</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s2">&quot;hello world&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+<span class="p">});</span>
+<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">saySomething</span><span class="p">());</span>
+<span class="c1">// will print &quot;hello world&quot; in the JavaScript console</span>
+</pre></div>
+
+
+<p>`ring.class()`` takes a dictionary as argument. The methods in that </p>
+<h2 id="constructor">Constructor</h2>
 
                 </div>
             </div>
