@@ -69,6 +69,18 @@ function declare(_) {
         ring.class([className,[parents,]] properties)
 
         Creates a new class and returns it.
+
+        properties is a dictionary of the methods and attributes that should
+        be added to the new class' prototype.
+
+        parents is a list of the classes this new class should extend. If not
+        specified or an empty list is specified this class will inherit from one
+        class: ring.Object.
+
+        className is the name of the class as it should appear in a JavaScript
+        debugger. If not specified a default class name is generated. This is only
+        useful to ease debugging in some cases, so it's not necessary to specify it
+        most of the time.
     */
     ring.class = function() {
         // arguments parsing
@@ -175,10 +187,30 @@ function declare(_) {
                 continue;
             if (_.all(current, function(i) { return i.length ==0; }))
                 return __mro__;
-            throw new Exception("Cannot create a consistent method resolution order (MRO)");
+            throw new ring.ValueError("Cannot create a consistent method resolution order (MRO)");
         };
     };
 
+    /**
+        ring.instance(obj, type)
+
+        Returns true if obj is an instance of type or an instance of a sub-class of type.
+
+        It is necessary to use this method instead of instanceof when using the Ring.js class
+        system because instanceof will not be able to detect sub-classes.
+
+        If used with obj or type that do not use the Ring.js class system this method will
+        use instanceof instead. So it should be safe to replace all usages of instanceof
+        by ring.instance() in any program, whether or not it uses Ring.js.
+
+        Additionaly this method allows to test the type of simple JavaScript types like strings.
+        To do so, pass a string instead of a type as second argument. Examples:
+
+            ring.instance("", "string") // returns true
+            ring.instance(function() {}, "function") // returns true
+            ring.instance({}, "object") // returns true
+            ring.instance(1, "number") // returns true
+    */
     ring.instance = function(obj, type) {
         if (typeof(obj) === "object" && obj.$class &&
             typeof(type) === "function" && typeof(type.__class_id__) === "number") {
@@ -189,9 +221,36 @@ function declare(_) {
         return obj instanceof type;
     };
 
+    /**
+        A class to easily create new classes representing exceptions. This class is special
+        because it is a sub-class of the standard Error class of JavaScript. Examples:
+
+        ring.instance(e, Error)
+
+        e instanceof Error
+
+        This two expressions will always be true if e is an instance of ring.Error or any
+        sub-class of ring.Error.
+
+    */
     ring.Error = ring.class("RingError", [], {
+        /**
+            The name attribute is used in the default implementation of the toString() method
+            of the standard JavaScript Error class. According to the standard, all sub-classes
+            of Error should define a new name.
+        */
         name: "ring.Error",
+        /**
+            A default message to use in instances of this class if there is no arguments given
+            to the constructor.
+        */
         defaultMessage: "",
+        /**
+            Constructor arguments:
+
+            message: The message to put in the instance. If there is no message specified, the
+            message will be this.defaultMessage.
+        */
         $init: function(message) {
             this.message = message || this.defaultMessage;
         },
@@ -202,6 +261,9 @@ function declare(_) {
         }
     });
 
+    /**
+        A type of exception to inform that a method received an argument with an incorrect value.
+    */
     ring.ValueError = ring.class([ring.Error], {
         name: "ring.ValueError"
     });
