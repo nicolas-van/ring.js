@@ -15,7 +15,7 @@ Tutorial
 Installation in Browser
 -----------------------
 
-[Download the last release of Ring.js](/downloads.html). Then extract the zip file.
+[Download the last release of Ring.js](/downloads.html). Then extract the content of the zip file.
 
 Ring.js has only one dependency: [Underscore.js](http://underscorejs.org/). It is already provided in the Ring.js
 release but you can use another version if you want.
@@ -48,7 +48,8 @@ The `ring.class()` function is used to declare new classes:
     var a = new A();
     console.log(a.saySomething()); // prints "hello world" in the JavaScript console
 
-`ring.class()` takes a dictionary as argument. The content of that dictionary will be added to the class' prototype.
+`ring.class()` takes a dictionary as argument. The content of that dictionary will be added to the prototype of the
+class.
 
 Constructor
 -----------
@@ -63,7 +64,7 @@ Constructor
     console.log(a.name); // prints "Nicolas"
 
 When the dictionary of properties given to `ring.class()` contains a method named `$init`, that method will be called
-during the object construction with the arguments given to class when using `new`.
+during the object construction with the arguments given to the class when using `new`.
 
 Inheritance
 -----------
@@ -95,7 +96,7 @@ Ring.js.
 Super Method
 ------------
 
-To call the super method when overriding a method, use `this.$super()`. Pass arguments to `this.$super()' to forward
+To call the super method when overriding a method, use `this.$super()`. Pass arguments to `this.$super()` to forward
 arguments if necessary.
 
     :::javascript
