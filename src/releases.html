@@ -1,0 +1,18 @@
+<%!
+    title = "Ring.js Releases"
+    description = title
+
+    import mypygreen
+%>
+
+<%inherit file="/site_base.mako"/>
+
+<%block name="mainContent">
+<%text filter="markdown">
+Releases
+========
+</%text>
+
+${mypygreen.generate_file_list(pygreen, "/static/releases", reverse=True)}
+
+</%block>
