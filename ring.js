@@ -1,5 +1,5 @@
 /*
-Ring.js version 0.1
+Ring.js version 1.0
 
 Copyright (c) 2013, Nicolas Vanhoren
 
@@ -38,7 +38,15 @@ if (typeof(exports) !== "undefined") { // nodejs
 function declare(_) {
     var ring = {};
 
+
     function Object() {};
+    /**
+        ring.Object
+
+        The base class of all other classes. It doesn't have much uses except
+        testing testing if an object uses the Ring.js class system using
+        ring.instance(x, ring.Object)
+    */
     ring.Object = Object;
     _.extend(ring.Object, {
         __mro__: [ring.Object],
@@ -57,6 +65,11 @@ function declare(_) {
     var classCounter = 3;
     var fnTest = /xyz/.test(function(){xyz;}) ? /\$super\b/ : /.*/;
 
+    /**
+        ring.class([className,[parents,]] properties)
+
+        Creates a new class and returns it.
+    */
     ring.class = function() {
         // arguments parsing
         var args = _.toArray(arguments);
