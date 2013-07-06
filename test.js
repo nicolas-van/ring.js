@@ -61,9 +61,16 @@ test("instance", function() {
     ok(ring.instance(new B(), B));
     ok(ring.instance(new B(), A));
     ok(! ring.instance(new A(), B));
+
     ok(ring.instance([], Array));
     ok(! ring.instance([], A));
     ok(! ring.instance(new A(), Array));
+
+    ok(ring.instance("", "string"));
+    ok(ring.instance(function(){}, "function"));
+    ok(ring.instance(2, "number"));
+    ok(ring.instance({}, "object"));
+
 });
 
 test("$classInit", function() {

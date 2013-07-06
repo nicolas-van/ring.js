@@ -111,6 +111,12 @@ function declare(_) {
         _.each(keys, function(v, k) {
             claz.prototype[k] = getProperty(claz.__mro__, k);
         });
+        // construct classes index
+        claz.__class_index__ = {};
+        _.each(claz.__mro__, function(c) {
+            claz.__class_index__[c.__class_id__] = c;
+        });
+        claz.isSubClass = ring.Object.isSubClass;
         // class init
         if (claz.prototype.$classInit) {
             claz.__class_init__ = claz.prototype.$classInit;
@@ -123,12 +129,6 @@ function declare(_) {
                     claz.prototype = ret;
             }
         });
-        // construct classes index
-        claz.__class_index__ = {};
-        _.each(claz.__mro__, function(c) {
-            claz.__class_index__[c.__class_id__] = c;
-        });
-        claz.isSubClass = ring.Object.isSubClass;
 
         return claz;
     };
@@ -171,6 +171,8 @@ function declare(_) {
             typeof(type) === "function" && typeof(type.__class_id__) === "number") {
             return obj.$class.isSubClass(type);
         }
+        if (typeof(type) === "string")
+            return typeof(obj) === type;
         return obj instanceof type;
     };
 
