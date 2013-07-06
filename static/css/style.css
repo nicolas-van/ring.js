@@ -18,22 +18,20 @@
 .frontPageHeader > div > h2 {
   font-size: 20px;
 }
-.leftLogo {
+.sidePageHeader {
   text-align: center;
 }
-.leftLogo > img {
-  width: 150px;
-}
-.sidePageHeader {
-  height: 300px;
+.sidePageHeader > div {
+  text-align: left;
+  margin-bottom: 15px;
 }
 .sidePageHeader > div > h1 {
   font-size: 40px;
-  margin: 0 30px;
+  margin: 0 20px;
 }
 .sidePageHeader > div > h2 {
   font-size: 15px;
-  margin: 0 30px;
+  margin: 0 20px;
 }
 .horizontalMenu {
   text-align: center;
@@ -41,4 +39,13 @@
 .horizontalMenu > a {
   font-style: italic;
   padding: 0 10px;
+}
+.sideNavigation {
+  margin: 0 20px;
+}
+.sideNavigation a {
+  display: block;
+  margin: 5px 0;
+  font-size: 16px;
+  font-style: italic;
 }
