@@ -1,0 +1,44 @@
+.frontPageHeader {
+  display: table;
+  height: 200px;
+  margin: 20px auto;
+}
+.frontPageHeader > img {
+  display: table-cell;
+}
+.frontPageHeader > div {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 50px;
+}
+.frontPageHeader > div > h1 {
+  font-size: 70px;
+  margin-bottom: 15px;
+}
+.frontPageHeader > div > h2 {
+  font-size: 20px;
+}
+.leftLogo {
+  text-align: center;
+}
+.leftLogo > img {
+  width: 150px;
+}
+.sidePageHeader {
+  height: 300px;
+}
+.sidePageHeader > div > h1 {
+  font-size: 40px;
+  margin: 0 30px;
+}
+.sidePageHeader > div > h2 {
+  font-size: 15px;
+  margin: 0 30px;
+}
+.horizontalMenu {
+  text-align: center;
+}
+.horizontalMenu > a {
+  font-style: italic;
+  padding: 0 10px;
+}

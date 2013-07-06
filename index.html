@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+
+<html class="progdesign">
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ring.js</title>
+    <meta name="description" content="Ring.js">
+    <meta name="author" content="Nicolas Vanhoren">
+
+    
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/common/static/css/base_style.css" />
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+
+</head>
+<body>
+
+    
+    
+
+    <div class="mainHorizontalTable">
+        <div class="contentRow">
+            <div class="contentTable">
+                <div class="rightAreaCell">
+                    
+                    
+                    
+
+<div class="frontPageHeader">
+    <img src="/static/img/ring_200.png"/>
+    <div>
+        <h1>Ring.js</h1>
+        <h2>JavaScript Class System with Multiple Inheritance</h2>
+    </div>
+</div>
+
+<div class="horizontalMenu">
+    
+    <a href="/">home</a>
+    <a href="/docs/docs.html">documentation</a>
+
+</div>
+
+<p>Ring.js is a class system in JavaScript allowing multiple inheritance.</p>
+<pre><code>var Human = ring.class({
+    talk: function() {
+        return "hello";
+    },
+});
+
+var Spider = ring.class({
+    climb: function() {
+        return "climbing";
+    },
+});
+
+var SpiderMan = ring.class([Spider, Human], {
+    talk: function() {
+        return this.$super() + ", I am your friendly neighborhood";
+    }
+});
+
+var spiderman = new SpiderMan();
+console.log(spiderman.talk());
+</code></pre>
+<p>Its advantages:</p>
+<ul>
+<li>Stop fighting against JavaScript prototype-based object oriented system. Use a class system like
+  you would in Java, Python, or basically any well-known language.</li>
+<li>Available in the browser or in node.js. Also works with require.js.</li>
+<li>The inheritance system is inspired by Python3, one of the best multiple inheritance system ever.</li>
+<li>It's extremely fast. The performances are at least identical if not superior to John Resig's simple inheritance.</li>
+<li>Licensed under the MIT license.</li>
+<li>Damn, multiple inheritance just rocks!</li>
+</ul>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="footerRow">
+            <div class="footerCell">
+                Copyright © 2013 <a href="https://github.com/nicolas-van">Nicolas Vanhoren</a><br />
+                All Rights Reserved
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+  <!--[if lt IE 8]>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+    <script>
+        // You may want to place these lines inside an onload handler
+        CFInstall.check({
+        mode: "overlay"
+        });
+    </script>
+  <![endif]-->
+</body>
+</html>

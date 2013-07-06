@@ -1,0 +1,61 @@
+<%!
+    title = "Ring.js"
+    description = "JavaScript Class System with Multiple Inheritance"
+    hideSideContent = True
+%>
+
+<%inherit file="/site_base.mako"/>
+<%namespace name="macros" file="/macros.mako"/>
+
+<%block name="mainContent">
+
+<div class="frontPageHeader">
+    <img src="/static/img/ring_200.png"/>
+    <div>
+        <h1>${title}</h1>
+        <h2>${description}</h2>
+    </div>
+</div>
+
+<div class="horizontalMenu">
+    ${macros.navigation()}
+</div>
+
+<%text filter="markdown">
+
+Ring.js is a class system in JavaScript allowing multiple inheritance.
+
+    var Human = ring.class({
+        talk: function() {
+            return "hello";
+        },
+    });
+
+    var Spider = ring.class({
+        climb: function() {
+            return "climbing";
+        },
+    });
+
+    var SpiderMan = ring.class([Spider, Human], {
+        talk: function() {
+            return this.$super() + ", I am your friendly neighborhood";
+        }
+    });
+
+    var spiderman = new SpiderMan();
+    console.log(spiderman.talk());
+
+Its advantages:
+
+* Stop fighting against JavaScript prototype-based object oriented system. Use a class system like
+  you would in Java, Python, or basically any well-known language.
+* Available in the browser or in node.js. Also works with require.js.
+* The inheritance system is inspired by Python3, one of the best multiple inheritance system ever.
+* It's extremely fast. The performances are at least identical if not superior to John Resig's simple inheritance.
+* Licensed under the MIT license.
+* Damn, multiple inheritance just rocks!
+
+</%text>
+
+</%block>
