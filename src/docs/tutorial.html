@@ -37,10 +37,10 @@ TODO
 Declaring Classes
 -----------------
 
-The `ring.class()` function is used to declare new classes:
+The `ring.create()` function is used to declare new classes:
 
     :::javascript
-    var A = ring.class({
+    var A = ring.create({
         saySomething: function() {
             return "hello world";
         },
@@ -48,14 +48,14 @@ The `ring.class()` function is used to declare new classes:
     var a = new A();
     console.log(a.saySomething()); // prints "hello world" in the JavaScript console
 
-`ring.class()` takes a dictionary as argument. The content of that dictionary will be added to the prototype of the
+`ring.create()` takes a dictionary as argument. The content of that dictionary will be added to the prototype of the
 class.
 
 Constructor
 -----------
 
     :::javascript
-    var A = ring.class({
+    var A = ring.create({
         $init: function(name) {
             this.name = name;
         },
@@ -63,28 +63,28 @@ Constructor
     var a = new A("Nicolas");
     console.log(a.name); // prints "Nicolas"
 
-When the dictionary of properties given to `ring.class()` contains a method named `$init`, that method will be called
+When the dictionary of properties given to `ring.create()` contains a method named `$init`, that method will be called
 during the object construction with the arguments given to the class when using `new`.
 
 Inheritance
 -----------
 
-To inherit from one or multiple classes, add a list of the classes to inherit as an argument of `ring.class()` *before*
+To inherit from one or multiple classes, add a list of the classes to inherit as an argument of `ring.create()` *before*
 the properties dictionary.
 
     :::javascript
-    var A = ring.class({
+    var A = ring.create({
         x: function() {
             return "x";
         },
     });
-    var B = ring.class({
+    var B = ring.create({
         y: function() {
             return "y";
         },
     });
 
-    var C = ring.class([A, B], {});
+    var C = ring.create([A, B], {});
 
     var c = new C();
     console.log(c.x()); // prints "x";
@@ -100,12 +100,12 @@ To call the super method when overriding a method, use `this.$super()`. Pass arg
 arguments if necessary.
 
     :::javascript
-    var A = ring.class({
+    var A = ring.create({
         sayHello: function(name) {
             return "Hello " + name;
         },
     });
-    var B = ring.class([A], {
+    var B = ring.create([A], {
         sayHello: function(name) {
             return this.$super(name) + ", nice to meet you";
         },
@@ -124,8 +124,8 @@ work properly.
 So you should use `ring.instance()` instead.
 
     :::javascript
-    var A = ring.class({});
-    var B = ring.class([A], {});
+    var A = ring.create({});
+    var B = ring.create([A], {});
 
     console.log(ring.instance(new A(), A)); // prints "true"
     console.log(ring.instance(new B(), A)); // prints "true"
@@ -150,7 +150,7 @@ To create new exception types you are supposed to inherit from the standard `Err
 standard class can hard. That's why Ring.js contains a feature to bring a solution to that:
 
     :::javascript
-    var MyError = ring.class([ring.Error], {
+    var MyError = ring.create([ring.Error], {
         name: "MyError",
     });
 

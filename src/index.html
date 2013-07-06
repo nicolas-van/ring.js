@@ -27,19 +27,19 @@
 Ring.js is a class system in JavaScript allowing multiple inheritance.
 
     :::javascript
-    var Human = ring.class({
+    var Human = ring.create({
         talk: function() {
             return "hello";
         },
     });
 
-    var Spider = ring.class({
+    var Spider = ring.create({
         climb: function() {
             return "climbing";
         },
     });
 
-    var SpiderMan = ring.class([Spider, Human], {
+    var SpiderMan = ring.create([Spider, Human], {
         talk: function() {
             return this.$super() + ", I am your friendly neighborhood";
         }
@@ -53,7 +53,7 @@ Its advantages:
 * Stop fighting against JavaScript prototype-based object oriented system. Use a class system like
   you would in Java, Python, or basically any well-known language.
 * Available in the browser or in node.js. Also works with require.js.
-* The inheritance system is inspired by Python3, one of the best multiple inheritance system ever.
+* The inheritance system is inspired by Python, one of the best multiple inheritance system ever.
 * It's extremely fast. The performances are at least identical if not superior to John Resig's simple inheritance.
 * Licensed under the MIT license.
 * Damn, multiple inheritance just rocks!

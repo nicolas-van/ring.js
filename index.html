@@ -62,19 +62,19 @@
 </div>
 
 <p>Ring.js is a class system in JavaScript allowing multiple inheritance.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">Human</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">Human</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
     <span class="nx">talk</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="s2">&quot;hello&quot;</span><span class="p">;</span>
     <span class="p">},</span>
 <span class="p">});</span>
 
-<span class="kd">var</span> <span class="nx">Spider</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+<span class="kd">var</span> <span class="nx">Spider</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
     <span class="nx">climb</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="s2">&quot;climbing&quot;</span><span class="p">;</span>
     <span class="p">},</span>
 <span class="p">});</span>
 
-<span class="kd">var</span> <span class="nx">SpiderMan</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">([</span><span class="nx">Spider</span><span class="p">,</span> <span class="nx">Human</span><span class="p">],</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">SpiderMan</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">Spider</span><span class="p">,</span> <span class="nx">Human</span><span class="p">],</span> <span class="p">{</span>
     <span class="nx">talk</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$super</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;, I am your friendly neighborhood&quot;</span><span class="p">;</span>
     <span class="p">}</span>
@@ -90,7 +90,7 @@
 <li>Stop fighting against JavaScript prototype-based object oriented system. Use a class system like
   you would in Java, Python, or basically any well-known language.</li>
 <li>Available in the browser or in node.js. Also works with require.js.</li>
-<li>The inheritance system is inspired by Python3, one of the best multiple inheritance system ever.</li>
+<li>The inheritance system is inspired by Python, one of the best multiple inheritance system ever.</li>
 <li>It's extremely fast. The performances are at least identical if not superior to John Resig's simple inheritance.</li>
 <li>Licensed under the MIT license.</li>
 <li>Damn, multiple inheritance just rocks!</li>

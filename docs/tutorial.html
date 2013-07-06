@@ -78,8 +78,8 @@ the <code>define()</code> method instead of defining a global variable.</p>
 <h2 id="installation-in-nodejs">Installation in node.js</h2>
 <p>TODO</p>
 <h2 id="declaring-classes">Declaring Classes</h2>
-<p>The <code>ring.class()</code> function is used to declare new classes:</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+<p>The <code>ring.create()</code> function is used to declare new classes:</p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
     <span class="nx">saySomething</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="s2">&quot;hello world&quot;</span><span class="p">;</span>
     <span class="p">},</span>
@@ -89,10 +89,10 @@ the <code>define()</code> method instead of defining a global variable.</p>
 </pre></div>
 
 
-<p><code>ring.class()</code> takes a dictionary as argument. The content of that dictionary will be added to the prototype of the
+<p><code>ring.create()</code> takes a dictionary as argument. The content of that dictionary will be added to the prototype of the
 class.</p>
 <h2 id="constructor">Constructor</h2>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
     <span class="nx">$init</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
     <span class="p">},</span>
@@ -102,23 +102,23 @@ class.</p>
 </pre></div>
 
 
-<p>When the dictionary of properties given to <code>ring.class()</code> contains a method named <code>$init</code>, that method will be called
+<p>When the dictionary of properties given to <code>ring.create()</code> contains a method named <code>$init</code>, that method will be called
 during the object construction with the arguments given to the class when using <code>new</code>.</p>
 <h2 id="inheritance">Inheritance</h2>
-<p>To inherit from one or multiple classes, add a list of the classes to inherit as an argument of <code>ring.class()</code> <em>before</em>
+<p>To inherit from one or multiple classes, add a list of the classes to inherit as an argument of <code>ring.create()</code> <em>before</em>
 the properties dictionary.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
     <span class="nx">x</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="s2">&quot;x&quot;</span><span class="p">;</span>
     <span class="p">},</span>
 <span class="p">});</span>
-<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
     <span class="nx">y</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="s2">&quot;y&quot;</span><span class="p">;</span>
     <span class="p">},</span>
 <span class="p">});</span>
 
-<span class="kd">var</span> <span class="nx">C</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">([</span><span class="nx">A</span><span class="p">,</span> <span class="nx">B</span><span class="p">],</span> <span class="p">{});</span>
+<span class="kd">var</span> <span class="nx">C</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">A</span><span class="p">,</span> <span class="nx">B</span><span class="p">],</span> <span class="p">{});</span>
 
 <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">C</span><span class="p">();</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">x</span><span class="p">());</span> <span class="c1">// prints &quot;x&quot;;</span>
@@ -131,12 +131,12 @@ Ring.js.</p>
 <h2 id="super-method">Super Method</h2>
 <p>To call the super method when overriding a method, use <code>this.$super()</code>. Pass arguments to <code>this.$super()</code> to forward
 arguments if necessary.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
     <span class="nx">sayHello</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">;</span>
     <span class="p">},</span>
 <span class="p">});</span>
-<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">([</span><span class="nx">A</span><span class="p">],</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">A</span><span class="p">],</span> <span class="p">{</span>
     <span class="nx">sayHello</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$super</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, nice to meet you&quot;</span><span class="p">;</span>
     <span class="p">},</span>
@@ -152,8 +152,8 @@ arguments if necessary.</p>
 the implementation of inheritance in Ring.js (which is necessary to have multiple inheritance), <code>instanceof</code> can not
 work properly.</p>
 <p>So you should use <code>ring.instance()</code> instead.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">({});</span>
-<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">([</span><span class="nx">A</span><span class="p">],</span> <span class="p">{});</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({});</span>
+<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">A</span><span class="p">],</span> <span class="p">{});</span>
 
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="k">new</span> <span class="nx">A</span><span class="p">(),</span> <span class="nx">A</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="k">new</span> <span class="nx">B</span><span class="p">(),</span> <span class="nx">A</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
@@ -174,7 +174,7 @@ as second argument instead of a class. Example:</p>
 <h2 id="creation-of-new-exception-types">Creation of New Exception Types</h2>
 <p>To create new exception types you are supposed to inherit from the standard <code>Error</code> class. But inheriting from that
 standard class can hard. That's why Ring.js contains a feature to bring a solution to that:</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">MyError</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="kr">class</span><span class="p">([</span><span class="nx">ring</span><span class="p">.</span><span class="nb">Error</span><span class="p">],</span> <span class="p">{</span>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">MyError</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">ring</span><span class="p">.</span><span class="nb">Error</span><span class="p">],</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;MyError&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
