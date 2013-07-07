@@ -8,6 +8,27 @@ test("base", function() {
     deepEqual(C.__mro__, [C, ring.Object]);
 });
 
+test("objectSuper", function() {
+    var A = ring.create({
+        $init: function() {
+            this.a = "a";
+            this.$super();
+        }
+    });
+    var B = ring.create({
+        $init: function() {
+            this.b = "b";
+            this.$super();
+        }
+    });
+    var C = ring.create([A, B], {});
+    equal(new C().a, "a");
+    equal(new C().b, "b");
+    var D = ring.create([B, A], {});
+    equal(new D().a, "a");
+    equal(new D().b, "b");
+});
+
 test("mro", function() {
     var f = ring.create("f", [], {});
     deepEqual(f.__mro__, [f, ring.Object]);

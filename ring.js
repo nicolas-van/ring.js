@@ -50,9 +50,8 @@ function declare(_) {
     ring.Object = Object;
     _.extend(ring.Object, {
         __mro__: [ring.Object],
-        __properties__: {},
+        __properties__: {$init: function() {}},
         prototype: {
-            $class: ring.Object
         },
         __class_id__: 1,
         parents: [],
@@ -60,6 +59,10 @@ function declare(_) {
         isSubClass: function(other) {
             return this.__class_index__[other.__class_id__] !== undefined;
         }
+    });
+    _.extend(ring.Object.prototype, {
+        $class: ring.Object,
+        $init: ring.Object.__properties__.$init,
     });
 
     var classCounter = 3;
