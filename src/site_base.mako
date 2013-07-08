@@ -5,7 +5,6 @@
 
 <%inherit file="/common/base.mako"/>
 <%namespace name="macros" file="/macros.mako"/>
-<%namespace name="basemacros" file="/common/macros.mako"/>
 
 <%block name="favicons">
     <link rel="shortcut icon" href="/static/img/favicon.ico">
@@ -25,13 +24,6 @@
     </script>
 </%block>
 
-<%block name="beforeContent">
-    <a href="https://github.com/nicolas-van/ring.js">
-        <img style="position: absolute; top: 0; right: 0; border: 0;"
-            src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub">
-    </a>
-</%block>
-
 <%block name="sideContent">
     <div class="sidePageHeader sideBlock">
         <a href="/"><img src="/static/img/ring_150.png"></a>
@@ -46,8 +38,6 @@
     </div>
     <div class="usefulLinks sideBlock">
         <h3>Useful Links</h3>
-        <a href="https://github.com/nicolas-van/ring.js/issues">Bug tracker</a>
-        <a href="https://github.com/nicolas-van/ring.js">Ring.js @ Github</a>
-        ${basemacros.links()}
+        ${macros.links()}
     </div>
 </%block>
