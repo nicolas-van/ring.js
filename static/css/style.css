@@ -31,15 +31,6 @@
 .sidePageHeader > div > h2 {
   font-size: 15px;
 }
-.horizontalMenu {
-  text-align: center;
-  margin: 10px;
-}
-.horizontalMenu > a {
-  display: inline-block;
-  font-style: italic;
-  padding: 0 10px;
-}
 .sideNavigation a,
 .usefulLinks a {
   display: block;
