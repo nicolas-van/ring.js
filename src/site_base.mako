@@ -5,6 +5,7 @@
 
 <%inherit file="/common/base.mako"/>
 <%namespace name="macros" file="/macros.mako"/>
+<%namespace name="basemacros" file="/common/macros.mako"/>
 
 <%block name="favicons">
     <link rel="shortcut icon" href="/static/img/favicon.ico">
@@ -32,14 +33,21 @@
 </%block>
 
 <%block name="sideContent">
-    <div class="sidePageHeader">
+    <div class="sidePageHeader sideBlock">
         <a href="/"><img src="/static/img/ring_150.png"></a>
         <div>
             <h1>Ring.js</h1>
             <h2>JavaScript Class System with Multiple Inheritance</h2>
         </div>
     </div>
-    <div class="sideNavigation">
+    <div class="sideNavigation sideBlock">
+        <h3>Navigation</h3>
         ${macros.navigation()}
+    </div>
+    <div class="usefulLinks sideBlock">
+        <h3>Useful Links</h3>
+        <a href="https://github.com/nicolas-van/ring.js/issues">Bug tracker</a>
+        <a href="https://github.com/nicolas-van/ring.js">Ring.js @ Github</a>
+        ${basemacros.links()}
     </div>
 </%block>

@@ -27,11 +27,9 @@
 }
 .sidePageHeader > div > h1 {
   font-size: 40px;
-  margin: 0 20px;
 }
 .sidePageHeader > div > h2 {
   font-size: 15px;
-  margin: 0 20px;
 }
 .horizontalMenu {
   text-align: center;
@@ -40,12 +38,16 @@
   font-style: italic;
   padding: 0 10px;
 }
-.sideNavigation {
-  margin: 0 20px;
-}
-.sideNavigation a {
+.sideNavigation a,
+.usefulLinks a {
   display: block;
   margin: 5px 0;
   font-size: 16px;
   font-style: italic;
+}
+.sideBlock {
+  margin: 0 20px;
+}
+.usefulLinks a {
+  display: block;
 }
