@@ -62,7 +62,7 @@ function declare(_) {
     });
     _.extend(ring.Object.prototype, {
         $class: ring.Object,
-        init: ring.Object.__properties__.init,
+        init: ring.Object.__properties__.init
     });
 
     var classCounter = 3;
