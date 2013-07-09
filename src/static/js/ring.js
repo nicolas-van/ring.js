@@ -94,13 +94,6 @@ function declare(_) {
         toMerge = toMerge.concat([parents]);
         var __mro__ = [{__properties__: props}].concat(mergeMro(toMerge));
         //generate prototype
-        var prototype = {};
-        var keys = {};
-        _.each(__mro__, function(c) {
-            _.each(c.__properties__, function(v, k) {
-                keys[k] = true;
-            });
-        });
         var getProperty = function(mro, key) {
             if (mro.length === 0)
                 return undefined;
@@ -123,20 +116,47 @@ function declare(_) {
                 };
             })(sup);
         };
-        _.each(keys, function(v, k) {
-            prototype[k] = getProperty(__mro__, k);
-        });
-        // create real class
-        var claz = function Instance() {
-            this.$super = null;
-            this.$init.apply(this, arguments);
+        var buildClass = function(mro) {
+            if (mro.length === 0)
+                return {prototype:undefined};
+            var claz = function Instance() {
+                this.$super = null;
+                this.$init.apply(this, arguments);
+            };
+            claz.__super__ = buildClass(_.rest(mro)).prototype;
+            claz.prototype = {};
+            var c = mro[0];
+            _.each(c.__properties__, function(p, key) {
+                if (typeof p !== "function" || ! fnTest.test(p)) {
+                    claz.prototype[key] = p;
+                    return;
+                }
+                var sup = claz.__super__[key];
+                if (! typeof sup === "function")
+                    return p;
+                claz.prototype[key] = (function(sup) {
+                    return function() {
+                        var tmp = this.$super;
+                        this.$super = sup;
+                        var ret = p.apply(this, arguments);
+                        this.$super = tmp;
+                        return ret;
+                    };
+                })(sup);
+            });
+            _.each(claz.__super__, function(v, k) {
+                if (claz.prototype[k] === undefined)
+                    claz.prototype[k] = v;
+            });
+            return claz;
         };
+        // create real class
+        var claz = buildClass(__mro__);
         __mro__[0] = claz;
         claz.__mro__ = __mro__;
         claz.parents = parents;
         claz.__properties__ = props;
-        claz.prototype = prototype;
-        prototype.$class = claz;
+        claz.prototype.$class = claz;
         claz.__class_id__ = id;
         // construct classes index
         claz.__class_index__ = {};
