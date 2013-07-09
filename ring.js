@@ -89,9 +89,6 @@ function declare(_) {
         if (parents.length == 0)
             parents = [ring.Object];
         var id = classCounter++;
-        // constructor creation
-        if (props.$init === undefined)
-            props.$init = function() { this.$super.apply(this, arguments); };
         // mro creation
         var toMerge = _.pluck(parents, "__mro__");
         toMerge = toMerge.concat([parents]);
@@ -130,7 +127,10 @@ function declare(_) {
             prototype[k] = getProperty(__mro__, k);
         });
         // create real class
-        var claz = prototype.$init;
+        var claz = function Instance() {
+            this.$super = null;
+            this.$init.apply(this, arguments);
+        };
         __mro__[0] = claz;
         claz.__mro__ = __mro__;
         claz.parents = parents;
