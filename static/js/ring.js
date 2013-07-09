@@ -50,7 +50,7 @@ function declare(_) {
     ring.Object = Object;
     _.extend(ring.Object, {
         __mro__: [ring.Object],
-        __properties__: {$init: function() {}},
+        __properties__: {constructor: function() {}},
         prototype: {
         },
         __class_id__: 1,
@@ -62,7 +62,7 @@ function declare(_) {
     });
     _.extend(ring.Object.prototype, {
         $class: ring.Object,
-        $init: ring.Object.__properties__.$init,
+        constructor: ring.Object.__properties__.constructor,
     });
 
     var classCounter = 3;
@@ -121,7 +121,7 @@ function declare(_) {
                 return {prototype:undefined};
             var claz = function Instance() {
                 this.$super = null;
-                this.$init.apply(this, arguments);
+                this.constructor.apply(this, arguments);
             };
             claz.__super__ = buildClass(_.rest(mro)).prototype;
             claz.prototype = {};
@@ -273,7 +273,7 @@ function declare(_) {
             message: The message to put in the instance. If there is no message specified, the
             message will be this.defaultMessage.
         */
-        $init: function(message) {
+        constructor: function(message) {
             this.message = message || this.defaultMessage;
         },
         $classInit: function(prototype) {
