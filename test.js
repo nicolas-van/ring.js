@@ -10,13 +10,13 @@ test("base", function() {
 
 test("objectSuper", function() {
     var A = ring.create({
-        $init: function() {
+        init: function() {
             this.a = "a";
             this.$super();
         }
     });
     var B = ring.create({
-        $init: function() {
+        init: function() {
             this.b = "b";
             this.$super();
         }
@@ -66,9 +66,9 @@ test("inherit", function() {
     equal(new D().x(), 6);
 });
 
-test("$init", function() {
+test("init", function() {
     var A = ring.create({
-        $init: function() {
+        init: function() {
             this.x = 3;
         }
     });
