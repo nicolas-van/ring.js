@@ -12,8 +12,8 @@
 
 <%block name="head">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
-    <script type="text/javascript" src="/static/src/js/underscore.js"/>
-    <script type="text/javascript" src="/static/src/js/ring.js"/>
+    <script type="text/javascript" src="/static/js/underscore.js"/>
+    <script type="text/javascript" src="/static/js/ring.js"/>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
