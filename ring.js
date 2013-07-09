@@ -79,11 +79,6 @@ function declare(_) {
         parents is a list of the classes this new class should extend. If not
         specified or an empty list is specified this class will inherit from one
         class: ring.Object.
-
-        className is the name of the class as it should appear in a JavaScript
-        debugger. If not specified a default class name is generated. This is only
-        useful to ease debugging in some cases, so it's not necessary to specify it
-        most of the time.
     */
     ring.create = function() {
         // arguments parsing
@@ -94,24 +89,17 @@ function declare(_) {
         if (parents.length == 0)
             parents = [ring.Object];
         var id = classCounter++;
-        var name = args.length >= 3 ? args[2] : "Class" + id;
-        // class/function creation
-        var claz = new Function("function " + name +
-            "() {if (this.$init)this.$init.apply(this, arguments);}; return " + name + ";")();
+        // constructor creation
+        if (props.$init === undefined)
+            props.$init = function() { this.$super.apply(this, arguments); };
         // mro creation
         var toMerge = _.pluck(parents, "__mro__");
-        toMerge = toMerge.concat(parents);
-        var __mro__ = [claz].concat(mergeMro(toMerge));
-        claz.__mro__ = __mro__;
-        claz.parents = parents;
+        toMerge = toMerge.concat([parents]);
+        var __mro__ = [{__properties__: props}].concat(mergeMro(toMerge));
         //generate prototype
-        claz.__properties__ = props;
         var prototype = {};
-        claz.prototype = prototype;
-        prototype.$class = claz;
-        claz.__class_id__ = classCounter;
         var keys = {};
-        _.each(claz.__mro__, function(c) {
+        _.each(__mro__, function(c) {
             _.each(c.__properties__, function(v, k) {
                 keys[k] = true;
             });
@@ -128,17 +116,28 @@ function declare(_) {
             var sup = getProperty(_.rest(mro), key);
             if (! typeof sup === "function")
                 return p;
-            return function() {
-                var tmp = this.$super;
-                this.$super = sup;
-                var ret = p.apply(this, arguments);
-                this.$super = tmp;
-                return ret;
-            };
+            return (function(sup) {
+                return function() {
+                    var tmp = this.$super;
+                    this.$super = sup;
+                    var ret = p.apply(this, arguments);
+                    this.$super = tmp;
+                    return ret;
+                };
+            })(sup);
         };
         _.each(keys, function(v, k) {
-            claz.prototype[k] = getProperty(claz.__mro__, k);
+            prototype[k] = getProperty(__mro__, k);
         });
+        // create real class
+        var claz = prototype.$init;
+        __mro__[0] = claz;
+        claz.__mro__ = __mro__;
+        claz.parents = parents;
+        claz.__properties__ = props;
+        claz.prototype = prototype;
+        prototype.$class = claz;
+        claz.__class_id__ = id;
         // construct classes index
         claz.__class_index__ = {};
         _.each(claz.__mro__, function(c) {

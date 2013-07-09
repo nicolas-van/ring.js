@@ -30,19 +30,19 @@ test("objectSuper", function() {
 });
 
 test("mro", function() {
-    var f = ring.create("f", [], {});
+    var f = ring.create([], {});
     deepEqual(f.__mro__, [f, ring.Object]);
-    var e = ring.create("e", [], {});
+    var e = ring.create([], {});
     deepEqual(e.__mro__, [e, ring.Object]);
-    var d = ring.create("d", [], {});
+    var d = ring.create([], {});
     deepEqual(d.__mro__, [d, ring.Object]);
 
-    var c = ring.create("c", [d, f], {});
+    var c = ring.create([d, f], {});
     deepEqual(c.__mro__, [c, d, f, ring.Object]);
-    var b = ring.create("b", [d, e], {});
+    var b = ring.create([d, e], {});
     deepEqual(b.__mro__, [b, d, e, ring.Object]);
 
-    var a = ring.create("a", [b, c], {});
+    var a = ring.create([b, c], {});
     deepEqual(a.__mro__, [a, b, c, d, e, f, ring.Object]);
 });
 
