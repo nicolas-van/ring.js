@@ -9,7 +9,7 @@
 
 
 <%block name="mainContent">
-<%text filter="markdown">
+<%text filter="mypygreen.markdown">
 
 FAQ
 ===
@@ -32,6 +32,32 @@ algorithm as defined in the Python standard](http://www.python.org/download/rele
 * Latest Firefox
 
 node.js is also supported.
+
+### Is Ring.js fast?
+
+Yes. When compared to similar libraries Ring.js is one of the fastest.
+
+When comparing classes libraries, it is necessary to explain the differences between them. Basically, if the
+syntax is nice and easy to type it will be slower. To make it faster you have to remove features and makes the syntax
+more and more ugly.
+
+For Ring.js I tried to use a syntax as nice as possible while still keeping top notch performances. This was quite
+successful since, when compared to libraries providing similar features (mainly `this.$super` that gives access to
+the super method), Ring.js has excellent performances. It can be 100 times faster than some well-known libraries,
+notably John Resig's inheritance. Additionally, none of these other class systems provide multiple inheritance. See the
+test result:
+
+![Ring.js performance chart](/static/img/perf.jpg)
+
+See [this link to the jsperf.com test.](http://jsperf.com/multiple-class-systems)
+
+When compared to the fastest class systems, including those that have long and boring syntaxes to call the super method,
+Ring.js still has quite good performances. It's only 2 or 3 times slower that the fastest systems. This type of
+difference should not be overestimated because it's only the measurement of pure performances when calling a method.
+Real programs do a lot of other things rather that calling methods all the time.
+
+Anyway, even if performances can be important, I think it was better to favor shorter and nicer syntax to improve the
+productivity of the programmers rather than trying to gain some milliseconds every x millions calls.
 
 ### How to contribute?
 

@@ -64,14 +64,14 @@ Constructor
 
     :::javascript
     var A = ring.create({
-        $init: function(name) {
+        init: function(name) {
             this.name = name;
         },
     });
     var a = new A("Nicolas");
     console.log(a.name); // prints "Nicolas"
 
-When the dictionary of properties given to `ring.create()` contains a method named `$init`, that method will be called
+When the dictionary of properties given to `ring.create()` contains a method named `init`, that method will be called
 during the object construction with the arguments given to the class when using `new`.
 
 Inheritance

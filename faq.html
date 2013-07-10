@@ -73,22 +73,40 @@
                     
                     
                     
-<h1>FAQ</h1>
-<h3>How does Ring.js makes multiple inheritance?</h3>
+<h1 id="faq">FAQ</h1>
+<h3 id="how-does-ringjs-makes-multiple-inheritance">How does Ring.js makes multiple inheritance?</h3>
 <p>Most inheritance systems in JavaScript (like John Resig's one) use prototype inheritance. They create a chain of
 prototypes and the JavaScript virtual machine will recursively search that chain to find the methods to call.</p>
 <p>Unfortunately this behavior makes it impossible to use multiple inheritance. So Ring.js uses a different system.</p>
 <p>When a new class is created, Ring.js creates a completely new prototype by using the methods defined in its whole set of
 base classes. To solve problems created by the diamond inheritances Ring.js linearize the classes graph using the <a href="http://www.python.org/download/releases/2.3/mro/">C3
 algorithm as defined in the Python standard</a>.</p>
-<h3>What browsers are supported?</h3>
+<h3 id="what-browsers-are-supported">What browsers are supported?</h3>
 <ul>
 <li>Internet Explorer from version 7</li>
 <li>Latest Chrome</li>
 <li>Latest Firefox</li>
 </ul>
 <p>node.js is also supported.</p>
-<h3>How to contribute?</h3>
+<h3 id="is-ringjs-fast">Is Ring.js fast?</h3>
+<p>Yes. When compared to similar libraries Ring.js is one of the fastest.</p>
+<p>When comparing classes libraries, it is necessary to explain the differences between them. Basically, if the
+syntax is nice and easy to type it will be slower. To make it faster you have to remove features and makes the syntax
+more and more ugly.</p>
+<p>For Ring.js I tried to use a syntax as nice as possible while still keeping top notch performances. This was quite
+successful since, when compared to libraries providing similar features (mainly <code>this.$super</code> that gives access to
+the super method), Ring.js has excellent performances. It can be 100 times faster than some well-known libraries,
+notably John Resig's inheritance. Additionally, none of these other class systems provide multiple inheritance. See the
+test result:</p>
+<p><img alt="Ring.js performance chart" src="/static/img/perf.jpg" /></p>
+<p>See <a href="http://jsperf.com/multiple-class-systems">this link to the jsperf.com test.</a></p>
+<p>When compared to the fastest class systems, including those that have long and boring syntaxes to call the super method,
+Ring.js still has quite good performances. It's only 2 or 3 times slower that the fastest systems. This type of
+difference should not be overestimated because it's only the measurement of pure performances when calling a method.
+Real programs do a lot of other things rather that calling methods all the time.</p>
+<p>Anyway, even if performances can be important, I think it was better to favor shorter and nicer syntax to improve the
+productivity of the programmers rather than trying to gain some milliseconds every x millions calls.</p>
+<h3 id="how-to-contribute">How to contribute?</h3>
 <p><a href="https://github.com/nicolas-van/ring.js">Go on the Github page</a>.</p>
 <p>Report bugs, propose improvements, improve the documentation. Any help will be welcomed!</p>
 
