@@ -89,23 +89,23 @@ algorithm as defined in the Python standard</a>.</p>
 </ul>
 <p>node.js is also supported.</p>
 <h3 id="is-ringjs-fast">Is Ring.js fast?</h3>
-<p>Yes. When compared to similar libraries Ring.js is one of the fastest.</p>
+<p>Yes. When compared to similar libraries Ring.js has good performances.</p>
 <p>When comparing classes libraries, it is necessary to explain the differences between them. Basically, if the
 syntax is nice and easy to type it will be slower. To make it faster you have to remove features and makes the syntax
 more and more ugly.</p>
-<p>For Ring.js I tried to use a syntax as nice as possible while still keeping top notch performances. This was quite
-successful since, when compared to libraries providing similar features (mainly <code>this.$super</code> that gives access to
-the super method), Ring.js has excellent performances. It can be 100 times faster than some well-known libraries,
-notably John Resig's inheritance. Additionally, none of these other class systems provide multiple inheritance. See the
-test result:</p>
+<p>For Ring.js I tried to use a syntax as nice as possible while still keeping very good performances. This was quite
+successful since, when compared to libraries providing similar features (mainly <code>this.$super</code> that gives access to the
+super method), Ring.js has excellent performances. It can be a lot faster than some well-known libraries, notably John
+Resig's inheritance. Additionally, none of these other class systems provide multiple inheritance. See the test result:</p>
 <p><img alt="Ring.js performance chart" src="/static/img/perf.jpg" /></p>
 <p>See <a href="http://jsperf.com/multiple-class-systems">this link to the jsperf.com test.</a></p>
-<p>When compared to the fastest class systems, including those that have long and boring syntaxes to call the super method,
-Ring.js still has quite good performances. It's only 2 or 3 times slower that the fastest systems. This type of
-difference should not be overestimated because it's only the measurement of pure performances when calling a method.
-Real programs do a lot of other things rather that calling methods all the time.</p>
-<p>Anyway, even if performances can be important, I think it was better to favor shorter and nicer syntax to improve the
-productivity of the programmers rather than trying to gain some milliseconds every x millions calls.</p>
+<p>Some class systems can still have better performances. None of these have <code>this.$super</code> and require to use longer syntax
+instead. But this type of difference should not be overestimated because it's only the measurement of pure
+performances when calling a method. Real programs do a lot of other things rather that calling methods that performs
+no operations.</p>
+<p>Anyway, I think it's better to favor shorter and nicer syntax to improve the productivity of the programmers rather
+than trying to gain some milliseconds every x millions calls, that's why I choose to use <code>this.$super</code> in Ring.js rather
+than an uglier system.</p>
 <h3 id="how-to-contribute">How to contribute?</h3>
 <p><a href="https://github.com/nicolas-van/ring.js">Go on the Github page</a>.</p>
 <p>Report bugs, propose improvements, improve the documentation. Any help will be welcomed!</p>
