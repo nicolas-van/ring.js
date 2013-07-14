@@ -10,6 +10,10 @@
     <link rel="shortcut icon" href="/static/img/favicon.ico">
 </%block>
 
+<%block name="beforeContent">
+    <a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+</%block>
+
 <%block name="head">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
     <script type="text/javascript" src="/static/js/underscore.js"/>
