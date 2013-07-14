@@ -193,7 +193,7 @@ as second argument instead of a class. Example:</p>
 
 <h2 id="creation-of-new-exception-types">Creation of New Exception Types</h2>
 <p>To create new exception types you are supposed to inherit from the standard <code>Error</code> class. But inheriting from that
-standard class can hard. That's why Ring.js contains a feature to bring a solution to that:</p>
+standard class can be hard. That's why Ring.js contains a feature to bring a solution to that:</p>
 <div class="codehilite"><pre><span class="kd">var</span> <span class="nx">MyError</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">ring</span><span class="p">.</span><span class="nb">Error</span><span class="p">],</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;MyError&quot;</span><span class="p">,</span>
 <span class="p">});</span>
