@@ -25,9 +25,9 @@
 </%block>
 
 <%block name="head">
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
-    <script type="text/javascript" src="/static/js/underscore.js"/>
-    <script type="text/javascript" src="/static/js/ring.js"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css"></link>
+    <script type="text/javascript" src="/static/js/underscore.js"></script>
+    <script type="text/javascript" src="/static/js/ring.js"></script>
 </%block>
 
 <%block name="sideContent">
