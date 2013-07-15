@@ -11,13 +11,6 @@
 </%block>
 
 <%block name="beforeContent">
-    <a href="https://github.com/nicolas-van/ring.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-</%block>
-
-<%block name="head">
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
-    <script type="text/javascript" src="/static/js/underscore.js"/>
-    <script type="text/javascript" src="/static/js/ring.js"/>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -28,6 +21,13 @@
       ga('send', 'pageview');
 
     </script>
+    <a href="https://github.com/nicolas-van/ring.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+</%block>
+
+<%block name="head">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+    <script type="text/javascript" src="/static/js/underscore.js"/>
+    <script type="text/javascript" src="/static/js/ring.js"/>
 </%block>
 
 <%block name="sideContent">
