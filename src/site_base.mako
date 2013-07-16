@@ -38,6 +38,9 @@
             <h2>JavaScript Class System with Multiple Inheritance</h2>
         </div>
     </div>
+    <div class="verticalSocialNetwork">
+        ${macros.social()}
+    </div>
     <div class="sideNavigation sideBlock">
         <h3>Navigation</h3>
         ${macros.navigation()}

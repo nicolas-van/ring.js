@@ -28,9 +28,11 @@
 }
 .sidePageHeader > div > h1 {
   font-size: 40px;
+  margin: 10px 0px;
 }
 .sidePageHeader > div > h2 {
   font-size: 15px;
+  margin: 15px 0px;
 }
 .sideNavigation a,
 .usefulLinks a {
@@ -47,4 +49,8 @@
 }
 .horizontalSocialNetwork {
   text-align: center;
+}
+.verticalSocialNetwork > iframe {
+  display: block;
+  margin: 7px 20px;
 }
