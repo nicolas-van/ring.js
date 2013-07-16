@@ -29,6 +29,16 @@ test("objectSuper", function() {
     equal(new D().b, "b");
 });
 
+test("instanceSuper", function () {
+  var A = ring.create({
+    x: function(a) { return a; }
+  });
+  var B = ring.create([A], {
+    x: function(a) { return this.$super() + a; }
+  });
+  equal(new B().x(5), 10);
+});
+
 test("mro", function() {
     var f = ring.create([], {});
     deepEqual(f.__mro__, [f, ring.Object]);
