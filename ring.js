@@ -115,8 +115,11 @@ function declare(_) {
                 return p;
             return (function(sup) {
                 return function() {
+                    var args = arguments;
                     var tmp = this.$super;
-                    this.$super = sup;
+                    this.$super = function() {
+                      return sup.apply(this, arguments.length ? arguments : args);
+                    };
                     var ret = p.apply(this, arguments);
                     this.$super = tmp;
                     return ret;
