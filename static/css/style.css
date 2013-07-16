@@ -13,10 +13,11 @@
 }
 .frontPageHeader > div > h1 {
   font-size: 70px;
-  margin-bottom: 15px;
+  margin: 10px 0px;
 }
 .frontPageHeader > div > h2 {
   font-size: 20px;
+  margin: 15px 0px;
 }
 .sidePageHeader {
   text-align: center;
@@ -43,4 +44,7 @@
 }
 .usefulLinks a {
   display: block;
+}
+.horizontalSocialNetwork {
+  text-align: center;
 }
