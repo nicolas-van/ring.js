@@ -49,6 +49,10 @@
 }
 .horizontalSocialNetwork {
   text-align: center;
+  padding-left: 40px;
+}
+.horizontalSocialNetwork > iframe {
+  min-width: 85px;
 }
 .verticalSocialNetwork > iframe {
   display: block;
