@@ -1,23 +1,33 @@
 {
-    "name": "ring",
-    "version": "1.0.1",
-    "description": "Ring.js - JavaScript Class System with Multiple Inheritance",
-    "main": "ring.js",
-    "author": "Nicolas Vanhoren",
-    "keywords": ["ring", "ring.js", "ringjs", "class", "multiple", "inheritance"],
-    "repository" : {
-        "type": "git",
-        "url": "git@github.com:nicolas-van/ring.js.git"
-    },
-    "homepage": "http://ringjs.neoname.eu",
-    "dependencies": {
-        "underscore": ">=1.4.4"
-    },
-    "devDependencies": {
-        "grunt": "*",
-        "grunt-contrib-jshint": "*",
-        "grunt-contrib-qunit": "*"
-    },
-    "engines": { "node": ">=0.6.12" },
-    "license": "MIT"
+  "name": "ring",
+  "version": "1.0.1",
+  "description": "Ring.js - JavaScript Class System with Multiple Inheritance",
+  "main": "ring.js",
+  "author": "Nicolas Vanhoren",
+  "keywords": [
+    "ring",
+    "ring.js",
+    "ringjs",
+    "class",
+    "multiple",
+    "inheritance"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nicolas-van/ring.js.git"
+  },
+  "homepage": "http://ringjs.neoname.eu",
+  "dependencies": {
+    "underscore": ">=1.4.4"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-qunit": "*",
+    "grunt-contrib-compress": "~0.5.2"
+  },
+  "engines": {
+    "node": ">=0.6.12"
+  },
+  "license": "MIT"
 }

@@ -1,5 +1,5 @@
 /*
-Ring.js version 1.0
+Ring.js version
 
 Copyright (c) 2013, Nicolas Vanhoren
 
