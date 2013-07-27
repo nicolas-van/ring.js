@@ -39,7 +39,7 @@ function declare(_) {
     var ring = {};
 
 
-    function Object() {};
+    function Object() {}
     /**
         ring.Object
 
@@ -66,7 +66,7 @@ function declare(_) {
     });
 
     var classCounter = 3;
-    var fnTest = /xyz/.test(function(){xyz;}) ? /\$super\b/ : /.*/;
+    var fnTest = /xyz/.test(function(){xyz();}) ? /\$super\b/ : /.*/;
 
     /**
         ring.create([[className,] parents,] properties)
@@ -86,7 +86,7 @@ function declare(_) {
         args.reverse();
         var props = args[0];
         var parents = args.length >= 2 ? args[1] : [];
-        if (parents.length == 0)
+        if (parents.length === 0)
             parents = [ring.Object];
         var id = classCounter++;
         // mro creation
@@ -111,7 +111,7 @@ function declare(_) {
             if (typeof p !== "function" || ! fnTest.test(p))
                 return p;
             var sup = getProperty(_.rest(mro), key);
-            if (! typeof sup === "function")
+            if (typeof sup !== "function")
                 return p;
             return (function(sup) {
                 return function() {
@@ -161,13 +161,14 @@ function declare(_) {
     };
 
     var mergeMro = function(toMerge) {
+        /* jshint loopfunc:true */
         // C3 merge() implementation
         var __mro__ = [];
         var current = _.clone(toMerge);
         while (true) {
             var found = false;
             for (var i=0; i < current.length; i++) {
-                if (current[i].length == 0)
+                if (current[i].length === 0)
                     continue;
                 var currentClass = current[i][0];
                 var isInTail = _.find(current, function(lst) {
@@ -187,10 +188,10 @@ function declare(_) {
             }
             if (found)
                 continue;
-            if (_.all(current, function(i) { return i.length ==0; }))
+            if (_.all(current, function(i) { return i.length === 0; }))
                 return __mro__;
             throw new ring.ValueError("Cannot create a consistent method resolution order (MRO)");
-        };
+        }
     };
 
     /**
@@ -271,5 +272,5 @@ function declare(_) {
     });
 
     return ring;
-};
+}
 })();
