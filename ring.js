@@ -24,6 +24,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 (function() {
+/* jshint es3: true */
+"use strict";
 
 if (typeof(exports) !== "undefined") { // nodejs
     var underscore = require("underscore");
@@ -31,13 +33,12 @@ if (typeof(exports) !== "undefined") { // nodejs
 } else if (typeof(define) !== "undefined") { // amd
     define(["underscore"], declare);
 } else { // define global variable
-    ring = declare(_);
+    window.ring = declare(_);
 }
 
 
 function declare(_) {
     var ring = {};
-
 
     function Object() {}
     /**

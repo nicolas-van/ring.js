@@ -1,4 +1,8 @@
 
+(function() {
+/* jshint es3: true */
+"use strict";
+
 if (typeof(exports) !== "undefined") { // nodejs
     _ = require("underscore");
 }
@@ -143,3 +147,5 @@ test("exceptions", function() {
         ok(ring.instance(e, ring.ValueError));
     }
 });
+
+})();
