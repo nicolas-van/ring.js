@@ -237,7 +237,7 @@ function declare(_) {
         sub-class of ring.Error.
 
     */
-    ring.Error = ring.create("RingError", [], {
+    ring.Error = ring.create({
         /**
             The name attribute is used in the default implementation of the toString() method
             of the standard JavaScript Error class. According to the standard, all sub-classes
