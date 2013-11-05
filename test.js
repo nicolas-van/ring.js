@@ -98,15 +98,15 @@ test("instance", function() {
 
 });
 
-test("$classInit", function() {
+test("classInit", function() {
     var A = ring.create({
-        $classInit: function(proto) {
+        classInit: function(proto) {
             proto.x = 2;
         }
     });
     equal(new A().x, 2);
     var B = ring.create([A], {
-        $classInit: function(proto) {
+        classInit: function(proto) {
             proto.y = 3;
         }
     });

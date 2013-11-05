@@ -148,9 +148,9 @@ function declare(_) {
         });
         claz.isSubClass = ring.Object.isSubClass;
         // class init
-        if (claz.prototype.$classInit) {
-            claz.__classInit__ = claz.prototype.$classInit;
-            delete claz.prototype.$classInit;
+        if (claz.prototype.classInit) {
+            claz.__classInit__ = claz.prototype.classInit;
+            delete claz.prototype.classInit;
         }
         _.each(_.chain(claz.__mro__).clone().reverse().value(), function(c) {
             if (c.__classInit__) {
@@ -260,7 +260,7 @@ function declare(_) {
         init: function(message) {
             this.message = message || this.defaultMessage;
         },
-        $classInit: function(prototype) {
+        classInit: function(prototype) {
             var p = new Error();
             _.extend(p, prototype);
             return p;
