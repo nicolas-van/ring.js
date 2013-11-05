@@ -9,12 +9,13 @@ module.exports = function(grunt) {
                 es3: true, // ie 7 compatibility
                 eqeqeq: true, // no == or !=
                 immed: true, // forces () around directly called functions
-                forin: true, // makes it harder to user for in
+                forin: true, // makes it harder to use for in
                 latedef: "nofunc", // makes it impossible to use a variable before it is declared
                 newcap: true, // force capitalized constructors
                 strict: true, // enforce strict mode
                 trailing: true, // trailing whitespaces are ugly
                 maxlen: 120, // maximum characters per line
+                camelcase: true, // force camelCase
             },
         },
         qunit: {

@@ -54,11 +54,11 @@ function declare(_) {
         __properties__: {init: function() {}},
         prototype: {
         },
-        __class_id__: 1,
+        __classId__: 1,
         parents: [],
-        __class_index__: {"1": ring.Object},
+        __classIndex__: {"1": ring.Object},
         isSubClass: function(other) {
-            return this.__class_index__[other.__class_id__] !== undefined;
+            return this.__classIndex__[other.__classId__] !== undefined;
         }
     });
     _.extend(ring.Object.prototype, {
@@ -138,21 +138,21 @@ function declare(_) {
         claz.__properties__ = props;
         claz.prototype = prototype;
         prototype.$class = claz;
-        claz.__class_id__ = id;
+        claz.__classId__ = id;
         // construct classes index
-        claz.__class_index__ = {};
+        claz.__classIndex__ = {};
         _.each(claz.__mro__, function(c) {
-            claz.__class_index__[c.__class_id__] = c;
+            claz.__classIndex__[c.__classId__] = c;
         });
         claz.isSubClass = ring.Object.isSubClass;
         // class init
         if (claz.prototype.$classInit) {
-            claz.__class_init__ = claz.prototype.$classInit;
+            claz.__classInit__ = claz.prototype.$classInit;
             delete claz.prototype.$classInit;
         }
         _.each(_.chain(claz.__mro__).clone().reverse().value(), function(c) {
-            if (c.__class_init__) {
-                var ret = c.__class_init__(claz.prototype);
+            if (c.__classInit__) {
+                var ret = c.__classInit__(claz.prototype);
                 if (ret !== undefined)
                     claz.prototype = ret;
             }
@@ -217,7 +217,7 @@ function declare(_) {
     */
     ring.instance = function(obj, type) {
         if (typeof(obj) === "object" && obj.$class &&
-            typeof(type) === "function" && typeof(type.__class_id__) === "number") {
+            typeof(type) === "function" && typeof(type.__classId__) === "number") {
             return obj.$class.isSubClass(type);
         }
         if (typeof(type) === "string")
