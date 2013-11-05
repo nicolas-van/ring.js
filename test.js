@@ -60,7 +60,7 @@ test("inherit", function() {
     equal(new A().x(), 1);
     equal(new B().x(), 1);
     equal(new B().y(), 2);
-    var C = ring.create([A], {
+    var C = ring.create(A, {
         x: function() { return 3; }
     });
     equal(new C().x(), 3);

@@ -87,6 +87,8 @@ function declare(_) {
         args.reverse();
         var props = args[0];
         var parents = args.length >= 2 ? args[1] : [];
+        if (! parents instanceof Array)
+            parents = [parents];
         if (parents.length === 0)
             parents = [ring.Object];
         var id = classCounter++;
