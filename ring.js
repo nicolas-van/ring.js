@@ -52,8 +52,6 @@ function declare(_) {
     _.extend(ring.Object, {
         __mro__: [ring.Object],
         __properties__: {init: function() {}},
-        prototype: {
-        },
         __classId__: 1,
         parents: [],
         __classIndex__: {"1": ring.Object},
@@ -62,7 +60,6 @@ function declare(_) {
         }
     });
     _.extend(ring.Object.prototype, {
-        $class: ring.Object,
         init: ring.Object.__properties__.init
     });
 
@@ -138,8 +135,7 @@ function declare(_) {
         claz.__mro__ = __mro__;
         claz.parents = parents;
         claz.__properties__ = props;
-        claz.prototype = prototype;
-        prototype.$class = claz;
+        _.extend(claz.prototype, prototype);
         claz.__classId__ = id;
         // construct classes index
         claz.__classIndex__ = {};
@@ -218,9 +214,9 @@ function declare(_) {
             ring.instance(1, "number") // returns true
     */
     ring.instance = function(obj, type) {
-        if (typeof(obj) === "object" && obj.$class &&
+        if (typeof(obj) === "object" && obj.constructor && obj.constructor.isSubClass &&
             typeof(type) === "function" && typeof(type.__classId__) === "number") {
-            return obj.$class.isSubClass(type);
+            return obj.constructor.isSubClass(type);
         }
         if (typeof(type) === "string")
             return typeof(obj) === type;
@@ -262,7 +258,9 @@ function declare(_) {
         },
         classInit: function(prototype) {
             var p = new Error();
+            var cons = prototype.constructor;
             _.extend(p, prototype);
+            p.constructor = cons;
             return p;
         }
     });
