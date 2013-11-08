@@ -53,7 +53,7 @@ function declare(_) {
         __mro__: [ring.Object],
         __properties__: {init: function() {}},
         __classId__: 1,
-        parents: [],
+        __parents__: [],
         __classIndex__: {"1": ring.Object},
         isSubClass: function(other) {
             return this.__classIndex__[other.__classId__] !== undefined;
@@ -132,7 +132,7 @@ function declare(_) {
         };
         __mro__[0] = claz;
         claz.__mro__ = __mro__;
-        claz.parents = parents;
+        claz.__parents__ = parents;
         claz.__properties__ = props;
         claz.prototype = prototype;
         claz.prototype.constructor = claz;
