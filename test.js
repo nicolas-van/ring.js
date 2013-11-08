@@ -148,21 +148,26 @@ test("exceptions", function() {
     }
 });
 
-var objectCreate = function(o) {
-    function F(){}
-    F.prototype = o;
-    return new F();
-};
-
 test("objectCreate", function() {
     function Array2() {
         Array.apply(this, arguments);
     }
-    Array2.prototype = objectCreate(Array.prototype);
+    Array2.prototype = ring.__objectCreate(Array.prototype);
     Array2.prototype.constructor = Array2;
     var a = new Array2();
     ok(a instanceof Array2);
     ok(a instanceof Array);
+    equal(a.constructor, Array2);
+    function Array3() {
+        Array2.apply(this, arguments);
+    }
+    Array3.prototype = ring.__objectCreate(Array2.prototype);
+    Array3.prototype.constructor = Array3;
+    var a3 = new Array3();
+    ok(a3 instanceof Array3);
+    ok(a3 instanceof Array2);
+    ok(a3 instanceof Array);
+    equal(a3.constructor, Array3);
 });
 
 

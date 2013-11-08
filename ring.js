@@ -63,6 +63,13 @@ function declare(_) {
         init: ring.Object.__properties__.init
     });
 
+    var objectCreate = function(o) {
+        function F(){}
+        F.prototype = o;
+        return new F();
+    };
+    ring.__objectCreate = objectCreate;
+
     var classCounter = 3;
     var fnTest = /xyz/.test(function(){xyz();}) ? /\$super\b/ : /.*/;
 
