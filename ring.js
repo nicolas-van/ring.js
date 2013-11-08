@@ -65,7 +65,8 @@ function declare(_) {
 
     var objectCreate = function(o) {
         function F(){}
-        F.prototype = o;
+        if (o !== undefined)
+            F.prototype = o;
         return new F();
     };
     ring.__objectCreate = objectCreate;
@@ -101,37 +102,28 @@ function declare(_) {
         toMerge = toMerge.concat([parents]);
         var __mro__ = [{__properties__: props}].concat(mergeMro(toMerge));
         //generate prototype
-        var prototype = {};
-        var keys = {};
-        _.each(__mro__, function(c) {
-            _.each(c.__properties__, function(v, k) {
-                keys[k] = true;
+        var prototype = undefined;
+        _.each(_.clone(__mro__).reverse(), function(claz) {
+            var current = objectCreate(prototype);
+            _.extend(current, claz.__properties__);
+            _.each(_.keys(current), function(key) {
+                var p = current[key];
+                if (typeof p !== "function" || ! fnTest.test(p))
+                    return;
+                current[key] = (function(name, fct, supProto) {
+                    return function() {
+                        var tmp = this.$super;
+                        this.$super = supProto[name];
+                        try {
+                            var ret = fct.apply(this, arguments);
+                            return ret;
+                        } finally {
+                            this.$super = tmp;
+                        }
+                    };
+                })(key, p, prototype);
             });
-        });
-        var getProperty = function(mro, key) {
-            if (mro.length === 0)
-                return undefined;
-            var c = mro[0];
-            if (c.__properties__[key] === undefined)
-                return getProperty(_.rest(mro), key);
-            var p = c.__properties__[key];
-            if (typeof p !== "function" || ! fnTest.test(p))
-                return p;
-            var sup = getProperty(_.rest(mro), key);
-            if (typeof sup !== "function")
-                return p;
-            return (function(sup) {
-                return function() {
-                    var tmp = this.$super;
-                    this.$super = sup;
-                    var ret = p.apply(this, arguments);
-                    this.$super = tmp;
-                    return ret;
-                };
-            })(sup);
-        };
-        _.each(keys, function(v, k) {
-            prototype[k] = getProperty(__mro__, k);
+            prototype = current;
         });
         // create real class
         var claz = function Instance() {
@@ -142,7 +134,8 @@ function declare(_) {
         claz.__mro__ = __mro__;
         claz.parents = parents;
         claz.__properties__ = props;
-        _.extend(claz.prototype, prototype);
+        claz.prototype = prototype;
+        claz.prototype.constructor = claz;
         claz.__classId__ = id;
         // construct classes index
         claz.__classIndex__ = {};
