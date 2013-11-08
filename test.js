@@ -148,4 +148,22 @@ test("exceptions", function() {
     }
 });
 
+var objectCreate = function(o) {
+    function F(){}
+    F.prototype = o;
+    return new F();
+};
+
+test("objectCreate", function() {
+    function Array2() {
+        Array.apply(this, arguments);
+    }
+    Array2.prototype = objectCreate(Array.prototype);
+    Array2.prototype.constructor = Array2;
+    var a = new Array2();
+    ok(a instanceof Array2);
+    ok(a instanceof Array);
+});
+
+
 })();
