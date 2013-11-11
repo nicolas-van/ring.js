@@ -284,6 +284,62 @@ function declare(_) {
         name: "ring.ValueError"
     });
 
+    /**
+        This method allows to find the super of a method when that method has been re-defined
+        in a child class.
+
+        Contrary to this.$super(), this function allows to find a super method in another method
+        than the re-defining one. Example:
+
+        var A = ring.create({
+            fctA: function() {...};
+        });
+
+        var B = ring.create([A], {
+            fctA: function() {...};
+            fctB: function() {
+                ring.getSuper(B, this, "fctA")(); // here we call the original fctA() method
+                // as it was defined in the A class
+            };
+        });
+
+        This method is much slower than this.$super(), so this.$super() should always be
+        preferred when it is possible to use it.
+
+        Arguments:
+
+        * currentClass: The current class. It is necessary to specify it for this function
+          to work properly.
+        * obj: The current object (this in most cases).
+        * attributeName: The name of the desired attribute as it appeared in the base class.
+
+        Returns the attribute as it was defined in the base class. If that attribute is a function,
+        it will be binded to obj.
+    */
+    ring.getSuper = function(currentClass, obj, attributeName) {
+        var pos;
+        var __mro__ = obj.constructor.__mro__;
+        for (var i = 0; i < __mro__.length; i++) {
+            if (__mro__[i] === currentClass) {
+                pos = i;
+                break;
+            }
+        }
+        if (pos === undefined)
+            throw new ring.ValueError("Class not found in instance's method resolution order.");
+        var find = function(proto, counter) {
+            if (counter === 0)
+                return proto;
+            return find(proto.__proto__, counter - 1);
+        };
+        var proto = find(obj.constructor.prototype, pos + 1);
+        var att = proto[attributeName];
+        if (ring.instance(att, "function"))
+            return _.bind(att, obj);
+        else
+            return att;
+    };
+
     return ring;
 }
 })();

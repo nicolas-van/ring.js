@@ -33,6 +33,42 @@ test("objectSuper", function() {
     equal(new D().b, "b");
 });
 
+test("ringSuper", function() {
+    var A = ring.create({
+        init: function() {
+            this.a = "a";
+            ring.getSuper(A, this, "init")();
+        }
+    });
+    var B = ring.create({
+        init: function() {
+            this.b = "b";
+            ring.getSuper(B, this, "init")();
+        }
+    });
+    var C = ring.create([A, B], {});
+    equal(new C().a, "a");
+    equal(new C().b, "b");
+    var D = ring.create([B, A], {});
+    equal(new D().a, "a");
+    equal(new D().b, "b");
+    var X = ring.create({
+        val: function() {
+            return "x";
+        }
+    });
+    var Y = ring.create([X], {
+        val: function() {
+            return "y";
+        },
+        origVal: function() {
+            return ring.getSuper(Y, this, "val")();
+        }
+    });
+    equal(new Y().val(), "y");
+    equal(new Y().origVal(), "x");
+});
+
 test("mro", function() {
     var f = ring.create([], {});
     deepEqual(f.__mro__, [f, ring.Object]);
