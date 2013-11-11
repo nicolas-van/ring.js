@@ -40,7 +40,7 @@ if (typeof(exports) !== "undefined") { // nodejs
 function declare(_) {
     var ring = {};
 
-    function Object() {}
+    function RingObject() {}
     /**
         ring.Object
 
@@ -48,7 +48,7 @@ function declare(_) {
         testing testing if an object uses the Ring.js class system using
         ring.instance(x, ring.Object)
     */
-    ring.Object = Object;
+    ring.Object = RingObject;
     _.extend(ring.Object, {
         __mro__: [ring.Object],
         __properties__: {init: function() {}},
@@ -64,10 +64,12 @@ function declare(_) {
     });
 
     var objectCreate = function(o) {
-        function F(){}
+        function CreatedObject(){}
         if (o !== undefined)
-            F.prototype = o;
-        return new F();
+            CreatedObject.prototype = o;
+        var tmp = new CreatedObject();
+        tmp.__proto__ = o;
+        return tmp;
     };
     ring.__objectCreate = objectCreate;
 
@@ -97,10 +99,16 @@ function declare(_) {
         if (parents.length === 0)
             parents = [ring.Object];
         var id = classCounter++;
+        // create real class
+        var claz = function Instance() {
+            this.$super = null;
+            this.init.apply(this, arguments);
+        };
+        claz.__properties__ = props;
         // mro creation
         var toMerge = _.pluck(parents, "__mro__");
         toMerge = toMerge.concat([parents]);
-        var __mro__ = [{__properties__: props}].concat(mergeMro(toMerge));
+        var __mro__ = [claz].concat(mergeMro(toMerge));
         //generate prototype
         var prototype = undefined;
         _.each(_.clone(__mro__).reverse(), function(claz) {
@@ -125,18 +133,11 @@ function declare(_) {
                     };
                 })(key, p, prototype);
             });
-            current.__proto__ = prototype;
             prototype = current;
         });
-        // create real class
-        var claz = function Instance() {
-            this.$super = null;
-            this.init.apply(this, arguments);
-        };
-        __mro__[0] = claz;
+        // remaining operations
         claz.__mro__ = __mro__;
         claz.__parents__ = parents;
-        claz.__properties__ = props;
         claz.prototype = prototype;
         claz.prototype.constructor = claz;
         claz.__classId__ = id;
@@ -260,11 +261,24 @@ function declare(_) {
             this.message = message || this.defaultMessage;
         },
         classInit: function(prototype) {
-            var p = new Error();
-            var cons = prototype.constructor;
-            _.extend(p, prototype);
-            p.constructor = cons;
-            return p;
+            // some black magic to reconstitute a complete prototype chain
+            // with Error at the end
+            var protos = [];
+            var gather = function(proto) {
+                if (proto.__proto__ === Object.prototype)
+                    return;
+                protos.push(proto);
+                gather(proto.__proto__);
+            };
+            gather(prototype);
+            var current = new Error();
+            _.each(_.clone(protos).reverse(), function(proto) {
+                var tmp = objectCreate(current);
+                _.extend(tmp, proto);
+                current = tmp;
+            });
+            current.constructor = prototype.constructor;
+            return current;
         }
     });
 
