@@ -74,6 +74,29 @@ function declare(_) {
     var classCounter = 3;
     var fnTest = /xyz/.test(function(){xyz();}) ? /\$super\b/ : /.*/;
 
+    function hasDefineProperty() {
+        if (typeof(Object.defineProperty) !== "function") {
+            return false;
+        }
+        // Avoid IE8 bug
+        try {
+            Object.defineProperty({}, 'x', {});
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+    var obfuscateSuper = hasDefineProperty() ? function(obj) {
+            Object.defineProperty(obj, "$super", {
+                value: null,
+                configurable: false,
+                writable: true,
+                enumerable: false
+            });
+    } : function(obj) {
+        obj.$super = null;
+    };
+
     /**
         ring.create([parents,] properties)
 
@@ -99,7 +122,7 @@ function declare(_) {
         var id = classCounter++;
         // create real class
         var claz = function Instance() {
-            this.$super = null;
+            obfuscateSuper(this);
             this.init.apply(this, arguments);
         };
         claz.__properties__ = props;
