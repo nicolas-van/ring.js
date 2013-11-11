@@ -112,8 +112,6 @@ function declare(_) {
         //generate prototype
         var prototype = undefined;
         _.each(_.clone(__mro__).reverse(), function(claz) {
-            if (prototype !== undefined)
-                prototype.constructor = claz;
             var current = objectCreate(prototype);
             _.extend(current, claz.__properties__);
             _.each(_.keys(current), function(key) {
