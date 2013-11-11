@@ -60,6 +60,7 @@ function declare(_) {
         init: ring.Object.__properties__.init
     });
 
+    // utility function to have Object.create on all browsers
     var objectCreate = function(o) {
         function CreatedObject(){}
         if (o)
