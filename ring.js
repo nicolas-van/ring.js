@@ -54,10 +54,7 @@ function declare(_) {
         __properties__: {init: function() {}},
         __classId__: 1,
         __parents__: [],
-        __classIndex__: {"1": ring.Object},
-        isSubClass: function(other) {
-            return this.__classIndex__[other.__classId__] !== undefined;
-        }
+        __classIndex__: {"1": ring.Object}
     });
     _.extend(ring.Object.prototype, {
         init: ring.Object.__properties__.init
@@ -144,7 +141,6 @@ function declare(_) {
         _.each(claz.__mro__, function(c) {
             claz.__classIndex__[c.__classId__] = c;
         });
-        claz.isSubClass = ring.Object.isSubClass;
         // class init
         if (claz.prototype.classInit) {
             claz.__classInit__ = claz.prototype.classInit;
@@ -216,9 +212,9 @@ function declare(_) {
             ring.instance(1, "number") // returns true
     */
     ring.instance = function(obj, type) {
-        if (typeof(obj) === "object" && obj.constructor && obj.constructor.isSubClass &&
+        if (typeof(obj) === "object" && obj.constructor && obj.constructor.__classIndex__ &&
             typeof(type) === "function" && typeof(type.__classId__) === "number") {
-            return obj.constructor.isSubClass(type);
+            return obj.constructor.__classIndex__[type.__classId__] !== undefined;
         }
         if (typeof(type) === "string")
             return typeof(obj) === type;
