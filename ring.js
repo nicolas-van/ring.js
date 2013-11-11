@@ -24,7 +24,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 (function() {
-/* jshint es3: true */
+/* jshint es3: true, proto: true */
 "use strict";
 
 if (typeof(exports) !== "undefined") { // nodejs
@@ -110,7 +110,7 @@ function declare(_) {
         toMerge = toMerge.concat([parents]);
         var __mro__ = [claz].concat(mergeMro(toMerge));
         //generate prototype
-        var prototype = undefined;
+        var prototype = null;
         _.each(_.clone(__mro__).reverse(), function(claz) {
             var current = objectCreate(prototype);
             _.extend(current, claz.__properties__);
@@ -131,13 +131,13 @@ function declare(_) {
                     };
                 })(key, p, prototype);
             });
+            current.constructor = claz;
             prototype = current;
         });
         // remaining operations
         claz.__mro__ = __mro__;
         claz.__parents__ = parents;
         claz.prototype = prototype;
-        claz.prototype.constructor = claz;
         claz.__classId__ = id;
         // construct classes index
         claz.__classIndex__ = {};
@@ -276,7 +276,6 @@ function declare(_) {
                 _.extend(tmp, proto);
                 current = tmp;
             });
-            current.constructor = prototype.constructor;
             return current;
         }
     });
