@@ -270,7 +270,10 @@ function declare(_) {
             _.each(_.clone(protos).reverse(), function(proto) {
                 var tmp = objectCreate(current);
                 delete proto.__proto__;
-                _.extend(tmp, proto);
+                // using _.each to avoid traversing prototypes
+                _.each(proto, function(v, k) {
+                    tmp[k] = v;
+                });
                 current = tmp;
             });
             return current;

@@ -206,5 +206,19 @@ test("objectCreate", function() {
     equal(a3.constructor, Array3);
 });
 
+test("underscoreProto", function() {
+    // testing underscore to know the exact behavior with prototypes
+    function Obj() {};
+    Obj.prototype.a = "a";
+    var tmp = {};
+    _.extend(tmp, new Obj());
+    equal(tmp.a, "a"); // extend traverse prototype
+    tmp = {};
+    _.each(new Obj(), function(v, k) {
+        tmp[k] = true;
+    });
+    equal(tmp.a, undefined); // but each does not
+});
+
 
 })();
