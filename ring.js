@@ -65,10 +65,10 @@ function declare(_) {
 
     var objectCreate = function(o) {
         function CreatedObject(){}
-        if (o !== undefined)
+        if (o)
             CreatedObject.prototype = o;
         var tmp = new CreatedObject();
-        tmp.__proto__ = o;
+        tmp.__proto__ = o || null;
         return tmp;
     };
     ring.__objectCreate = objectCreate;
@@ -263,7 +263,7 @@ function declare(_) {
             // with Error at the end
             var protos = [];
             var gather = function(proto) {
-                if (proto.__proto__ === Object.prototype)
+                if (! proto)
                     return;
                 protos.push(proto);
                 gather(proto.__proto__);
@@ -272,6 +272,7 @@ function declare(_) {
             var current = new Error();
             _.each(_.clone(protos).reverse(), function(proto) {
                 var tmp = objectCreate(current);
+                delete proto.__proto__;
                 _.extend(tmp, proto);
                 current = tmp;
             });
