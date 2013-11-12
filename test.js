@@ -3,7 +3,7 @@
 /* jshint es3: true, proto: true */
 "use strict";
 
-typeof(module) === "undefined" ? null : (function() {
+if (typeof(module) !== "undefined") {
     global.dejavu = require("dejavu");
     global.ring = require("./ring");
     global.assert = require("assert");
@@ -11,7 +11,7 @@ typeof(module) === "undefined" ? null : (function() {
     global.Class = require("resig-class");
     global.jsface = require("jsface");
     global._ = require("underscore");
-})();
+}
 
 test("base", function() {
     var C = ring.create({});
@@ -384,7 +384,7 @@ test("klassCompatibility", function() {
     performCompatTest(B);
 });
 
-typeof(module) !== "undefined" ? null : test("classyCompatibility", function() {
+if (typeof(module) === "undefined") test("classyCompatibility", function() {
     var A = Classy.$extend({
         __init__: function() {
             this.a = "a";

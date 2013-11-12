@@ -56,7 +56,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-contrib-compress');
 
-    grunt.registerTask('test', ['jshint', "mocha"]);
+    grunt.registerTask('test', ['jshint', "mocha", "mochaTest"]);
 
     grunt.registerTask('dist', ['compress']);
 
