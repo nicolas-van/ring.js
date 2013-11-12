@@ -311,5 +311,26 @@ test("classCompatibility", function() {
     performCompatTest(B);
 });
 
+test("jsfaceCompatibility", function() {
+    var A = jsface.Class({
+        constructor: function() {
+            this.a = "a";
+        }, 
+        set: function() {
+            this.x = "x";
+        }
+    });
+    var B = jsface.Class(A, {
+        constructor: function() {
+            B.$super.call(this);
+            this.b = "b";
+        },
+        set: function() {
+            B.$superp.set.call(this);
+            this.y = "y";
+        }
+    });
+    performCompatTest(B);
+});
 
 })();

@@ -10,7 +10,13 @@
     "tests"
   ],
   "devDependencies": {
-    "qunit": ">=1.12.0"
+    "qunit": ">=1.12.0",
+    "Class.js": ">=1.0.0",
+    "classy": "*",
+    "jsface": ">=2.2.0",
+    "klass": "*",
+    "dejavu": ">=0.4.4",
+    "classify": ">=0.13.1"
   },
   "dependencies": {
     "underscore": ">=1.4.4"
