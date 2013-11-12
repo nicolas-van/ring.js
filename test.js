@@ -220,5 +220,45 @@ test("underscoreProto", function() {
     equal(tmp.a, undefined); // but each does not
 });
 
+test("initRetroCompatibility", function() {
+    var A = ring.create({
+        init: function() {
+            this.a = "a";
+            this.$super();
+        }
+    });
+    var B = ring.create({
+        init: function() {
+            this.b = "b";
+            this.$super();
+        }
+    });
+    var C = ring.create([A, B], {});
+    equal(new C().a, "a");
+    equal(new C().b, "b");
+    var D = ring.create([B, A], {});
+    equal(new D().a, "a");
+    equal(new D().b, "b");
+
+    A = ring.create({
+        init: function() {
+            this.a = "a";
+            ring.getSuper(A, this, "init")();
+        }
+    });
+    B = ring.create({
+        init: function() {
+            this.b = "b";
+            ring.getSuper(B, this, "init")();
+        }
+    });
+    C = ring.create([A, B], {});
+    equal(new C().a, "a");
+    equal(new C().b, "b");
+    D = ring.create([B, A], {});
+    equal(new D().a, "a");
+    equal(new D().b, "b");
+});
+
 
 })();

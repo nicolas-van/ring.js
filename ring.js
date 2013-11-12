@@ -100,8 +100,14 @@ function declare(_) {
         var cons = props.constructor !== Object ? props.constructor : undefined;
         props = _.clone(props);
         delete props.constructor;
-        if (cons !== undefined)
+        if (cons)
             props.__ringConstructor__ = cons;
+        else { //retro compatibility
+            cons = props.init;
+            delete props.init;
+            if (cons)
+                props.__ringConstructor__ = cons;
+        }
         // create real class
         var claz = function Instance() {
             this.$super = null;
@@ -343,7 +349,7 @@ function declare(_) {
         };
         var proto = find(obj.constructor.prototype, pos + 1);
         var att;
-        if (attributeName !== "constructor")
+        if (attributeName !== "constructor" && attributeName !== "init") // retro compatibility
             att = proto[attributeName];
         else
             att = proto.__ringConstructor__;
