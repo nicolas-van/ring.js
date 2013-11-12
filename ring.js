@@ -63,10 +63,9 @@ function declare(_) {
     // utility function to have Object.create on all browsers
     var objectCreate = function(o) {
         function CreatedObject(){}
-        if (o)
-            CreatedObject.prototype = o;
+        CreatedObject.prototype = o;
         var tmp = new CreatedObject();
-        tmp.__proto__ = o || null;
+        tmp.__proto__ = o;
         return tmp;
     };
     ring.__objectCreate = objectCreate;
@@ -122,7 +121,7 @@ function declare(_) {
         toMerge = toMerge.concat([parents]);
         var __mro__ = [claz].concat(mergeMro(toMerge));
         //generate prototype
-        var prototype = null;
+        var prototype = Object.prototype;
         _.each(_.clone(__mro__).reverse(), function(claz) {
             var current = objectCreate(prototype);
             _.extend(current, claz.__properties__);
@@ -136,8 +135,7 @@ function declare(_) {
                         var tmp = this.$super;
                         this.$super = supProto[name];
                         try {
-                            var ret = fct.apply(this, arguments);
-                            return ret;
+                            return fct.apply(this, arguments);
                         } finally {
                             this.$super = tmp;
                         }
