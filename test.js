@@ -1,6 +1,6 @@
 
 (function() {
-/* jshint es3: true */
+/* jshint es3: true, proto: true */
 "use strict";
 
 if (typeof(exports) !== "undefined") { // nodejs
@@ -301,7 +301,7 @@ test("classCompatibility", function() {
     }
     A.prototype.set = function() {
         this.x = "x";
-    }
+    };
     function B() {
         A.call(this);
         this.b = "b";
@@ -311,7 +311,7 @@ test("classCompatibility", function() {
     B.prototype.set = function() {
         A.prototype.set.call(this);
         this.y = "y";
-    }
+    };
     performCompatTest(B);
 });
 
@@ -319,7 +319,7 @@ test("jsfaceCompatibility", function() {
     var A = jsface.Class({
         constructor: function() {
             this.a = "a";
-        }, 
+        },
         set: function() {
             this.x = "x";
         }
@@ -341,7 +341,7 @@ test("johnresigCompatibility", function() {
     var A = Class.extend({
         init: function() {
             this.a = "a";
-        }, 
+        },
         set: function() {
             this.x = "x";
         }
@@ -382,7 +382,7 @@ test("classyCompatibility", function() {
     var A = Classy.$extend({
         __init__: function() {
             this.a = "a";
-        }, 
+        },
         set: function() {
             this.x = "x";
         }
@@ -404,7 +404,7 @@ test("dejavuCompatibility", function() {
     var A = dejavu.Class.declare({
         initialize: function() {
             this.a = "a";
-        }, 
+        },
         set: function() {
             this.x = "x";
         }
@@ -428,7 +428,7 @@ test("dejavuClosureCompatibility", function() {
         return {
             initialize: function() {
                 this.a = "a";
-            }, 
+            },
             set: function() {
                 this.x = "x";
             }
@@ -496,38 +496,53 @@ test("coffeeCompatibility", function() {
                 @y = "y"
     */
     var A, B,
-      __hasProp = {}.hasOwnProperty,
-      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+        __hasProp = {}.hasOwnProperty,
+        __extends = function (child, parent) {
+            for (var key in parent) {
+                if (__hasProp.call(parent, key))
+                    child[key] = parent[key];
+            }
 
-    A = (function() {
+            function Ctor() {
+                this.constructor = child;
+            }
+            Ctor.prototype = parent.prototype;
+            child.prototype = new Ctor();
+            child.__super__ = parent.prototype;
+            return child;
+        };
 
-      function A() {
-        this.a = "a";
-      }
+    A = (function () {
 
-      A.prototype.set = function() {
-        return this.x = "x";
-      };
+        function A() {
+            this.a = "a";
+        }
 
-      return A;
+        A.prototype.set = function () {
+            this.x = "x";
+            return this.x;
+        };
+
+        return A;
 
     })();
 
-    B = (function(_super) {
+    B = (function (_super) {
 
-      __extends(B, _super);
+        __extends(B2, _super);
 
-      function B() {
-        B.__super__.constructor.apply(this, arguments);
-        this.b = "b";
-      }
+        function B2() {
+            B.__super__.constructor.apply(this, arguments);
+            this.b = "b";
+        }
 
-      B.prototype.set = function() {
-        B.__super__.set.apply(this, arguments);
-        return this.y = "y";
-      };
+        B2.prototype.set = function () {
+            B.__super__.set.apply(this, arguments);
+            this.y = "y";
+            return this.y;
+        };
 
-      return B;
+        return B2;
 
     })(A);
     

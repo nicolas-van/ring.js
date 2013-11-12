@@ -127,8 +127,8 @@ function declare(_) {
             _.extend(current, claz.__properties__);
             _.each(_.keys(current), function(key) {
                 var p = current[key];
-                if (typeof p !== "function" || ! fnTest.test(p)
-                    || (key !== "__ringConstructor__" && claz.__ringConvertedObject__))
+                if (typeof p !== "function" || ! fnTest.test(p) ||
+                    (key !== "__ringConstructor__" && claz.__ringConvertedObject__))
                     return;
                 current[key] = (function(name, fct, supProto) {
                     return function() {
@@ -218,7 +218,7 @@ function declare(_) {
                 if (p === Object.prototype)
                     return;
                 _.extend(keys, _.chain(Object.getOwnPropertyNames(p))
-                    .map(function(el) {return [el, true]})
+                    .map(function(el) {return [el, true];})
                     .filter(function(el) {return el[0] !== "constructor" && el[0] !== "__proto__";})
                     .object().value());
                 crawl(Object.getPrototypeOf(p));
