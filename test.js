@@ -14,13 +14,13 @@ test("base", function() {
 
 test("objectSuper", function() {
     var A = ring.create({
-        init: function() {
+        constructor: function() {
             this.a = "a";
             this.$super();
         }
     });
     var B = ring.create({
-        init: function() {
+        constructor: function() {
             this.b = "b";
             this.$super();
         }
@@ -35,15 +35,15 @@ test("objectSuper", function() {
 
 test("ringSuper", function() {
     var A = ring.create({
-        init: function() {
+        constructor: function() {
             this.a = "a";
-            ring.getSuper(A, this, "init")();
+            ring.getSuper(A, this, "constructor")();
         }
     });
     var B = ring.create({
-        init: function() {
+        constructor: function() {
             this.b = "b";
-            ring.getSuper(B, this, "init")();
+            ring.getSuper(B, this, "constructor")();
         }
     });
     var C = ring.create([A, B], {});
@@ -106,9 +106,9 @@ test("inherit", function() {
     equal(new D().x(), 6);
 });
 
-test("init", function() {
+test("constructor", function() {
     var A = ring.create({
-        init: function() {
+        constructor: function() {
             this.x = 3;
         }
     });
@@ -208,7 +208,7 @@ test("objectCreate", function() {
 
 test("underscoreProto", function() {
     // testing underscore to know the exact behavior with prototypes
-    function Obj() {};
+    function Obj() {}
     Obj.prototype.a = "a";
     var tmp = {};
     _.extend(tmp, new Obj());
@@ -218,6 +218,46 @@ test("underscoreProto", function() {
         tmp[k] = true;
     });
     equal(tmp.a, undefined); // but each does not
+});
+
+test("initRetroCompatibility", function() {
+    var A = ring.create({
+        init: function() {
+            this.a = "a";
+            this.$super();
+        }
+    });
+    var B = ring.create({
+        init: function() {
+            this.b = "b";
+            this.$super();
+        }
+    });
+    var C = ring.create([A, B], {});
+    equal(new C().a, "a");
+    equal(new C().b, "b");
+    var D = ring.create([B, A], {});
+    equal(new D().a, "a");
+    equal(new D().b, "b");
+
+    A = ring.create({
+        init: function() {
+            this.a = "a";
+            ring.getSuper(A, this, "init")();
+        }
+    });
+    B = ring.create({
+        init: function() {
+            this.b = "b";
+            ring.getSuper(B, this, "init")();
+        }
+    });
+    C = ring.create([A, B], {});
+    equal(new C().a, "a");
+    equal(new C().b, "b");
+    D = ring.create([B, A], {});
+    equal(new D().a, "a");
+    equal(new D().b, "b");
 });
 
 
