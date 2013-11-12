@@ -1,6 +1,6 @@
 {
   "name": "ring",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Ring.js - JavaScript Class System with Multiple Inheritance",
   "main": "ring.js",
   "author": "Nicolas Vanhoren",
@@ -24,10 +24,7 @@
     "grunt": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-qunit": "*",
-    "grunt-contrib-compress": "~0.5.2"
-  },
-  "engines": {
-    "node": ">=0.6.12"
+    "grunt-contrib-compress": ">=0.5.2"
   },
   "license": "MIT"
 }

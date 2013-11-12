@@ -1,6 +1,6 @@
 {
   "name": "ring",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "main": "ring.js",
   "ignore": [
     "**/.*",
@@ -13,6 +13,6 @@
     "qunit": ">=1.12.0"
   },
   "dependencies": {
-    "underscore": ">=1.5.1"
+    "underscore": ">=1.4.4"
   }
 }
