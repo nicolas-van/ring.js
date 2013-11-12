@@ -17,7 +17,8 @@
     "klass": "*",
     "dejavu": ">=0.4.4",
     "classify": ">=0.13.1",
-    "mocha": "1.12"
+    "mocha": "1.12",
+    "ristretto": "~1.2.0"
   },
   "dependencies": {
     "underscore": ">=1.4.4"
