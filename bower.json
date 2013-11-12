@@ -16,7 +16,8 @@
     "jsface": ">=2.2.0",
     "klass": "*",
     "dejavu": ">=0.4.4",
-    "classify": ">=0.13.1"
+    "classify": ">=0.13.1",
+    "mocha": "1.12"
   },
   "dependencies": {
     "underscore": ">=1.4.4"

@@ -247,7 +247,7 @@ function declare(_) {
         });
         claz.__classIndex__[id] = claz;
         delete claz.__properties__.constructor;
-        delete claz.__properties__.__proto__;
+        claz.__properties__.__proto__ = Object.prototype;
     };
 
     /**
@@ -327,10 +327,10 @@ function declare(_) {
             var current = new Error();
             _.each(_.clone(protos).reverse(), function(proto) {
                 var tmp = objectCreate(current);
-                delete proto.__proto__;
                 // using _.each to avoid traversing prototypes
                 _.each(proto, function(v, k) {
-                    tmp[k] = v;
+                    if (k !== "__proto__")
+                        tmp[k] = v;
                 });
                 current = tmp;
             });

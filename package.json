@@ -23,8 +23,14 @@
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-jshint": "*",
-    "grunt-contrib-qunit": "*",
-    "grunt-contrib-compress": ">=0.5.2"
+    "grunt-contrib-compress": ">=0.5.2",
+    "grunt-mocha": "~0.4.1",
+    "grunt-mocha-test": "~0.7.0",
+    "mocha": "~1.14.0",
+    "dejavu": "~0.4.4",
+    "klass": "~1.3.0",
+    "resig-class": "~0.1.0",
+    "jsface": "~2.2.0"
   },
   "license": "MIT"
 }

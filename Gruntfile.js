@@ -18,8 +18,23 @@ module.exports = function(grunt) {
                 camelcase: true, // force camelCase
             },
         },
-        qunit: {
-            files: ['test.html'],
+        mocha: {
+            main: {
+                src: ['test.html'],
+                options: {
+                    log: true,
+                    reporter: "Nyan",
+                    run: true,
+                },
+            }
+        },
+        mochaTest: {
+            main: {
+                src: ['test.js'],
+                options: {
+                    ui: "qunit",
+                }
+            }
         },
         compress: {
             main: {
@@ -37,10 +52,11 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-mocha');
+    grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-contrib-compress');
 
-    grunt.registerTask('test', ['jshint', "qunit"]);
+    grunt.registerTask('test', ['jshint', "mocha"]);
 
     grunt.registerTask('dist', ['compress']);
 
