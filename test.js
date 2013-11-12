@@ -400,4 +400,28 @@ test("classyCompatibility", function() {
     performCompatTest(B);
 });
 
+test("dejavuCompatibility", function() {
+    var A = dejavu.Class.declare({
+        initialize: function() {
+            this.a = "a";
+        }, 
+        set: function() {
+            this.x = "x";
+        }
+    });
+    var B = dejavu.Class.declare({
+        $extends: A,
+        initialize: function() {
+            this.$super(this);
+            this.b = "b";
+        },
+        set: function() {
+            this.$super(this);
+            this.y = "y";
+        }
+    });
+    var b = new B();
+    performCompatTest(B);
+});
+
 })();

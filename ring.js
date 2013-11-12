@@ -128,7 +128,8 @@ function declare(_) {
             _.extend(current, claz.__properties__);
             _.each(_.keys(current), function(key) {
                 var p = current[key];
-                if (typeof p !== "function" || ! fnTest.test(p))
+                if (typeof p !== "function" || ! fnTest.test(p)
+                    || (key !== "__ringConstructor__" && claz.__ringConvertedObject__))
                     return;
                 current[key] = (function(name, fct, supProto) {
                     return function() {
@@ -213,18 +214,38 @@ function declare(_) {
     var toRingClass = function(claz) {
         if (claz.__classId__)
             return;
+        var proto = ! Object.getOwnPropertyNames ? claz.prototype : (function() {
+            var keys = {};
+            (function crawl(p) {
+                if (p === Object.prototype)
+                    return;
+                _.extend(keys, _.chain(Object.getOwnPropertyNames(p))
+                    .map(function(el) {return [el, true]})
+                    .filter(function(el) {return el[0] !== "constructor" && el[0] !== "__proto__";})
+                    .object().value());
+                crawl(Object.getPrototypeOf(p));
+            })(claz.prototype);
+            return _.object(_.map(_.keys(keys), function(k) {return [k, claz.prototype[k]];}));
+        })();
         var id = classCounter++;
         _.extend(claz, {
             __mro__: [claz, ring.Object],
-            __properties__: _.extend({}, claz.prototype, {
+            __properties__: _.extend({}, proto, {
                 __ringConstructor__: function() {
                     this.$super.apply(this, arguments);
-                    claz.apply(this, arguments);
+                    var tmp = this.$super;
+                    this.$super = null;
+                    try {
+                        claz.apply(this, arguments);
+                    } finally {
+                        this.$super = tmp;
+                    }
                 }
             }),
             __classId__: id,
             __parents__: [ring.Object],
-            __classIndex__: {"1": ring.Object}
+            __classIndex__: {"1": ring.Object},
+            __ringConvertedObject__: true
         });
         claz.__classIndex__[id] = claz;
         delete claz.__properties__.constructor;
