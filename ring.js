@@ -94,6 +94,9 @@ function declare(_) {
         var parents = args.length >= 2 ? args[1] : [];
         if (! parents instanceof Array)
             parents = [parents];
+        _.each(parents, function(el) {
+            toRingClass(el);
+        });
         if (parents.length === 0)
             parents = [ring.Object];
         // constructor handling
@@ -202,6 +205,30 @@ function declare(_) {
                 return __mro__;
             throw new ring.ValueError("Cannot create a consistent method resolution order (MRO)");
         }
+    };
+
+    /**
+        Convert an existing class to be used with the ring.js class system.
+    */
+    var toRingClass = function(claz) {
+        if (claz.__classId__)
+            return;
+        var id = classCounter++;
+        _.extend(claz, {
+            __mro__: [claz, ring.Object],
+            __properties__: _.extend({}, claz.prototype, {
+                constructor: undefined,
+                __proto__: undefined,
+                __ringConstructor__: function() {
+                    this.$super.apply(this, arguments);
+                    claz.apply(this, arguments);
+                }
+            }),
+            __classId__: id,
+            __parents__: [ring.Object],
+            __classIndex__: {"1": ring.Object}
+        });
+        claz.__classIndex__[id] = claz;
     };
 
     /**

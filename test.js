@@ -260,5 +260,56 @@ test("initRetroCompatibility", function() {
     equal(new D().b, "b");
 });
 
+var performCompatTest = function(B) {
+    var C = ring.create({
+        constructor: function() {
+            this.c = "c";
+        },
+        set: function() {
+            this.z = "z";
+        }
+    });
+    var D = ring.create([B, C], {
+        constructor: function() {
+            this.$super();
+            this.d = "d";
+        },
+        set: function() {
+            this.$super();
+            this.zz = "zz";
+        }
+    });
+    var d = new D();
+    d.set();
+    equal(d.a, "a");
+    equal(d.b, "b");
+    equal(d.c, "c");
+    equal(d.d, "d");
+    equal(d.x, "x");
+    equal(d.y, "y");
+    equal(d.z, undefined);
+    equal(d.zz, "zz");
+};
+
+test("classCompatibility", function() {
+    function A() {
+        this.a = "a";
+    }
+    A.prototype.set = function() {
+        this.x = "x";
+    }
+    function B() {
+        A.call(this);
+        this.b = "b";
+    }
+    B.prototype = ring.__objectCreate(A.prototype);
+    B.prototype.constructor = B;
+    B.prototype.set = function() {
+        A.prototype.set.call(this);
+        this.y = "y";
+    }
+    performCompatTest(B);
+});
+
 
 })();
