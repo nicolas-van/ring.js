@@ -333,4 +333,45 @@ test("jsfaceCompatibility", function() {
     performCompatTest(B);
 });
 
+test("johnresigCompatibility", function() {
+    var A = Class.extend({
+        init: function() {
+            this.a = "a";
+        }, 
+        set: function() {
+            this.x = "x";
+        }
+    });
+    var B = A.extend({
+        init: function() {
+            this._super(this);
+            this.b = "b";
+        },
+        set: function() {
+            this._super(this);
+            this.y = "y";
+        }
+    });
+    performCompatTest(B);
+});
+
+test("klassCompatibility", function() {
+    var A = klass(function() {
+        this.a = "a";
+    }).methods({
+        set: function() {
+            this.x = "x";
+        }
+    });
+    var B = A.extend(function() {
+        this.b = "b";
+    }).methods({
+        set: function() {
+            this.supr(this);
+            this.y = "y";
+        }
+    });
+    performCompatTest(B);
+});
+
 })();
