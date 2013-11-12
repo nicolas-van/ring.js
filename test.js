@@ -420,7 +420,32 @@ test("dejavuCompatibility", function() {
             this.y = "y";
         }
     });
-    var b = new B();
+    performCompatTest(B);
+});
+
+test("dejavuClosureCompatibility", function() {
+    var A = dejavu.Class.declare(function () {
+        return {
+            initialize: function() {
+                this.a = "a";
+            }, 
+            set: function() {
+                this.x = "x";
+            }
+        };
+    });
+    var B = A.extend(function($super) {
+        return {
+            initialize: function() {
+                $super.initialize.call(this);
+                this.b = "b";
+            },
+            set: function() {
+                $super.set.call(this);
+                this.y = "y";
+            }
+        };
+    });
     performCompatTest(B);
 });
 
