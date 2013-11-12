@@ -449,4 +449,33 @@ test("dejavuClosureCompatibility", function() {
     performCompatTest(B);
 });
 
+// It's not possible for ring to support classify because it checks in
+// its constructors that 'this' is an instance of the class created by classify
+// by using 'instanceof' (which does not work because instanceof does not work
+// with ringjs. Removing that test in Classify's source code make it work
+// correctly with ring.
+/*
+test("classifyCompatibility", function() {
+    var A = Classify({
+        init: function() {
+            this.a = "a";
+        }, 
+        set: function() {
+            this.x = "x";
+        }
+    });
+    var B = Classify(A, {
+        init: function() {
+            this.$$parent(this);
+            this.b = "b";
+        },
+        set: function() {
+            this.$$parent(this);
+            this.y = "y";
+        }
+    });
+    performCompatTest(B);
+});
+*/
+
 })();
