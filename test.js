@@ -374,4 +374,26 @@ test("klassCompatibility", function() {
     performCompatTest(B);
 });
 
+test("classyCompatibility", function() {
+    var A = Classy.$extend({
+        __init__: function() {
+            this.a = "a";
+        }, 
+        set: function() {
+            this.x = "x";
+        }
+    });
+    var B = A.$extend({
+        __init__: function() {
+            this.$super(this);
+            this.b = "b";
+        },
+        set: function() {
+            this.$super(this);
+            this.y = "y";
+        }
+    });
+    performCompatTest(B);
+});
+
 })();
