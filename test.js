@@ -478,4 +478,60 @@ test("classifyCompatibility", function() {
 });
 */
 
+test("coffeeCompatibility", function() {
+    /*
+        Compiled using this code:
+
+        class A
+            constructor: ->
+                @a = "a"
+            set: ->
+                @x = "x"
+        class B extends A
+            constructor: ->
+                super
+                @b = "b"
+            set: ->
+                super
+                @y = "y"
+    */
+    var A, B,
+      __hasProp = {}.hasOwnProperty,
+      __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+    A = (function() {
+
+      function A() {
+        this.a = "a";
+      }
+
+      A.prototype.set = function() {
+        return this.x = "x";
+      };
+
+      return A;
+
+    })();
+
+    B = (function(_super) {
+
+      __extends(B, _super);
+
+      function B() {
+        B.__super__.constructor.apply(this, arguments);
+        this.b = "b";
+      }
+
+      B.prototype.set = function() {
+        B.__super__.set.apply(this, arguments);
+        return this.y = "y";
+      };
+
+      return B;
+
+    })(A);
+    
+    performCompatTest(B);
+});
+
 })();
