@@ -279,6 +279,10 @@ var performCompatTest = function(B) {
             this.zz = "zz";
         }
     });
+    equal(D.prototype.constructor, D);
+    equal(D.prototype.__proto__.constructor, B);
+    equal(D.prototype.__proto__.__proto__.constructor, C);
+    equal(D.prototype.__proto__.__proto__.__proto__.constructor, ring.Object);
     var d = new D();
     d.set();
     equal(d.a, "a");

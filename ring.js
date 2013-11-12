@@ -217,8 +217,6 @@ function declare(_) {
         _.extend(claz, {
             __mro__: [claz, ring.Object],
             __properties__: _.extend({}, claz.prototype, {
-                constructor: undefined,
-                __proto__: undefined,
                 __ringConstructor__: function() {
                     this.$super.apply(this, arguments);
                     claz.apply(this, arguments);
@@ -229,6 +227,8 @@ function declare(_) {
             __classIndex__: {"1": ring.Object}
         });
         claz.__classIndex__[id] = claz;
+        delete claz.__properties__.constructor;
+        delete claz.__properties__.__proto__;
     };
 
     /**
