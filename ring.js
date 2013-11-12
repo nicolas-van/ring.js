@@ -219,12 +219,14 @@ function declare(_) {
                     return;
                 _.extend(keys, _.chain(Object.getOwnPropertyNames(p))
                     .map(function(el) {return [el, true];})
-                    .filter(function(el) {return el[0] !== "constructor" && el[0] !== "__proto__";})
                     .object().value());
                 crawl(Object.getPrototypeOf(p));
             })(claz.prototype);
             return _.object(_.map(_.keys(keys), function(k) {return [k, claz.prototype[k]];}));
         })();
+        proto = _.chain(proto).map(function(v, k) { return [k, v]; })
+            .filter(function(el) {return el[0] !== "constructor" && el[0] !== "__proto__";})
+            .object().value();
         var id = classCounter++;
         _.extend(claz, {
             __mro__: [claz, ring.Object],
@@ -246,8 +248,6 @@ function declare(_) {
             __ringConvertedObject__: true
         });
         claz.__classIndex__[id] = claz;
-        delete claz.__properties__.constructor;
-        claz.__properties__.__proto__ = Object.prototype;
     };
 
     /**
