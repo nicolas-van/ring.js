@@ -51,13 +51,13 @@ function declare(_) {
     ring.Object = RingObject;
     _.extend(ring.Object, {
         __mro__: [ring.Object],
-        __properties__: {init: function() {}},
+        __properties__: {__ringConstructor__: function() {}},
         __classId__: 1,
         __parents__: [],
         __classIndex__: {"1": ring.Object}
     });
     _.extend(ring.Object.prototype, {
-        init: ring.Object.__properties__.init
+        __ringConstructor__: ring.Object.__properties__.__ringConstructor__
     });
 
     // utility function to have Object.create on all browsers
@@ -96,11 +96,16 @@ function declare(_) {
             parents = [parents];
         if (parents.length === 0)
             parents = [ring.Object];
-        var id = classCounter++;
+        // constructor handling
+        var cons = props.constructor !== Object ? props.constructor : undefined;
+        props = _.clone(props);
+        delete props.constructor;
+        if (cons !== undefined)
+            props.__ringConstructor__ = cons;
         // create real class
         var claz = function Instance() {
             this.$super = null;
-            this.init.apply(this, arguments);
+            this.__ringConstructor__.apply(this, arguments);
         };
         claz.__properties__ = props;
         // mro creation
@@ -133,6 +138,7 @@ function declare(_) {
             prototype = current;
         });
         // remaining operations
+        var id = classCounter++;
         claz.__mro__ = __mro__;
         claz.__parents__ = parents;
         claz.prototype = prototype;
@@ -252,7 +258,7 @@ function declare(_) {
             message: The message to put in the instance. If there is no message specified, the
             message will be this.defaultMessage.
         */
-        init: function(message) {
+        constructor: function(message) {
             this.message = message || this.defaultMessage;
         },
         classInit: function(prototype) {
@@ -336,7 +342,11 @@ function declare(_) {
             return find(proto.__proto__, counter - 1);
         };
         var proto = find(obj.constructor.prototype, pos + 1);
-        var att = proto[attributeName];
+        var att;
+        if (attributeName !== "constructor")
+            att = proto[attributeName];
+        else
+            att = proto.__ringConstructor__;
         if (ring.instance(att, "function"))
             return _.bind(att, obj);
         else
