@@ -7,3 +7,5 @@
 * Lot of internal changes. Normally, none of the features displayed in the documentation should be altered. But some
   codes that were written using undocumented features may not work anymore. (That justifies incrementing the major
   version number.)
+* Now also allows calling `ring.create(SomeClass, {...})`. The behavior will be the same than
+  `ring.create([SomeClass], {...})`.
