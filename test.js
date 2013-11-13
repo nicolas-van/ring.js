@@ -11,6 +11,7 @@ if (typeof(module) !== "undefined") {
     global.Class = require("resig-class");
     global.jsface = require("jsface");
     global._ = require("underscore");
+    global.Backbone = require("backbone");
 }
 
 test("base", function() {
@@ -551,6 +552,28 @@ test("coffeeCompatibility", function() {
 
     })(A);
     
+    performCompatTest(B);
+});
+
+test("backboneCompatibility", function() {
+    var A = Backbone.Model.extend({
+        initialize: function() {
+            this.a = "a";
+        },
+        set: function() {
+            this.x = "x";
+        }
+    });
+    var B = A.extend({
+        initialize: function() {
+            A.prototype.initialize.call(this);
+            this.b = "b";
+        },
+        set: function() {
+            A.prototype.set.call(this);
+            this.y = "y";
+        }
+    });
     performCompatTest(B);
 });
 

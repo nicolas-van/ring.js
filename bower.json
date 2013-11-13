@@ -18,7 +18,8 @@
     "dejavu": ">=0.4.4",
     "classify": ">=0.13.1",
     "mocha": "1.12",
-    "ristretto": "~1.2.0"
+    "ristretto": "~1.2.0",
+    "backbone": "~1.1.0"
   },
   "dependencies": {
     "underscore": ">=1.4.4"
