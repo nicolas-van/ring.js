@@ -64,7 +64,7 @@ test("ringSuper", function() {
             return "x";
         }
     });
-    var Y = ring.create([X], {
+    var Y = ring.create(X, {
         val: function() {
             return "y";
         },
@@ -97,7 +97,7 @@ test("inherit", function() {
     var A = ring.create({
         x: function() { return 1; }
     });
-    var B = ring.create([A], {
+    var B = ring.create(A, {
         y: function() { return 2; }
     });
     assert.equal(new A().x(), 1);
@@ -107,7 +107,7 @@ test("inherit", function() {
         x: function() { return 3; }
     });
     assert.equal(new C().x(), 3);
-    var D = ring.create([A], {
+    var D = ring.create(A, {
         x: function() { return this.$super() + 5; }
     });
     assert.equal(new D().x(), 6);
@@ -124,7 +124,7 @@ test("constructor", function() {
 
 test("instance", function() {
     var A = ring.create({});
-    var B = ring.create([A], {});
+    var B = ring.create(A, {});
     assert(ring.instance(new A(), A));
     assert(ring.instance(new B(), B));
     assert(ring.instance(new B(), A));
@@ -148,7 +148,7 @@ test("classInit", function() {
         }
     });
     assert.equal(new A().x, 2);
-    var B = ring.create([A], {
+    var B = ring.create(A, {
         classInit: function(proto) {
             proto.y = 3;
         }
@@ -270,6 +270,7 @@ test("initRetroCompatibility", function() {
 var performCompatTest = function(B) {
     var C = ring.create({
         constructor: function() {
+            this.$super();
             this.c = "c";
         },
         set: function() {
@@ -300,6 +301,53 @@ var performCompatTest = function(B) {
     assert.equal(d.y, "y");
     assert.equal(d.z, undefined);
     assert.equal(d.zz, "zz");
+    var E = ring.create(B, {
+        constructor: function() {
+            this.$super();
+            this.e = "e";
+        },
+        set: function() {
+            this.$super();
+            this.i = "i";
+        }
+    });
+    var F = ring.create(B, {
+        constructor: function() {
+            this.$super();
+            this.f = "f";
+        },
+        set: function() {
+            this.$super();
+            this.j = "j";
+        }
+    });
+    var G = ring.create([E, F], {
+        constructor: function() {
+            this.$super();
+            this.g = "g";
+        },
+        set: function() {
+            this.$super();
+            this.k = "k";
+        }
+    });
+    assert.equal(G.prototype.constructor, G);
+    assert.equal(G.prototype.__proto__.constructor, E);
+    assert.equal(G.prototype.__proto__.__proto__.constructor, F);
+    assert.equal(G.prototype.__proto__.__proto__.__proto__.constructor, B);
+    assert.equal(G.prototype.__proto__.__proto__.__proto__.__proto__.constructor, ring.Object);
+    var g = new G();
+    g.set();
+    assert.equal(g.a, "a");
+    assert.equal(g.b, "b");
+    assert.equal(g.e, "e");
+    assert.equal(g.f, "f");
+    assert.equal(g.g, "g");
+    assert.equal(g.x, "x");
+    assert.equal(g.y, "y");
+    assert.equal(g.i, "i");
+    assert.equal(g.j, "j");
+    assert.equal(g.k, "k");
 };
 
 test("classCompatibility", function() {
