@@ -90,71 +90,65 @@
 <p>Ring.js has only one dependency: <a href="http://underscorejs.org/">Underscore.js</a>. It is already provided in the Ring.js
 release but you can use another version if you want.</p>
 <p>To use Ring.js add theses lines to your HTML header:</p>
-<div class="codehilite"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;underscore.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;ring.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-</pre></div>
+<pre class="codehilite"><code class="language-html">&lt;script type=&quot;text/javascript&quot; src=&quot;underscore.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;ring.js&quot;&gt;&lt;/script&gt;</code></pre>
 
 
 <p>Ring.js is also compatible with <a href="http://requirejs.org/">Require.js</a>. Simply load the <code>ring.js</code> file and it will call
 the <code>define()</code> method instead of defining a global variable.</p>
 <h2 id="installation-in-nodejs">Installation in node.js</h2>
 <p>Use this command to install Ring.js:</p>
-<div class="codehilite"><pre>npm install ring
-</pre></div>
+<pre class="codehilite"><code class="language-sh">npm install ring</code></pre>
 
 
 <p>Then inside your program:</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">ring</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;ring&quot;</span><span class="p">);</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">var ring = require(&quot;ring&quot;);</code></pre>
 
 
 <h2 id="declaring-classes">Declaring Classes</h2>
 <p>The <code>ring.create()</code> function is used to declare new classes:</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">saySomething</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s2">&quot;hello world&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
-<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span><span class="p">();</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">saySomething</span><span class="p">());</span> <span class="c1">// prints &quot;hello world&quot; in the JavaScript console</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">var A = ring.create({
+    saySomething: function() {
+        return &quot;hello world&quot;;
+    },
+});
+var a = new A();
+console.log(a.saySomething()); // prints &quot;hello world&quot; in the JavaScript console</code></pre>
 
 
 <p><code>ring.create()</code> takes a dictionary as argument. The content of that dictionary will be added to the prototype of the
 class.</p>
 <h2 id="constructor">Constructor</h2>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
-<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span><span class="p">(</span><span class="s2">&quot;Nicolas&quot;</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span> <span class="c1">// prints &quot;Nicolas&quot;</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">var A = ring.create({
+    constructor: function(name) {
+        this.name = name;
+    },
+});
+var a = new A(&quot;Nicolas&quot;);
+console.log(a.name); // prints &quot;Nicolas&quot;</code></pre>
 
 
-<p>When the dictionary of properties given to <code>ring.create()</code> contains a method named <code>init</code>, that method will be called
-during the object construction with the arguments given to the class when using <code>new</code>.</p>
+<p>When the dictionary of properties given to <code>ring.create()</code> contains a method named <code>constructor</code>, that method will be
+called during the object construction with the arguments given to the class when using <code>new</code>.</p>
 <h2 id="inheritance">Inheritance</h2>
 <p>To inherit from one or multiple classes, add a list of the classes to inherit as an argument of <code>ring.create()</code> <em>before</em>
 the properties dictionary.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">x</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s2">&quot;x&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
-<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">y</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s2">&quot;y&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
+<pre class="codehilite"><code class="language-javascript">var A = ring.create({
+    x: function() {
+        return &quot;x&quot;;
+    },
+});
+var B = ring.create({
+    y: function() {
+        return &quot;y&quot;;
+    },
+});
 
-<span class="kd">var</span> <span class="nx">C</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">A</span><span class="p">,</span> <span class="nx">B</span><span class="p">],</span> <span class="p">{});</span>
+var C = ring.create([A, B], {});
 
-<span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">C</span><span class="p">();</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">x</span><span class="p">());</span> <span class="c1">// prints &quot;x&quot;;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">c</span><span class="p">.</span><span class="nx">y</span><span class="p">());</span> <span class="c1">// prints &quot;y&quot;;</span>
-</pre></div>
+var c = new C();
+console.log(c.x()); // prints &quot;x&quot;;
+console.log(c.y()); // prints &quot;y&quot;;</code></pre>
 
 
 <p>Diamond inheritance (ie: the classes B and C both inherit from A and the class D inherits from B <em>and</em> C) is allowed by
@@ -162,20 +156,19 @@ Ring.js.</p>
 <h2 id="super-method">Super Method</h2>
 <p>To call the super method when overriding a method, use <code>this.$super()</code>. Pass arguments to <code>this.$super()</code> to forward
 arguments if necessary.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">sayHello</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="nx">name</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
-<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">A</span><span class="p">],</span> <span class="p">{</span>
-    <span class="nx">sayHello</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$super</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, nice to meet you&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
+<pre class="codehilite"><code class="language-javascript">var A = ring.create({
+    sayHello: function(name) {
+        return &quot;Hello &quot; + name;
+    },
+});
+var B = ring.create([A], {
+    sayHello: function(name) {
+        return this.$super(name) + &quot;, nice to meet you&quot;;
+    },
+});
 
-<span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">B</span><span class="p">();</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">sayHello</span><span class="p">(</span><span class="s2">&quot;Nicolas&quot;</span><span class="p">));</span> <span class="c1">// prints &quot;Hello Nicolas, nice to meet you&quot;</span>
-</pre></div>
+var b = new B();
+console.log(b.sayHello(&quot;Nicolas&quot;)); // prints &quot;Hello Nicolas, nice to meet you&quot;</code></pre>
 
 
 <h2 id="testing-the-class-of-an-object">Testing the Class of an Object</h2>
@@ -183,12 +176,11 @@ arguments if necessary.</p>
 the implementation of inheritance in Ring.js (which is necessary to have multiple inheritance), <code>instanceof</code> can not
 work properly.</p>
 <p>So you should use <code>ring.instance()</code> instead.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">A</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({});</span>
-<span class="kd">var</span> <span class="nx">B</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">A</span><span class="p">],</span> <span class="p">{});</span>
+<pre class="codehilite"><code class="language-javascript">var A = ring.create({});
+var B = ring.create([A], {});
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="k">new</span> <span class="nx">A</span><span class="p">(),</span> <span class="nx">A</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="k">new</span> <span class="nx">B</span><span class="p">(),</span> <span class="nx">A</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
-</pre></div>
+console.log(ring.instance(new A(), A)); // prints &quot;true&quot;
+console.log(ring.instance(new B(), A)); // prints &quot;true&quot;</code></pre>
 
 
 <p><code>ring.instance(obj, type)</code> will return <code>true</code> if <code>obj</code> is an instance of <code>type</code> or an instance of a sub-class of <code>type</code>.</p>
@@ -197,32 +189,62 @@ work properly.</p>
 <code>ring.instance()</code> without causing problems.</p>
 <p>Additionally, <code>ring.instance()</code> can be used to test the type of basic data types in JavaScript. To do so, use a string
 as second argument instead of a class. Example:</p>
-<div class="codehilite"><pre><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{},</span> <span class="s2">&quot;function&quot;</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
-</pre></div>
+<pre class="codehilite"><code class="language-javascript">console.log(ring.instance(&quot;&quot;, &quot;string&quot;)); // prints &quot;true&quot;
+console.log(ring.instance(function() {}, &quot;function&quot;)); // prints &quot;true&quot;</code></pre>
 
 
 <h2 id="creation-of-new-exception-types">Creation of New Exception Types</h2>
 <p>To create new exception types you are supposed to inherit from the standard <code>Error</code> class. But inheriting from that
 standard class can be hard. That's why Ring.js contains a feature to bring a solution to that:</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">MyError</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">ring</span><span class="p">.</span><span class="nb">Error</span><span class="p">],</span> <span class="p">{</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;MyError&quot;</span><span class="p">,</span>
-<span class="p">});</span>
+<pre class="codehilite"><code class="language-javascript">var MyError = ring.create([ring.Error], {
+    name: &quot;MyError&quot;,
+});
 
-<span class="k">try</span> <span class="p">{</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="nx">MyError</span><span class="p">(</span><span class="s2">&quot;an error occured&quot;</span><span class="p">);</span>
-<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nb">Error</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">ring</span><span class="p">.</span><span class="nb">Error</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">ring</span><span class="p">.</span><span class="nx">instance</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">MyError</span><span class="p">));</span> <span class="c1">// prints &quot;true&quot;</span>
-<span class="p">}</span>
-</pre></div>
+try {
+    throw new MyError(&quot;an error occured&quot;);
+} catch(e) {
+    console.log(ring.instance(e, Error)); // prints &quot;true&quot;
+    console.log(ring.instance(e, ring.Error)); // prints &quot;true&quot;
+    console.log(ring.instance(e, MyError)); // prints &quot;true&quot;
+}</code></pre>
 
 
-<p>The <code>ring.Error</code> class is a special class using the Ring.js class system <em>but</em> also inherits from the standard <code>Error</code>
-class. You can create new exceptions classes inheriting from it and thus create complex exception hierarchies.</p>
+<p>The <code>ring.Error</code> class is a special class using the Ring.js class system <em>but</em> it also inherits from the standard
+<code>Error</code> class. You can create new exceptions classes inheriting from it and thus create complex exception hierarchies.</p>
 <p>Please note the <code>name</code> property is a property of the standard <code>Error</code> class that can be useful for debugging. So all
 exception classes should define one.</p>
+<h2 id="compatibility-with-other-class-systems">Compatibility with other class systems</h2>
+<p>With Ring.js, since version 2, it is possible to inherit from a class created with any other class system. Example
+with a Backbone model:</p>
+<pre class="codehilite"><code class="language-javascript">var A = Backbone.Model.extend({
+    initialize: function() {
+        this.a = &quot;a&quot;;
+    }
+});
+var B = ring.create([A], {
+    constructor: function() {
+        this.$super();
+    }
+});</code></pre>
+
+
+<p>Inheriting from a non-Ring class uses the same syntax than with a Ring class. <code>this.$super</code> is usable as always. When
+overriding the constructor method, simply define a <code>constructor</code> function like you would with a normal Ring class.
+To call the original implementation of the constructor, use the usual <code>this.$super</code>. It doesn't matter if you are
+using a class system that uses another name for the constructor, like <code>initialize</code>, <code>init</code> or whatever. Just use
+<code>constructor</code> and <code>this.$super()</code> like usual and Ring.js will do the rest.</p>
+<p>Also note that, in the above example, <code>new B() instanceof A</code> will return <code>false</code>. <code>instanceof</code> still doesn't work in
+this case so you should use <code>ring.instance()</code> instead.</p>
+<p>Inheriting from a non-Ring class has some limitations. We could mostly resume it by saying that Ring does not "see"
+the inheritance in other classes. Example:</p>
+<pre class="codehilite"><code class="language-javascript">var A = ... some non-Ring class ...
+var B = ... some non-Ring class inheriting from A ...
+
+var C = ring.create([B], {...});</code></pre>
+
+
+<p>Instances of C will work as expected in this example. But still, ring doesn't understand the relation between <code>A</code> and
+<code>B</code>, and <code>ring.instance(new C(), A)</code> will return <code>false</code> while <code>ring.instance(new C(), B)</code> return <code>true</code>.</p>
 
                 </div>
             </div>

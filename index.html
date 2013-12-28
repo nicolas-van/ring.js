@@ -71,27 +71,26 @@
 </div>
 
 <p>Ring.js is a class system in JavaScript allowing multiple inheritance.</p>
-<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">Human</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">talk</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s2">&quot;hello&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
+<pre class="codehilite"><code class="language-javascript">var Human = ring.create({
+    talk: function() {
+        return &quot;hello&quot;;
+    },
+});
 
-<span class="kd">var</span> <span class="nx">Spider</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-    <span class="nx">climb</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s2">&quot;climbing&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-<span class="p">});</span>
+var Spider = ring.create({
+    climb: function() {
+        return &quot;climbing&quot;;
+    },
+});
 
-<span class="kd">var</span> <span class="nx">SpiderMan</span> <span class="o">=</span> <span class="nx">ring</span><span class="p">.</span><span class="nx">create</span><span class="p">([</span><span class="nx">Spider</span><span class="p">,</span> <span class="nx">Human</span><span class="p">],</span> <span class="p">{</span>
-    <span class="nx">talk</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">$super</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;, my name is Peter Parker&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">});</span>
+var SpiderMan = ring.create([Spider, Human], {
+    talk: function() {
+        return this.$super() + &quot;, my name is Peter Parker&quot;;
+    }
+});
 
-<span class="kd">var</span> <span class="nx">spiderman</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SpiderMan</span><span class="p">();</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">spiderman</span><span class="p">.</span><span class="nx">talk</span><span class="p">());</span>
-</pre></div>
+var spiderman = new SpiderMan();
+console.log(spiderman.talk());</code></pre>
 
 
 <p>Its advantages:</p>
@@ -100,6 +99,7 @@
   you would in Java, Python, or basically any well-known language.</li>
 <li>Available in the browser or in node.js. Also works with require.js.</li>
 <li>The inheritance system is inspired by Python, one of the best multiple inheritance system ever.</li>
+<li>Provides compatibility with other JavaScript class systems, like CoffeeScript or Backbone.</li>
 <li>Licensed under the MIT license.</li>
 <li>Damn, multiple inheritance just rocks!</li>
 </ul>

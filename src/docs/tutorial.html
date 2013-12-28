@@ -64,15 +64,15 @@ Constructor
 
     :::javascript
     var A = ring.create({
-        init: function(name) {
+        constructor: function(name) {
             this.name = name;
         },
     });
     var a = new A("Nicolas");
     console.log(a.name); // prints "Nicolas"
 
-When the dictionary of properties given to `ring.create()` contains a method named `init`, that method will be called
-during the object construction with the arguments given to the class when using `new`.
+When the dictionary of properties given to `ring.create()` contains a method named `constructor`, that method will be
+called during the object construction with the arguments given to the class when using `new`.
 
 Inheritance
 -----------
@@ -170,11 +170,50 @@ standard class can be hard. That's why Ring.js contains a feature to bring a sol
         console.log(ring.instance(e, MyError)); // prints "true"
     }
 
-The `ring.Error` class is a special class using the Ring.js class system *but* also inherits from the standard `Error`
-class. You can create new exceptions classes inheriting from it and thus create complex exception hierarchies.
+The `ring.Error` class is a special class using the Ring.js class system *but* it also inherits from the standard
+`Error` class. You can create new exceptions classes inheriting from it and thus create complex exception hierarchies.
 
 Please note the `name` property is a property of the standard `Error` class that can be useful for debugging. So all
 exception classes should define one.
+
+Compatibility with other class systems
+--------------------------------------
+
+With Ring.js, since version 2, it is possible to inherit from a class created with any other class system. Example
+with a Backbone model:
+
+    :::javascript
+    var A = Backbone.Model.extend({
+        initialize: function() {
+            this.a = "a";
+        }
+    });
+    var B = ring.create([A], {
+        constructor: function() {
+            this.$super();
+        }
+    });
+
+Inheriting from a non-Ring class uses the same syntax than with a Ring class. `this.$super` is usable as always. When
+overriding the constructor method, simply define a `constructor` function like you would with a normal Ring class.
+To call the original implementation of the constructor, use the usual `this.$super`. It doesn't matter if you are
+using a class system that uses another name for the constructor, like `initialize`, `init` or whatever. Just use
+`constructor` and `this.$super()` like usual and Ring.js will do the rest.
+
+Also note that, in the above example, `new B() instanceof A` will return `false`. `instanceof` still doesn't work in
+this case so you should use `ring.instance()` instead.
+
+Inheriting from a non-Ring class has some limitations. We could mostly resume it by saying that Ring does not "see"
+the inheritance in other classes. Example:
+
+    :::javascript
+    var A = ... some non-Ring class ...
+    var B = ... some non-Ring class inheriting from A ...
+
+    var C = ring.create([B], {...});
+
+Instances of C will work as expected in this example. But still, ring doesn't understand the relation between `A` and
+`B`, and `ring.instance(new C(), A)` will return `false` while `ring.instance(new C(), B)` return `true`.
 
 </%text>
 </%block>
