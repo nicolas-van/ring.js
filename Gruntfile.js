@@ -19,7 +19,7 @@ module.exports = function(grunt) {
             },
         },
         mocha: {
-            main: {
+            browser: {
                 src: ['test.html'],
                 options: {
                     log: true,
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
             }
         },
         mochaTest: {
-            main: {
+            node: {
                 src: ['test.js'],
                 options: {
                     ui: "qunit",
