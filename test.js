@@ -625,4 +625,15 @@ test("backboneCompatibility", function() {
     performCompatTest(B);
 });
 
+test("length", function() {
+    var X = ring.create({});
+
+    var Y = ring.create([X], {length: 33});
+    var y = new Y();
+    assert.equal(y.constructor.prototype.length, 33);
+
+    var Z = ring.create([X], {length: function() { return 12; }});
+    assert.equal(new Z().length(), 12);
+});
+
 })();
