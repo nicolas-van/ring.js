@@ -139,6 +139,8 @@ test("instance", function() {
     assert(ring.instance(2, "number"));
     assert(ring.instance({}, "object"));
 
+    assert(! ring.instance(null, A));
+
 });
 
 test("classInit", function() {
