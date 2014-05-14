@@ -271,7 +271,7 @@ function declare(_) {
             ring.instance(1, "number") // returns true
     */
     ring.instance = function(obj, type) {
-        if (typeof(obj) === "object" && obj.constructor && obj.constructor.__classIndex__ &&
+        if (obj !== null && typeof(obj) === "object" && obj.constructor && obj.constructor.__classIndex__ &&
             typeof(type) === "function" && typeof(type.__classId__) === "number") {
             return obj.constructor.__classIndex__[type.__classId__] !== undefined;
         }
