@@ -1,6 +1,6 @@
 {
   "name": "ring",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "ring.js",
   "ignore": [
     "**/.*",
