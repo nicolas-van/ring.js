@@ -127,7 +127,7 @@ function declare(_) {
             _.extend(current, claz.__properties__);
             _.each(_.keys(current), function(key) {
                 var p = current[key];
-                if (typeof p !== "function" || ! fnTest.test(p) ||
+                if (typeof p !== "function" || ! fnTest.test(p) || p.__classId__ ||
                     (key !== "__ringConstructor__" && claz.__ringConvertedObject__))
                     return;
                 current[key] = (function(name, fct, supProto) {
