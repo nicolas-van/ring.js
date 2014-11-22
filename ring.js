@@ -172,6 +172,19 @@ function declare(_) {
         return claz;
     };
 
+    /**
+        ring.extend(class, properties)
+
+        Extend the class
+    */
+    ring.extend = function(claz, props) {
+        var new_claz = ring.create([claz], props);
+        claz.prototype = new_claz.prototype;
+        claz.__mro__ = new_claz.__mro__;
+        claz.__classIndex__ = new_claz.__classIndex__;
+        claz.__classInit__ = new_claz.__classInit__;
+    };
+
     var mergeMro = function(toMerge) {
         /* jshint loopfunc:true */
         // C3 merge() implementation
