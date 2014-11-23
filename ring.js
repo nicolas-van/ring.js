@@ -181,6 +181,7 @@ function declare(_) {
         var new_claz = ring.create([claz], props);
         claz.prototype = new_claz.prototype;
         claz.__mro__ = new_claz.__mro__;
+        claz.__properties__ = _.extend(_.clone(claz.__properties__), new_claz.__properties__);
         claz.__classIndex__ = new_claz.__classIndex__;
         claz.__classInit__ = new_claz.__classInit__;
     };
