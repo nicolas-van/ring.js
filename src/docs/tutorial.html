@@ -101,6 +101,13 @@ the properties dictionary.
 Diamond inheritance (ie: the classes B and C both inherit from A and the class D inherits from B *and* C) is allowed by
 Ring.js.
 
+Alternatively you can use the more classical `$extend` method:
+
+    :::javascript
+    var A = ring.create({});
+    
+    var B = A.$extend({});
+
 Super Method
 ------------
 
