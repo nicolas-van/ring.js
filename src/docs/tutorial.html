@@ -15,7 +15,13 @@ Tutorial
 Installation in Browser
 -----------------------
 
-[Download the last release of Ring.js](/releases.html). Then extract the content of the zip file.
+If you use bower:
+
+    :::javascript
+    bower install ring
+
+If you don't use bower (you should) then 
+[download the last release of Ring.js](https://github.com/nicolas-van/ring.js/releases).
 
 Ring.js has only one dependency: [Underscore.js](http://underscorejs.org/). It is already provided in the Ring.js
 release but you can use another version if you want.
@@ -25,9 +31,6 @@ To use Ring.js add theses lines to your HTML header:
     :::html
     <script type="text/javascript" src="underscore.js"></script>
     <script type="text/javascript" src="ring.js"></script>
-
-Ring.js is also compatible with [Require.js](http://requirejs.org/). Simply load the `ring.js` file and it will call
-the `define()` method instead of defining a global variable.
 
 Installation in node.js
 -----------------------

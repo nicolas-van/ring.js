@@ -86,7 +86,13 @@
                     
 <h1 id="tutorial">Tutorial</h1>
 <h2 id="installation-in-browser">Installation in Browser</h2>
-<p><a href="/releases.html">Download the last release of Ring.js</a>. Then extract the content of the zip file.</p>
+<p>If you use bower:</p>
+<div class="codehilite"><pre><span class="nx">bower</span> <span class="nx">install</span> <span class="nx">ring</span>
+</pre></div>
+
+
+<p>If you don't use bower (you should) then 
+<a href="https://github.com/nicolas-van/ring.js/releases">download the last release of Ring.js</a>.</p>
 <p>Ring.js has only one dependency: <a href="http://underscorejs.org/">Underscore.js</a>. It is already provided in the Ring.js
 release but you can use another version if you want.</p>
 <p>To use Ring.js add theses lines to your HTML header:</p>
@@ -95,8 +101,6 @@ release but you can use another version if you want.</p>
 </pre></div>
 
 
-<p>Ring.js is also compatible with <a href="http://requirejs.org/">Require.js</a>. Simply load the <code>ring.js</code> file and it will call
-the <code>define()</code> method instead of defining a global variable.</p>
 <h2 id="installation-in-nodejs">Installation in node.js</h2>
 <p>Use this command to install Ring.js:</p>
 <div class="codehilite"><pre>npm install ring
