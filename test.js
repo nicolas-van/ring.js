@@ -651,4 +651,14 @@ test("length", function() {
     assert.equal(new Z().length(), 12);
 });
 
+test("$extend", function() {
+    var A = ring.Object.$extend({
+        test: function() { return "a"; }
+    });
+    var B = A.$extend({
+        test: function() { return this.$super() + "b"; }
+    });
+    assert.strictEqual(new B().test(), "ab");
+});
+
 })();

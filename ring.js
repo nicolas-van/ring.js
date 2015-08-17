@@ -54,7 +54,10 @@ function declare(_) {
         __properties__: {__ringConstructor__: function() {}},
         __classId__: 1,
         __parents__: [],
-        __classIndex__: {"1": ring.Object}
+        __classIndex__: {"1": ring.Object},
+        $extend: function(props) {
+            return ring.create([this], props);
+        }
     });
     _.extend(ring.Object.prototype, {
         __ringConstructor__: ring.Object.__properties__.__ringConstructor__
@@ -168,6 +171,8 @@ function declare(_) {
                     claz.prototype = ret;
             }
         });
+        // $extend
+        claz.$extend = ring.Object.$extend;
 
         return claz;
     };
