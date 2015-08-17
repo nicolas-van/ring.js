@@ -110,6 +110,9 @@ function declare(_) {
             if (cons)
                 props.__ringConstructor__ = cons;
         }
+        // put the classInit aside to use later
+        var classInit = props.classInit;
+        delete props.classInit;
         // create real class
         var claz = function Instance() {
             this.$super = null;
@@ -120,7 +123,7 @@ function declare(_) {
         var toMerge = _.pluck(parents, "__mro__");
         toMerge = toMerge.concat([parents]);
         var __mro__ = [claz].concat(mergeMro(toMerge));
-        //generate prototype
+        // generate prototype
         var prototype = Object.prototype;
         _.each(_.clone(__mro__).reverse(), function(claz) {
             var current = objectCreate(prototype);
@@ -157,10 +160,7 @@ function declare(_) {
             claz.__classIndex__[c.__classId__] = c;
         });
         // class init
-        if (claz.prototype.classInit) {
-            claz.__classInit__ = claz.prototype.classInit;
-            delete claz.prototype.classInit;
-        }
+        claz.__classInit__ = classInit;
         _.each(_.chain(claz.__mro__).clone().reverse().value(), function(c) {
             if (c.__classInit__) {
                 var ret = c.__classInit__(claz.prototype);

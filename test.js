@@ -159,6 +159,19 @@ test("classInit", function() {
     assert.equal(new B().y, 3);
 });
 
+test("classInit - called once", function() {
+    var tmp = 0;
+    var A = ring.create({
+        classInit: function(proto) {
+            tmp += 1;
+        }
+    });
+    assert.equal(tmp, 1);
+    tmp = 0;
+    var B = ring.create(A, {});
+    assert.equal(tmp, 1);
+});
+
 test("exceptions", function() {
     var hasStack = false;
     try {
