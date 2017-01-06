@@ -10,7 +10,7 @@ if (typeof(module) !== "undefined") {
     global.klass = require("klass");
     global.Class = require("resig-class");
     global.jsface = require("jsface");
-    global._ = require("underscore");
+    global._ = require("lodash");
     global.Backbone = require("backbone");
 }
 
@@ -228,8 +228,8 @@ test("objectCreate", function() {
     assert.equal(a3.constructor, Array3);
 });
 
-test("underscoreProto", function() {
-    // testing underscore to know the exact behavior with prototypes
+test("lodashProto", function() {
+    // testing lodash to know the exact behavior with prototypes
     function Obj() {}
     Obj.prototype.a = "a";
     var tmp = {};

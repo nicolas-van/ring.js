@@ -43,7 +43,7 @@ module.exports = function(grunt) {
                 },
                 files: [
                     {src: 'ring.js', dest: '.'},
-                    {expand: true, flatten: true, src: 'bower_components/underscore/underscore.js', dest: '.'},
+                    {expand: true, flatten: true, src: 'bower_components/lodash/lodash.js', dest: '.'},
                     {src: 'README', dest: '.'},
                     {src: 'package.json', dest: '.'},
                 ],

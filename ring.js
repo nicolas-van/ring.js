@@ -28,10 +28,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 "use strict";
 
 if (typeof(exports) !== "undefined") { // nodejs
-    var underscore = require("underscore");
-    underscore.extend(exports, declare(underscore));
+    var lodash = require("lodash");
+    lodash.extend(exports, declare(lodash));
 } else if (typeof(define) !== "undefined") { // amd
-    define(["underscore"], declare);
+    define(["lodash"], declare);
 } else { // define global variable
     window.ring = declare(_);
 }
@@ -123,7 +123,7 @@ function declare(_) {
         };
         claz.__properties__ = props;
         // mro creation
-        var toMerge = _.pluck(parents, "__mro__");
+        var toMerge = _.map(parents, "__mro__");
         toMerge = toMerge.concat([parents]);
         var __mro__ = [claz].concat(mergeMro(toMerge));
         // generate prototype
@@ -189,14 +189,14 @@ function declare(_) {
                     continue;
                 var currentClass = current[i][0];
                 var isInTail = _.find(current, function(lst) {
-                    return _.contains(_.rest(lst), currentClass);
+                    return _.includes(_.drop(lst), currentClass);
                 });
                 if (! isInTail) {
                     found = true;
                     __mro__.push(currentClass);
                     current = _.map(current, function(lst) {
                         if (_.head(lst) === currentClass)
-                            return _.rest(lst);
+                            return _.drop(lst);
                         else
                             return lst;
                     });
@@ -205,7 +205,7 @@ function declare(_) {
             }
             if (found)
                 continue;
-            if (_.all(current, function(i) { return i.length === 0; }))
+            if (_.every(current, function(i) { return i.length === 0; }))
                 return __mro__;
             throw new ring.ValueError("Cannot create a consistent method resolution order (MRO)");
         }
