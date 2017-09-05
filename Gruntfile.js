@@ -18,7 +18,7 @@ module.exports = function(grunt) {
                 camelcase: true, // force camelCase
             },
         },
-        mocha: {
+        /*mocha: {
             browser: {
                 src: ['test.html'],
                 options: {
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
                     run: true,
                 },
             }
-        },
+        },*/
         mochaTest: {
             node: {
                 src: ['test.js'],
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-contrib-compress');
 
-    grunt.registerTask('test', ['jshint', "mocha", "mochaTest"]);
+    grunt.registerTask('test', ['jshint', /*"mocha",*/ "mochaTest"]);
 
     grunt.registerTask('dist', ['compress']);
 
