@@ -180,6 +180,7 @@ test("exceptions", function() {
         if (e.stack)
             hasStack = true;
     }
+    
     try {
         throw new ring.Error("test");
     } catch(e) {

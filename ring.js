@@ -30,8 +30,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 if (typeof(exports) !== "undefined") { // nodejs
     var lodash = require("lodash");
     lodash.extend(exports, declare(lodash));
-} else if (typeof(define) !== "undefined") { // amd
-    define(["lodash"], declare);
 } else { // define global variable
     window.ring = declare(_);
 }
@@ -39,6 +37,12 @@ if (typeof(exports) !== "undefined") { // nodejs
 
 function declare(_) {
     var ring = {};
+    
+    var assert = function(cond, txt) {
+        if (! cond) {
+            throw new Error(txt ? txt : "Unknown error");
+        }
+    };
 
     function RingObject() {}
     /**
@@ -128,7 +132,7 @@ function declare(_) {
         var __mro__ = [claz].concat(mergeMro(toMerge));
         // generate prototype
         var prototype = Object.prototype;
-        _.each(_.clone(__mro__).reverse(), function(claz) {
+        _.forEachRight(__mro__, function(claz) {
             var current = objectCreate(prototype);
             _.extend(current, claz.__properties__);
             _.each(_.keys(current), function(key) {
@@ -164,7 +168,7 @@ function declare(_) {
         });
         // class init
         claz.__classInit__ = classInit;
-        _.each(_.chain(claz.__mro__).clone().reverse().value(), function(c) {
+        _.forEachRight(claz.__mro__, function(c) {
             if (c.__classInit__) {
                 var ret = c.__classInit__(claz.prototype);
                 if (ret !== undefined)
@@ -177,7 +181,7 @@ function declare(_) {
         return claz;
     };
 
-    var mergeMro = function(toMerge) {
+    function mergeMro(toMerge) {
         /* jshint loopfunc:true */
         // C3 merge() implementation
         var __mro__ = [];
@@ -209,12 +213,12 @@ function declare(_) {
                 return __mro__;
             throw new ring.ValueError("Cannot create a consistent method resolution order (MRO)");
         }
-    };
+    }
 
     /**
         Convert an existing class to be used with the ring.js class system.
     */
-    var toRingClass = function(claz) {
+    function toRingClass(claz) {
         if (claz.__classId__)
             return;
         var proto = ! Object.getOwnPropertyNames ? claz.prototype : (function() {
@@ -224,14 +228,14 @@ function declare(_) {
                     return;
                 _.extend(keys, _.chain(Object.getOwnPropertyNames(p))
                     .map(function(el) {return [el, true];})
-                    .object().value());
+                    .fromPairs().value());
                 crawl(Object.getPrototypeOf(p));
             })(claz.prototype);
-            return _.object(_.map(_.keys(keys), function(k) {return [k, claz.prototype[k]];}));
+            return _.fromPairs(_.map(_.keys(keys), function(k) {return [k, claz.prototype[k]];}));
         })();
         proto = _.chain(proto).map(function(v, k) { return [k, v]; })
             .filter(function(el) {return el[0] !== "constructor" && el[0] !== "__proto__";})
-            .object().value();
+            .fromPairs().value();
         var id = classCounter++;
         _.extend(claz, {
             __mro__: [claz, ring.Object],
@@ -253,7 +257,7 @@ function declare(_) {
             __ringConvertedObject__: true
         });
         claz.__classIndex__[id] = claz;
-    };
+    }
 
     /**
         ring.instance(obj, type)
@@ -330,13 +334,14 @@ function declare(_) {
             };
             gather(prototype);
             var current = new Error();
-            _.each(_.clone(protos).reverse(), function(proto) {
+            _.forEachRight(protos, function(proto) {
                 var tmp = objectCreate(current);
                 // using _.each to avoid traversing prototypes
-                _.each(proto, function(v, k) {
+                _.forOwn(proto, function(v, k) {
                     if (k !== "__proto__")
                         tmp[k] = v;
                 });
+                tmp.constructor = proto.constructor;
                 current = tmp;
             });
             return current;
