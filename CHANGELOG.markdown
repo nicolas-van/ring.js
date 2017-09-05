@@ -1,3 +1,9 @@
+#### 2.2.0
+
+* Migrated from underscore to lodash.
+* Removed bower support.
+* Removed AMD support.
+
 #### 2.0.0-beta.1
 
 * Changed `init` to use `constructor` instead. `init` will still be supported for some time to ease transition from 1.x

@@ -3,12 +3,10 @@
 /* jshint es3: true, proto: true */
 "use strict";
 
-if (typeof(module) !== "undefined") {
-    global.dejavu = require("dejavu");
+if (typeof(module) !== "undefined" && typeof(module.exports) !== "undefined") {
     global.ring = require("./ring");
     global.assert = require("assert");
     global.klass = require("klass");
-    global.Class = require("resig-class");
     global.jsface = require("jsface");
     global._ = require("lodash");
     global.Backbone = require("backbone");
@@ -408,28 +406,6 @@ test("jsfaceCompatibility", function() {
     performCompatTest(B);
 });
 
-test("johnresigCompatibility", function() {
-    var A = Class.extend({
-        init: function() {
-            this.a = "a";
-        },
-        set: function() {
-            this.x = "x";
-        }
-    });
-    var B = A.extend({
-        init: function() {
-            this._super(this);
-            this.b = "b";
-        },
-        set: function() {
-            this._super(this);
-            this.y = "y";
-        }
-    });
-    performCompatTest(B);
-});
-
 test("klassCompatibility", function() {
     var A = klass(function() {
         this.a = "a";
@@ -470,84 +446,6 @@ if (typeof(module) === "undefined") test("classyCompatibility", function() {
     });
     performCompatTest(B);
 });
-
-test("dejavuCompatibility", function() {
-    var A = dejavu.Class.declare({
-        initialize: function() {
-            this.a = "a";
-        },
-        set: function() {
-            this.x = "x";
-        }
-    });
-    var B = dejavu.Class.declare({
-        $extends: A,
-        initialize: function() {
-            this.$super(this);
-            this.b = "b";
-        },
-        set: function() {
-            this.$super(this);
-            this.y = "y";
-        }
-    });
-    performCompatTest(B);
-});
-
-test("dejavuClosureCompatibility", function() {
-    var A = dejavu.Class.declare(function () {
-        return {
-            initialize: function() {
-                this.a = "a";
-            },
-            set: function() {
-                this.x = "x";
-            }
-        };
-    });
-    var B = A.extend(function($super) {
-        return {
-            initialize: function() {
-                $super.initialize.call(this);
-                this.b = "b";
-            },
-            set: function() {
-                $super.set.call(this);
-                this.y = "y";
-            }
-        };
-    });
-    performCompatTest(B);
-});
-
-// It's not possible for ring to support classify because it checks in
-// its constructors that 'this' is an instance of the class created by classify
-// by using 'instanceof' (which does not work because instanceof does not work
-// with ringjs. Removing that test in Classify's source code make it work
-// correctly with ring.
-/*
-test("classifyCompatibility", function() {
-    var A = Classify({
-        init: function() {
-            this.a = "a";
-        }, 
-        set: function() {
-            this.x = "x";
-        }
-    });
-    var B = Classify(A, {
-        init: function() {
-            this.$$parent(this);
-            this.b = "b";
-        },
-        set: function() {
-            this.$$parent(this);
-            this.y = "y";
-        }
-    });
-    performCompatTest(B);
-});
-*/
 
 test("coffeeCompatibility", function() {
     //    Compiled using this code:

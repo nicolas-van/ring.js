@@ -2,27 +2,22 @@
 <head>
   <meta charset="utf-8">
   <title>Mocha Tests</title>
-  <link rel="stylesheet" href="bower_components/mocha/mocha.css" />
-    <script type="text/javascript" src="bower_components/lodash/lodash.js"></script>
+  <link rel="stylesheet" href="node_modules/mocha/mocha.css" />
+    <script type="text/javascript" src="node_modules/lodash/lodash.js"></script>
     <script type="text/javascript" src="ring.js"></script>
 
-    <script src="bower_components/classy/classy.js"></script>
-    <script>
-    window.Classy = Class.$noConflict();
-    </script>
-    <script src="bower_components/jsface/jsface.js"></script>
-    <script src="bower_components/klass/klass.js"></script>
-    <script src="bower_components/dejavu/dist/regular/loose/dejavu.js"></script>
-    <script src="bower_components/classify/dist/classify.js"></script>
-    <script src="bower_components/Class.js/Class.js"></script>
-    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="node_modules/classy/dist/classy.js"></script>
+    <script src="node_modules/jsface/jsface.js"></script>
+    <script src="node_modules/klass/klass.js"></script>
+    <script src="node_modules/classify/dist/classify.js"></script>
+    <script src="node_modules/backbone/backbone.js"></script>
 </head>
 <body>
     <div id="mocha"></div>
-    <script src="bower_components/mocha/mocha.js"></script>
-    <script src="bower_components/ristretto/ristretto.js"></script>
+    <script src="node_modules/mocha/mocha.js"></script>
+    <script src="node_modules/chai/chai.js"></script>
     <script>
-        var assert = ristretto;
+        var assert = chai.assert;
         mocha.setup("qunit");
     </script>
     <script src="test.js"></script>
