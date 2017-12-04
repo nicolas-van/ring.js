@@ -20,6 +20,9 @@
     "url": "git@github.com:nicolas-van/ring.js.git"
   },
   "homepage": "http://ringjs.neoname.eu",
+  "scripts": {
+    "test": "grunt test"
+  },
   "dependencies": {
     "lodash": "^4.17.4"
   },
