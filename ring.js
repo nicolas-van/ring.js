@@ -23,7 +23,7 @@ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-(function() {
+(function() 
 /* jshint es3: true, proto: true */
 "use strict";
 
@@ -37,7 +37,7 @@ if (typeof(exports) !== "undefined") { // nodejs
 
 function declare(_) {
     var ring = {};
-    
+
     var assert = function(cond, txt) {
         if (! cond) {
             throw new Error(txt ? txt : "Unknown error");
