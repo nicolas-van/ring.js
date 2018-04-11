@@ -7,4 +7,4 @@ JavaScript Class System with Multiple Inheritance.
 
 Licensed under the MIT license.
 
-See the web site for any information: http://ringjs.neoname.eu .
+See the web site for any information: https://nicolas-van.github.io/ring.js/ .
