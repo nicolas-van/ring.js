@@ -37,8 +37,6 @@ successful since, when compared to libraries providing similar features (mainly 
 super method), Ring.js has excellent performances. It can be much faster than some well-known libraries, notably John
 Resig's inheritance. Additionally, none of these other class systems provide multiple inheritance. See the test result:
 
-<img src="/static/img/perf.jpg" style="max-width: 100%"></img>
-
 See [this link to the jsperf.com test.](http://jsperf.com/multiple-class-systems/5)
 
 Some class systems can still have better performances. None of these have `this.$super` and require to use longer syntax
