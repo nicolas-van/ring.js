@@ -38,4 +38,4 @@ Its advantages:
 * Licensed under the MIT license.
 * Damn, multiple inheritance just rocks!
 
-To get started, [read the tutorial](./docs/tutorial.html).
+To get started, [read the tutorial](./docs/tutorial.md).
