@@ -39,3 +39,5 @@ Its advantages:
 * Damn, multiple inheritance just rocks!
 
 To get started, [read the tutorial](./docs/tutorial.md).
+
+There is also a FAQ available [here](./docs/faq.md).
