@@ -1,7 +1,5 @@
-Ring.js
-=======
-
-[![Build Status](https://travis-ci.org/nicolas-van/ring.js.svg?branch=master)](https://travis-ci.org/nicolas-van/ring.js) [![npm version](https://img.shields.io/npm/v/ring.svg)](https://www.npmjs.com/package/ring)
+---
+---
 
 Ring.js is a class system in JavaScript allowing multiple inheritance.
 
