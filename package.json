@@ -1,6 +1,6 @@
 {
   "name": "ring",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Ring.js - JavaScript Class System with Multiple Inheritance",
   "main": "ring.js",
   "files": [
