@@ -9,5 +9,5 @@ deploy:
     secure: JhHw/dzKY/Mv5KEqF/Xj/ONZBZUCkx2c7Gr+Yy+ef6eKoKtkCEb6GhNSUzQsCiZiUfF+r0rs7iBpIJD/uDSJXtc6K2gmW/8tJwN2V6pSKbUWUGTI0atVtmtk3DF4A981qzMdxLElVwfcu7zDNgRvE6YsixnrqAUIeiqVMN85LL8gygZYQCjnUufG7JuET5fh8TX9+t5R0rWtqAfAQQmL6bkKA83+QWjJygzYpMgoKgcuosEH9nPbnIgYOi92fcxfHZ9RCFdaU5WkNeMHgo5d2WHB+ApG8kcVgbSjVDMFhimxaepTJfmzgPOop1LFOZjKIv6pb9FBUJNtfA5t2wHg/FnXcjgteOtFiAYnlNVEBFfj3tvXAjKnw3bZ/8FmIdqJlXJ5SSZUaKjuZ9oIa1ZeR9msjcU+4AuDCr8guUtBEFOsW5f1FtHSsJMl+meePcAGcPTuNJnUIoxGpQp3Wmu6PBOVznrOBGNavi83i/9OG68LssaRj5MnmIysH39ZxlakYZwN7aZI07j2oznfDVTkJyQ1Mn1fNhab5PJb/jFsrVgj0Mgh2jeNw4dRffTl5/xqlrynBywnxo6X4Ar+3Rc6X4ztwApZInxFHDyIjKyHSR5cpjHX/Ed/B87MPXEmUXRCRRJwGOqKEZf1BG/iPODqG/JAR+6K2DD8xYgM/AIrrs0=
   on:
     tags: true
-    repo: nicolas-van/jiko
+    repo: nicolas-van/ring
     branch: master
